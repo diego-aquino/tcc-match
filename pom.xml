@@ -36,6 +36,25 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+      <plugin>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>prettier-maven-plugin</artifactId>
+        <version>0.16</version>
+        <configuration>
+          <prettierJavaVersion>1.5.0</prettierJavaVersion>
+          <printWidth>100</printWidth>
+          <tabWidth>2</tabWidth>
+          <useTabs>false</useTabs>
+          <endOfLine>lf</endOfLine>
+          <ignoreConfigFile>false</ignoreConfigFile>
+          <ignoreEditorConfig>false</ignoreEditorConfig>
+          <inputGlobs>
+            <inputGlob>src/main/java/**/*.java</inputGlob>
+            <inputGlob>src/test/java/**/*.java</inputGlob>
+          </inputGlobs>
+        </configuration>
+      </plugin>
 		</plugins>
 	</build>
 </project>
