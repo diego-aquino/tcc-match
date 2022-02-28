@@ -45,7 +45,7 @@ function main() {
     update_file_on_index "$original_file" "$temporary_file"
   done
 
-  rm -r "${TEMPORARY_DIR:?}/*"
+  rm -r "${TEMPORARY_DIR:?}"/*
 
   echo 'Formatting done.'
 }
