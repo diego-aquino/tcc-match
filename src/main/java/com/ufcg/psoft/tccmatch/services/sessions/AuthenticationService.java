@@ -3,13 +3,18 @@ package com.ufcg.psoft.tccmatch.services.sessions;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.Date;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -59,7 +64,13 @@ public class AuthenticationService implements UserDetailsService {
     try {
       Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
       return true;
-    } catch (Exception exception) {
+    } catch (
+      ExpiredJwtException
+      | UnsupportedJwtException
+      | MalformedJwtException
+      | SignatureException
+      | IllegalArgumentException exception
+    ) {
       return false;
     }
   }
@@ -72,6 +83,12 @@ public class AuthenticationService implements UserDetailsService {
   public Long getUserIdFromToken(String token) {
     Claims tokenBody = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     return Long.valueOf(tokenBody.getSubject());
+  }
+
+  public User getAuthenticatedUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    User user = (User) authentication.getPrincipal();
+    return user;
   }
 
   @Override
