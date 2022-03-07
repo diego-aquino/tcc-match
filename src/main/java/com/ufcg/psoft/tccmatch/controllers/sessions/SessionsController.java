@@ -34,7 +34,7 @@ public class SessionsController {
 
     String token = authenticationService.generateToken(authentication);
 
-    return new ResponseEntity<>(new LoginResponseDTO(token), HttpStatus.OK);
+    return new ResponseEntity<>(new LoginResponseDTO(token), HttpStatus.CREATED);
   }
 
   /**
