@@ -1,0 +1,88 @@
+package com.ufcg.psoft.tccmatch.services.sessions;
+
+import com.ufcg.psoft.tccmatch.models.users.User;
+import com.ufcg.psoft.tccmatch.services.users.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Date;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AuthenticationService implements UserDetailsService {
+
+  @Value("${jwt.secret}")
+  private String jwtSecret;
+
+  @Value("${jwt.expirationTime}")
+  private String jwtExpirationTime;
+
+  @Autowired
+  private UserService userService;
+
+  private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+  public PasswordEncoder getPasswordEncoder() {
+    return passwordEncoder;
+  }
+
+  public String encodePassword(String password) {
+    return passwordEncoder.encode(password);
+  }
+
+  public String generateToken(Authentication authentication) {
+    User user = (User) authentication.getPrincipal();
+
+    long currentTime = new Date().getTime();
+    Date expiresAt = new Date(currentTime + Long.parseLong(jwtExpirationTime));
+
+    return Jwts
+      .builder()
+      .setIssuer("tccmatch")
+      .setSubject(user.getId().toString())
+      .setIssuedAt(new Date())
+      .setExpiration(expiresAt)
+      .signWith(SignatureAlgorithm.HS256, jwtSecret)
+      .compact();
+  }
+
+  public boolean isValidToken(String token) {
+    try {
+      Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+      return true;
+    } catch (Exception exception) {
+      return false;
+    }
+  }
+
+  public Optional<User> getUserFromToken(String token) {
+    Long userId = getUserIdFromToken(token);
+    return userService.findUserById(userId);
+  }
+
+  public Long getUserIdFromToken(String token) {
+    Claims tokenBody = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+    return Long.valueOf(tokenBody.getSubject());
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    Optional<User> optionalUser = userService.findUserByEmail(email);
+
+    if (optionalUser.isEmpty()) {
+      throw new UsernameNotFoundException(String.format("User with email '%s' not found", email));
+    }
+
+    User user = optionalUser.get();
+    return user;
+  }
+}
