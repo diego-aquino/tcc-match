@@ -30,7 +30,7 @@ public class AuthenticationService implements UserDetailsService {
   @Value("${jwt.secret}")
   private String jwtSecret;
 
-  @Value("${jwt.expirationTime}")
+  @Value("${jwt.expiration-time}")
   private String jwtExpirationTime;
 
   @Autowired
