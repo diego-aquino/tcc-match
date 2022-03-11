@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ufcg.psoft.tccmatch.IntegrationTests;
-import com.ufcg.psoft.tccmatch.dto.sessions.LoginRequestDTO;
+import com.ufcg.psoft.tccmatch.dto.sessions.LoginDTO;
 import com.ufcg.psoft.tccmatch.dto.users.CreateCoordinatorDTO;
 import com.ufcg.psoft.tccmatch.services.users.coordinators.CoordinatorService;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class SessionsControllerTests extends IntegrationTests {
   void validLogin() throws Exception {
     coordinatorService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
 
-    LoginRequestDTO loginDTO = new LoginRequestDTO(userEmail, userRawPassword);
+    LoginDTO loginDTO = new LoginDTO(userEmail, userRawPassword);
 
     makeLoginRequest(loginDTO)
       .andExpect(status().isCreated())
@@ -40,17 +40,17 @@ class SessionsControllerTests extends IntegrationTests {
     coordinatorService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
 
     String anotherEmail = "anotheruser@email.com";
-    LoginRequestDTO loginDTOWithAnotherEmail = new LoginRequestDTO(anotherEmail, userRawPassword);
+    LoginDTO loginDTOWithAnotherEmail = new LoginDTO(anotherEmail, userRawPassword);
 
     makeLoginRequest(loginDTOWithAnotherEmail).andExpect(status().isUnauthorized());
 
     String anotherPassword = "11111111";
-    LoginRequestDTO loginDTOWithAnotherPassword = new LoginRequestDTO(userEmail, anotherPassword);
+    LoginDTO loginDTOWithAnotherPassword = new LoginDTO(userEmail, anotherPassword);
 
     makeLoginRequest(loginDTOWithAnotherPassword).andExpect(status().isUnauthorized());
   }
 
-  private ResultActions makeLoginRequest(LoginRequestDTO loginDTO) throws Exception {
+  private ResultActions makeLoginRequest(LoginDTO loginDTO) throws Exception {
     return mvc.perform(
       post("/api/sessions/login").contentType(MediaType.APPLICATION_JSON).content(toJSON(loginDTO))
     );
