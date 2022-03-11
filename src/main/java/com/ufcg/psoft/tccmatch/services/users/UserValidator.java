@@ -21,4 +21,10 @@ public class UserValidator extends Validator {
     if (isValidPassword) return password.trim();
     throw new BadRequestApiException("Password too short.");
   }
+
+  public String validateName(String name) {
+    boolean isValidName = name != null && !name.isBlank();
+    if (isValidName) return name;
+    throw new BadRequestApiException("User name is empty.");
+  }
 }
