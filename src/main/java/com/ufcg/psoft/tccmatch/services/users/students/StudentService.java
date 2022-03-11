@@ -4,6 +4,7 @@ import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
+import com.ufcg.psoft.tccmatch.services.users.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,17 @@ public class StudentService {
   @Autowired
   private AuthenticationService authenticationService;
 
+  @Autowired
+  private UserValidator userValidator;
+
   public Student createStudent(CreateStudentDTO createStudentDTO) {
-    String encodedPassword = authenticationService.encodePassword(createStudentDTO.getPassword());
+    String email = userValidator.validateEmail(createStudentDTO.getEmail());
+    String rawPassword = userValidator.validatePassword((createStudentDTO.getPassword()));
+
+    String encodedPassword = authenticationService.encodePassword(rawPassword);
 
     Student student = new Student(
-      createStudentDTO.getEmail(),
+      email,
       encodedPassword,
       createStudentDTO.getName(),
       createStudentDTO.getRegistryNumber(),
