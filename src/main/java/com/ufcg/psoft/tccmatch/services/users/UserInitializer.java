@@ -21,6 +21,9 @@ public class UserInitializer implements ApplicationRunner {
   @Autowired
   private UserService userService;
 
+  @Autowired
+  private CoordinatorService coordinatorService;
+
   @Override
   public void run(ApplicationArguments arguments) throws Exception {
     createDefaultCoordinator();
@@ -31,7 +34,7 @@ public class UserInitializer implements ApplicationRunner {
 
     if (existingCoordinator.isPresent()) return;
 
-    userService.createCoordinator(
+    coordinatorService.createCoordinator(
       new CreateCoordinatorDTO(defaultCoordinatorEmail, defaultCoordinatorPassword)
     );
   }

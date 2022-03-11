@@ -8,7 +8,7 @@ import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.sessions.LoginRequestDTO;
 import com.ufcg.psoft.tccmatch.dto.sessions.LoginResponseDTO;
 import com.ufcg.psoft.tccmatch.dto.users.CreateCoordinatorDTO;
-import com.ufcg.psoft.tccmatch.services.users.UserService;
+import com.ufcg.psoft.tccmatch.services.users.CoordinatorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,11 +24,11 @@ class SessionsControllerTests extends IntegrationTests {
   private String userRawPassword = "12345678";
 
   @Autowired
-  private UserService userService;
+  private CoordinatorService coordinatorService;
 
   @Test
   void validLogin() throws Exception {
-    userService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
+    coordinatorService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
 
     LoginRequestDTO loginDTO = new LoginRequestDTO(userEmail, userRawPassword);
 
@@ -39,7 +39,7 @@ class SessionsControllerTests extends IntegrationTests {
 
   @Test
   void loginWithInvalidCredentials() throws Exception {
-    userService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
+    coordinatorService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
 
     String anotherEmail = "anotheruser@email.com";
     LoginRequestDTO loginDTOWithAnotherEmail = new LoginRequestDTO(anotherEmail, userRawPassword);
@@ -60,7 +60,7 @@ class SessionsControllerTests extends IntegrationTests {
 
   @Test
   void checkWithAuthenticatedUser() throws Exception {
-    userService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
+    coordinatorService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
 
     LoginRequestDTO loginDTO = new LoginRequestDTO(userEmail, userRawPassword);
     MvcResult loginResult = makeLoginRequest(loginDTO).andReturn();
