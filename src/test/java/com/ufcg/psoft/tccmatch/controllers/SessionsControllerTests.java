@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.sessions.LoginRequestDTO;
 import com.ufcg.psoft.tccmatch.dto.users.CreateCoordinatorDTO;
-import com.ufcg.psoft.tccmatch.services.users.CoordinatorService;
+import com.ufcg.psoft.tccmatch.services.users.coordinators.CoordinatorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

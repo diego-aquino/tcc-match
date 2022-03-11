@@ -2,6 +2,7 @@ package com.ufcg.psoft.tccmatch.services.users;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateCoordinatorDTO;
 import com.ufcg.psoft.tccmatch.models.users.User;
+import com.ufcg.psoft.tccmatch.services.users.coordinators.CoordinatorService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

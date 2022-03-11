@@ -1,4 +1,4 @@
-package com.ufcg.psoft.tccmatch.services.users;
+package com.ufcg.psoft.tccmatch.services.users.students;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
 import com.ufcg.psoft.tccmatch.models.users.Student;

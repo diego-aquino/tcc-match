@@ -5,7 +5,7 @@ import com.ufcg.psoft.tccmatch.dto.users.CreateStudentResponseDTO;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
-import com.ufcg.psoft.tccmatch.services.users.StudentService;
+import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

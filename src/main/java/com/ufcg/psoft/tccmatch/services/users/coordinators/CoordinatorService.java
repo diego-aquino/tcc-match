@@ -1,4 +1,4 @@
-package com.ufcg.psoft.tccmatch.services.users;
+package com.ufcg.psoft.tccmatch.services.users.coordinators;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateCoordinatorDTO;
 import com.ufcg.psoft.tccmatch.models.users.Coordinator;
