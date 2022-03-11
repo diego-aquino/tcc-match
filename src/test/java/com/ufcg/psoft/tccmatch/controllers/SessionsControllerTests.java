@@ -36,7 +36,7 @@ class SessionsControllerTests extends IntegrationTests {
   }
 
   @Test
-  void loginWithInvalidCredentials() throws Exception {
+  void errorOnLoginWithInvalidCredentials() throws Exception {
     coordinatorService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
 
     String anotherEmail = "anotheruser@email.com";
