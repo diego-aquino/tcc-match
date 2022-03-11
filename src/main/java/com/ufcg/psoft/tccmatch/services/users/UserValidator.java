@@ -1,7 +1,6 @@
 package com.ufcg.psoft.tccmatch.services.users;
 
-import com.ufcg.psoft.tccmatch.exceptions.users.InvalidUserEmailException;
-import com.ufcg.psoft.tccmatch.exceptions.users.UserPasswordTooShortException;
+import com.ufcg.psoft.tccmatch.exceptions.api.BadRequestApiException;
 import com.ufcg.psoft.tccmatch.services.Validator;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +13,12 @@ public class UserValidator extends Validator {
   public String validateEmail(String email) {
     boolean isValidEmail = matchesPattern(email, EMAIL_ADDRESS_PATTERN);
     if (isValidEmail) return email.trim();
-    throw new InvalidUserEmailException();
+    throw new BadRequestApiException("Invalid email.");
   }
 
   public String validatePassword(String password) {
     boolean isValidPassword = password != null && password.trim().length() >= MIN_PASSWORD_LENGTH;
     if (isValidPassword) return password.trim();
-    throw new UserPasswordTooShortException();
+    throw new BadRequestApiException("Password too short.");
   }
 }
