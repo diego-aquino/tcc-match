@@ -37,6 +37,10 @@ public abstract class User implements UserDetails {
 
   protected User() {}
 
+  protected User(Type type) {
+    this(type, null, null);
+  }
+
   protected User(Type type, String email, String encodedPassword) {
     this.type = type;
     this.email = email;
