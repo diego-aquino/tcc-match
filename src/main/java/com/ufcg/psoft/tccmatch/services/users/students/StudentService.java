@@ -4,11 +4,15 @@ import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
+import com.ufcg.psoft.tccmatch.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudentService {
+
+  @Autowired
+  private UserService userService;
 
   @Autowired
   private UserRepository userRepository;
@@ -29,6 +33,8 @@ public class StudentService {
     String completionPeriod = studentValidator.validateCompletionPeriod(
       createStudentDTO.getCompletionPeriod()
     );
+
+    userService.ensureEmailIsNotInUse(email);
 
     String encodedPassword = authenticationService.encodePassword(rawPassword);
 
