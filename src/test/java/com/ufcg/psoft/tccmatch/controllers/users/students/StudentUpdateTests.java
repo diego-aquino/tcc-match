@@ -6,7 +6,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
 import com.ufcg.psoft.tccmatch.dto.users.UpdateStudentDTO;
+import com.ufcg.psoft.tccmatch.exceptions.users.EmailAlreadyInUseException;
+import com.ufcg.psoft.tccmatch.exceptions.users.EmptyUserNameException;
 import com.ufcg.psoft.tccmatch.exceptions.users.ForbiddenUserUpdateException;
+import com.ufcg.psoft.tccmatch.exceptions.users.InvalidEmailApiException;
+import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidCompletionPeriodException;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
 import java.util.Optional;
@@ -117,7 +121,7 @@ class StudentUpdateTests extends StudentTests {
 
     makeUpdateStudentRequest(student.getId(), studentToken, updateStudentDTO)
       .andExpect(status().isConflict())
-      .andExpect(jsonPath("$.message", is("Email already in use.")));
+      .andExpect(jsonPath("$.message", is(EmailAlreadyInUseException.message())));
   }
 
   @Test
@@ -132,7 +136,7 @@ class StudentUpdateTests extends StudentTests {
 
     makeUpdateStudentRequest(student.getId(), studentToken, updateStudentDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("Invalid email.")));
+      .andExpect(jsonPath("$.message", is(InvalidEmailApiException.message())));
   }
 
   @Test
@@ -147,7 +151,7 @@ class StudentUpdateTests extends StudentTests {
 
     makeUpdateStudentRequest(student.getId(), studentToken, updateStudentDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("User name is empty.")));
+      .andExpect(jsonPath("$.message", is(EmptyUserNameException.message())));
   }
 
   @Test
@@ -162,7 +166,7 @@ class StudentUpdateTests extends StudentTests {
 
     makeUpdateStudentRequest(student.getId(), studentToken, updateStudentDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("Invalid completion period.")));
+      .andExpect(jsonPath("$.message", is(InvalidCompletionPeriodException.message())));
   }
 
   @Test
@@ -190,7 +194,7 @@ class StudentUpdateTests extends StudentTests {
 
     makeUpdateStudentRequest(student.getId(), anotherStudentToken, updateStudentDTO)
       .andExpect(status().isForbidden())
-      .andExpect(jsonPath("$.message", is(ForbiddenUserUpdateException.createMessage())));
+      .andExpect(jsonPath("$.message", is(ForbiddenUserUpdateException.message())));
   }
 
   private ResultActions makeUpdateStudentRequest(

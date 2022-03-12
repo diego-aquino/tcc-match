@@ -1,6 +1,6 @@
 package com.ufcg.psoft.tccmatch.services.users;
 
-import com.ufcg.psoft.tccmatch.exceptions.api.ConflictApiException;
+import com.ufcg.psoft.tccmatch.exceptions.users.EmailAlreadyInUseException;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import java.util.Optional;
@@ -25,7 +25,7 @@ public class UserService<GenericUser extends User> {
     Long existingUserId = existingUser.get().getId();
 
     if (!existingUserId.equals(ignoreUserId)) {
-      throw new ConflictApiException("Email already in use.");
+      throw new EmailAlreadyInUseException();
     }
   }
 

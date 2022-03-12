@@ -5,10 +5,10 @@ import com.ufcg.psoft.tccmatch.exceptions.api.ForbiddenApiException;
 public class ForbiddenUserUpdateException extends ForbiddenApiException {
 
   public ForbiddenUserUpdateException() {
-    super(createMessage());
+    super(message());
   }
 
-  public static String createMessage() {
+  public static String message() {
     return "No permission to update this user.";
   }
 }

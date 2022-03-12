@@ -5,10 +5,10 @@ import com.ufcg.psoft.tccmatch.exceptions.api.NotFoundApiException;
 public class UserNotFoundException extends NotFoundApiException {
 
   public UserNotFoundException() {
-    super(createMessage());
+    super(message());
   }
 
-  public static String createMessage() {
+  public static String message() {
     return "User not found.";
   }
 }

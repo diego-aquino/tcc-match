@@ -8,6 +8,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
+import com.ufcg.psoft.tccmatch.exceptions.users.EmailAlreadyInUseException;
+import com.ufcg.psoft.tccmatch.exceptions.users.EmptyUserNameException;
+import com.ufcg.psoft.tccmatch.exceptions.users.InvalidEmailApiException;
+import com.ufcg.psoft.tccmatch.exceptions.users.PasswordTooShortException;
+import com.ufcg.psoft.tccmatch.exceptions.users.professors.LaboratoriesNotProvidedException;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
@@ -85,7 +90,7 @@ class ProfessorCreationTests extends IntegrationTests {
 
     makeCreateUserRequest(createProfessorDTO)
       .andExpect(status().isConflict())
-      .andExpect(jsonPath("$.message", is("Email already in use.")));
+      .andExpect(jsonPath("$.message", is(EmailAlreadyInUseException.message())));
   }
 
   @Test
@@ -101,7 +106,7 @@ class ProfessorCreationTests extends IntegrationTests {
 
     makeCreateUserRequest(createProfessorDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("Invalid email.")));
+      .andExpect(jsonPath("$.message", is(InvalidEmailApiException.message())));
   }
 
   @Test
@@ -117,7 +122,7 @@ class ProfessorCreationTests extends IntegrationTests {
 
     makeCreateUserRequest(createProfessorDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("Password too short.")));
+      .andExpect(jsonPath("$.message", is(PasswordTooShortException.message())));
   }
 
   @Test
@@ -133,7 +138,7 @@ class ProfessorCreationTests extends IntegrationTests {
 
     makeCreateUserRequest(createProfessorDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("User name is empty.")));
+      .andExpect(jsonPath("$.message", is(EmptyUserNameException.message())));
   }
 
   @Test
@@ -142,7 +147,7 @@ class ProfessorCreationTests extends IntegrationTests {
 
     makeCreateUserRequest(createProfessorDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("Laboratories not provided.")));
+      .andExpect(jsonPath("$.message", is(LaboratoriesNotProvidedException.message())));
   }
 
   private ResultActions makeCreateUserRequest(CreateProfessorDTO createProfessorDTO)

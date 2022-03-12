@@ -7,6 +7,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
+import com.ufcg.psoft.tccmatch.exceptions.users.EmailAlreadyInUseException;
+import com.ufcg.psoft.tccmatch.exceptions.users.EmptyUserNameException;
+import com.ufcg.psoft.tccmatch.exceptions.users.InvalidEmailApiException;
+import com.ufcg.psoft.tccmatch.exceptions.users.PasswordTooShortException;
+import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidCompletionPeriodException;
+import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidRegistryNumberException;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
@@ -76,7 +82,7 @@ class StudentCreationTests extends StudentTests {
 
     makeCreateStudentRequest(createStudentDTO)
       .andExpect(status().isConflict())
-      .andExpect(jsonPath("$.message", is("Email already in use.")));
+      .andExpect(jsonPath("$.message", is(EmailAlreadyInUseException.message())));
   }
 
   @Test
@@ -93,7 +99,7 @@ class StudentCreationTests extends StudentTests {
 
     makeCreateStudentRequest(createStudentDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("Invalid email.")));
+      .andExpect(jsonPath("$.message", is(InvalidEmailApiException.message())));
   }
 
   @Test
@@ -110,7 +116,7 @@ class StudentCreationTests extends StudentTests {
 
     makeCreateStudentRequest(createStudentDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("Password too short.")));
+      .andExpect(jsonPath("$.message", is(PasswordTooShortException.message())));
   }
 
   @Test
@@ -127,7 +133,7 @@ class StudentCreationTests extends StudentTests {
 
     makeCreateStudentRequest(createStudentDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("User name is empty.")));
+      .andExpect(jsonPath("$.message", is(EmptyUserNameException.message())));
   }
 
   @Test
@@ -144,7 +150,7 @@ class StudentCreationTests extends StudentTests {
 
     makeCreateStudentRequest(createStudentDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("Invalid registry number.")));
+      .andExpect(jsonPath("$.message", is(InvalidRegistryNumberException.message())));
   }
 
   @Test
@@ -161,7 +167,7 @@ class StudentCreationTests extends StudentTests {
 
     makeCreateStudentRequest(createStudentDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is("Invalid completion period.")));
+      .andExpect(jsonPath("$.message", is(InvalidCompletionPeriodException.message())));
   }
 
   private ResultActions makeCreateStudentRequest(CreateStudentDTO createStudentDTO)
