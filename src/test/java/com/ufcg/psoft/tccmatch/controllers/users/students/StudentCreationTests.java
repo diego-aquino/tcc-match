@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
@@ -17,26 +16,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class StudentCreationTests extends IntegrationTests {
-
-  private String email = "student@email.com";
-  private String rawPassword = "12345678";
-  private String name = "Student";
-  private String registryNumber = "111000111";
-  private String completionPeriod = "2024.1";
-
-  private String coordinatorToken;
+class StudentCreationTests extends StudentTests {
 
   @Autowired
   private UserService<Student> userService;
 
   @Autowired
   private StudentService studentService;
+
+  private String coordinatorToken;
 
   @BeforeEach
   void beforeEach() {
@@ -46,40 +36,40 @@ class StudentCreationTests extends IntegrationTests {
   @Test
   void validStudentCreation() throws Exception {
     CreateStudentDTO createStudentDTO = new CreateStudentDTO(
-      email,
-      rawPassword,
-      name,
-      registryNumber,
-      completionPeriod
+      studentEmail,
+      studentRawPassword,
+      studentName,
+      studentRegistryNumber,
+      studentCompletionPeriod
     );
 
     makeCreateStudentRequest(createStudentDTO)
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.id", is(any(Integer.class))))
-      .andExpect(jsonPath("$.email", is(email)))
-      .andExpect(jsonPath("$.name", is(name)))
-      .andExpect(jsonPath("$.registryNumber", is(registryNumber)))
-      .andExpect(jsonPath("$.completionPeriod", is(completionPeriod)));
+      .andExpect(jsonPath("$.email", is(studentEmail)))
+      .andExpect(jsonPath("$.name", is(studentName)))
+      .andExpect(jsonPath("$.registryNumber", is(studentRegistryNumber)))
+      .andExpect(jsonPath("$.completionPeriod", is(studentCompletionPeriod)));
 
-    Optional<Student> optionalStudentCreated = userService.findUserByEmail(email);
+    Optional<Student> optionalStudentCreated = userService.findUserByEmail(studentEmail);
     assertTrue(optionalStudentCreated.isPresent());
 
     Student studentCreated = optionalStudentCreated.get();
     assertEquals(User.Type.STUDENT, studentCreated.getType());
-    assertEquals(email, studentCreated.getEmail());
-    assertEquals(name, studentCreated.getName());
-    assertEquals(registryNumber, studentCreated.getRegistryNumber());
-    assertEquals(completionPeriod, studentCreated.getCompletionPeriod());
+    assertEquals(studentEmail, studentCreated.getEmail());
+    assertEquals(studentName, studentCreated.getName());
+    assertEquals(studentRegistryNumber, studentCreated.getRegistryNumber());
+    assertEquals(studentCompletionPeriod, studentCreated.getCompletionPeriod());
   }
 
   @Test
   void errorOnEmailAlreadyInUse() throws Exception {
     CreateStudentDTO createStudentDTO = new CreateStudentDTO(
-      email,
-      rawPassword,
-      name,
-      registryNumber,
-      completionPeriod
+      studentEmail,
+      studentRawPassword,
+      studentName,
+      studentRegistryNumber,
+      studentCompletionPeriod
     );
 
     studentService.createStudent(createStudentDTO);
@@ -95,10 +85,10 @@ class StudentCreationTests extends IntegrationTests {
 
     CreateStudentDTO createStudentDTO = new CreateStudentDTO(
       invalidEmail,
-      rawPassword,
-      name,
-      registryNumber,
-      completionPeriod
+      studentRawPassword,
+      studentName,
+      studentRegistryNumber,
+      studentCompletionPeriod
     );
 
     makeCreateStudentRequest(createStudentDTO)
@@ -111,11 +101,11 @@ class StudentCreationTests extends IntegrationTests {
     String tooShortRawPassword = "1234567";
 
     CreateStudentDTO createStudentDTO = new CreateStudentDTO(
-      email,
+      studentEmail,
       tooShortRawPassword,
-      name,
-      registryNumber,
-      completionPeriod
+      studentName,
+      studentRegistryNumber,
+      studentCompletionPeriod
     );
 
     makeCreateStudentRequest(createStudentDTO)
@@ -128,11 +118,11 @@ class StudentCreationTests extends IntegrationTests {
     String emptyName = "";
 
     CreateStudentDTO createStudentDTO = new CreateStudentDTO(
-      email,
-      rawPassword,
+      studentEmail,
+      studentRawPassword,
       emptyName,
-      registryNumber,
-      completionPeriod
+      studentRegistryNumber,
+      studentCompletionPeriod
     );
 
     makeCreateStudentRequest(createStudentDTO)
@@ -145,11 +135,11 @@ class StudentCreationTests extends IntegrationTests {
     String invalidRegistryNumber = "11100011";
 
     CreateStudentDTO createStudentDTO = new CreateStudentDTO(
-      email,
-      rawPassword,
-      name,
+      studentEmail,
+      studentRawPassword,
+      studentName,
       invalidRegistryNumber,
-      completionPeriod
+      studentCompletionPeriod
     );
 
     makeCreateStudentRequest(createStudentDTO)
@@ -162,10 +152,10 @@ class StudentCreationTests extends IntegrationTests {
     String invalidCompletionPeriod = "20201";
 
     CreateStudentDTO createStudentDTO = new CreateStudentDTO(
-      email,
-      rawPassword,
-      name,
-      registryNumber,
+      studentEmail,
+      studentRawPassword,
+      studentName,
+      studentRegistryNumber,
       invalidCompletionPeriod
     );
 
