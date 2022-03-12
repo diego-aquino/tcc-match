@@ -14,9 +14,17 @@ public class UserService<GenericUser extends User> {
   private UserRepository<GenericUser> userRepository;
 
   public void ensureEmailIsNotInUse(String email) {
-    Optional<GenericUser> existingStudent = userRepository.findByEmail(email);
+    ensureEmailIsNotInUse(email, null);
+  }
 
-    if (existingStudent.isPresent()) {
+  public void ensureEmailIsNotInUse(String email, Long ignoreUserId) {
+    Optional<GenericUser> existingUser = userRepository.findByEmail(email);
+
+    if (existingUser.isEmpty()) return;
+
+    Long existingUserId = existingUser.get().getId();
+
+    if (!existingUserId.equals(ignoreUserId)) {
       throw new ConflictApiException("Email already in use.");
     }
   }

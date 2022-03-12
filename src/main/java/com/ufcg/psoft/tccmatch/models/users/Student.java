@@ -28,7 +28,15 @@ public class Student extends User {
     return registryNumber;
   }
 
+  public void setRegistryNumber(String registryNumber) {
+    this.registryNumber = registryNumber;
+  }
+
   public String getCompletionPeriod() {
     return completionPeriod;
+  }
+
+  public void setCompletionPeriod(String completionPeriod) {
+    this.completionPeriod = completionPeriod;
   }
 }
