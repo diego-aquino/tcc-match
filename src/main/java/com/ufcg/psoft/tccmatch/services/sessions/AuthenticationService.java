@@ -1,5 +1,6 @@
 package com.ufcg.psoft.tccmatch.services.sessions;
 
+import com.ufcg.psoft.tccmatch.exceptions.users.ForbiddenUserTypeException;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
 import io.jsonwebtoken.Claims;
@@ -9,6 +10,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ public class AuthenticationService implements UserDetailsService {
   @Value("${jwt.secret}")
   private String jwtSecret;
 
-  @Value("${jwt.expirationTime}")
+  @Value("${jwt.expiration-time}")
   private String jwtExpirationTime;
 
   @Autowired
@@ -83,6 +85,18 @@ public class AuthenticationService implements UserDetailsService {
   public Long getUserIdFromToken(String token) {
     Claims tokenBody = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     return Long.valueOf(tokenBody.getSubject());
+  }
+
+  public void ensureUserTypes(User.Type... userTypes) {
+    User user = getAuthenticatedUser();
+
+    boolean userHasAnAllowedType = Arrays
+      .stream(userTypes)
+      .anyMatch(type -> type == user.getType());
+
+    if (!userHasAnAllowedType) {
+      throw new ForbiddenUserTypeException(user.getType());
+    }
   }
 
   public User getAuthenticatedUser() {

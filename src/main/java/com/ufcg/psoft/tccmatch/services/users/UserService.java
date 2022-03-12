@@ -1,6 +1,7 @@
 package com.ufcg.psoft.tccmatch.services.users;
 
-import com.ufcg.psoft.tccmatch.dto.users.CreateUserRequestDTO;
+import com.ufcg.psoft.tccmatch.dto.users.CreateCoordinatorDTO;
+import com.ufcg.psoft.tccmatch.models.users.Coordinator;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
@@ -17,13 +18,15 @@ public class UserService {
   @Autowired
   private AuthenticationService authenticationService;
 
-  public User createUser(CreateUserRequestDTO createUserDTO) {
-    String email = createUserDTO.getEmail();
-    String encodedPassword = authenticationService.encodePassword(createUserDTO.getPassword());
+  public Coordinator createCoordinator(CreateCoordinatorDTO createCoordinatorDTO) {
+    String email = createCoordinatorDTO.getEmail();
+    String encodedPassword = authenticationService.encodePassword(
+      createCoordinatorDTO.getPassword()
+    );
 
-    User user = new User(email, encodedPassword);
-    userRepository.save(user);
-    return user;
+    Coordinator coordinator = new Coordinator(email, encodedPassword);
+    userRepository.save(coordinator);
+    return coordinator;
   }
 
   public Optional<User> findUserById(Long id) {

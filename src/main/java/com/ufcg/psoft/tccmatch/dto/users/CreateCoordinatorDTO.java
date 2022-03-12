@@ -1,11 +1,11 @@
 package com.ufcg.psoft.tccmatch.dto.users;
 
-public class CreateUserRequestDTO {
+public class CreateCoordinatorDTO {
 
   private String email;
   private String password;
 
-  public CreateUserRequestDTO(String email, String password) {
+  public CreateCoordinatorDTO(String email, String password) {
     this.email = email;
     this.password = password;
   }

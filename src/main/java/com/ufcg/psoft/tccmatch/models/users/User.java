@@ -7,15 +7,28 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-public class User implements UserDetails {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class User implements UserDetails {
+
+  public enum Type {
+    STUDENT,
+    PROFESSOR,
+    COORDINATOR,
+  }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Transient
+  private Type type;
 
   @Column(unique = true)
   private String email;
@@ -24,13 +37,18 @@ public class User implements UserDetails {
 
   protected User() {}
 
-  public User(String email, String encodedPassword) {
+  protected User(Type type, String email, String encodedPassword) {
+    this.type = type;
     this.email = email;
     this.encodedPassword = encodedPassword;
   }
 
   public Long getId() {
     return id;
+  }
+
+  public Type getType() {
+    return type;
   }
 
   public String getEmail() {
