@@ -1,4 +1,4 @@
-package com.ufcg.psoft.tccmatch.controllers.users;
+package com.ufcg.psoft.tccmatch.controllers.users.professors;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +25,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class ProfessorsControllerTests extends IntegrationTests {
+class ProfessorCreationTests extends IntegrationTests {
 
   private String email = "professor@email.com";
   private String rawPassword = "12345678";

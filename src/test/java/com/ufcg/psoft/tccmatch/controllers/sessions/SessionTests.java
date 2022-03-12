@@ -16,7 +16,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class SessionsControllerTests extends IntegrationTests {
+class SessionTests extends IntegrationTests {
 
   private String userEmail = "user@email.com";
   private String userRawPassword = "12345678";
