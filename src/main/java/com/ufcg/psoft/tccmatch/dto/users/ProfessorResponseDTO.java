@@ -3,7 +3,7 @@ package com.ufcg.psoft.tccmatch.dto.users;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import java.util.List;
 
-public class CreateProfessorResponseDTO {
+public class ProfessorResponseDTO {
 
   private Long id;
   private String email;
@@ -11,7 +11,7 @@ public class CreateProfessorResponseDTO {
   private List<String> laboratories;
   private int guidanceQuota;
 
-  public CreateProfessorResponseDTO(Professor professor) {
+  public ProfessorResponseDTO(Professor professor) {
     this.id = professor.getId();
     this.email = professor.getEmail();
     this.name = professor.getName();

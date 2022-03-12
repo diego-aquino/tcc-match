@@ -1,7 +1,7 @@
 package com.ufcg.psoft.tccmatch.controllers.users;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
-import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorResponseDTO;
+import com.ufcg.psoft.tccmatch.dto.users.ProfessorResponseDTO;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
@@ -25,12 +25,12 @@ public class ProfessorsController {
   private ProfessorService professorService;
 
   @PostMapping
-  public ResponseEntity<CreateProfessorResponseDTO> createProfessor(
+  public ResponseEntity<ProfessorResponseDTO> createProfessor(
     @RequestBody CreateProfessorDTO createProfessorDTO
   ) {
     authenticationService.ensureUserTypes(User.Type.COORDINATOR);
 
     Professor professor = professorService.createProfessor(createProfessorDTO);
-    return new ResponseEntity<>(new CreateProfessorResponseDTO(professor), HttpStatus.CREATED);
+    return new ResponseEntity<>(new ProfessorResponseDTO(professor), HttpStatus.CREATED);
   }
 }

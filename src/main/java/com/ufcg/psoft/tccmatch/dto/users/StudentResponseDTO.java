@@ -2,7 +2,7 @@ package com.ufcg.psoft.tccmatch.dto.users;
 
 import com.ufcg.psoft.tccmatch.models.users.Student;
 
-public class CreateStudentResponseDTO {
+public class StudentResponseDTO {
 
   private Long id;
   private String email;
@@ -10,7 +10,7 @@ public class CreateStudentResponseDTO {
   private String registryNumber;
   private String completionPeriod;
 
-  public CreateStudentResponseDTO(Student student) {
+  public StudentResponseDTO(Student student) {
     this.id = student.getId();
     this.email = student.getEmail();
     this.name = student.getName();
