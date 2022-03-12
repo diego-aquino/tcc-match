@@ -1,4 +1,4 @@
-package com.ufcg.psoft.tccmatch.controllers;
+package com.ufcg.psoft.tccmatch.controllers.users;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;

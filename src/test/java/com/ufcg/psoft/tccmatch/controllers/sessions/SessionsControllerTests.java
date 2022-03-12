@@ -1,4 +1,4 @@
-package com.ufcg.psoft.tccmatch.controllers;
+package com.ufcg.psoft.tccmatch.controllers.sessions;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
