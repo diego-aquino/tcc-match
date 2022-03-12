@@ -9,8 +9,6 @@ public class Professor extends User {
 
   private static final int DEFAULT_GUIDANCE_QUOTA = 0;
 
-  private String name;
-
   @ElementCollection
   private Set<String> laboratories;
 
@@ -31,14 +29,9 @@ public class Professor extends User {
     Set<String> laboratories,
     int guidanceQuota
   ) {
-    super(Type.STUDENT, email, encodedPassword);
-    this.name = name;
+    super(Type.STUDENT, email, encodedPassword, name);
     this.laboratories = laboratories;
     this.guidanceQuota = guidanceQuota;
-  }
-
-  public String getName() {
-    return name;
   }
 
   public Set<String> getLaboratories() {

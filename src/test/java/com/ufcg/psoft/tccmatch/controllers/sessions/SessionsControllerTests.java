@@ -20,13 +20,16 @@ class SessionsControllerTests extends IntegrationTests {
 
   private String userEmail = "user@email.com";
   private String userRawPassword = "12345678";
+  private String userName = "User";
 
   @Autowired
   private CoordinatorService coordinatorService;
 
   @Test
   void validLogin() throws Exception {
-    coordinatorService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
+    coordinatorService.createCoordinator(
+      new CreateCoordinatorDTO(userEmail, userRawPassword, userName)
+    );
 
     LoginDTO loginDTO = new LoginDTO(userEmail, userRawPassword);
 
@@ -37,7 +40,9 @@ class SessionsControllerTests extends IntegrationTests {
 
   @Test
   void errorOnLoginWithInvalidCredentials() throws Exception {
-    coordinatorService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
+    coordinatorService.createCoordinator(
+      new CreateCoordinatorDTO(userEmail, userRawPassword, userName)
+    );
 
     String anotherEmail = "anotheruser@email.com";
     LoginDTO loginDTOWithAnotherEmail = new LoginDTO(anotherEmail, userRawPassword);

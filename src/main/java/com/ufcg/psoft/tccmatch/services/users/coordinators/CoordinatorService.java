@@ -27,12 +27,13 @@ public class CoordinatorService {
   public Coordinator createCoordinator(CreateCoordinatorDTO createCoordinatorDTO) {
     String email = userValidator.validateEmail(createCoordinatorDTO.getEmail());
     String rawPassword = userValidator.validatePassword((createCoordinatorDTO.getPassword()));
+    String name = userValidator.validateName((createCoordinatorDTO.getName()));
 
     userService.ensureEmailIsNotInUse(email);
 
     String encodedPassword = authenticationService.encodePassword(rawPassword);
 
-    Coordinator coordinator = new Coordinator(email, encodedPassword);
+    Coordinator coordinator = new Coordinator(email, encodedPassword, name);
     userRepository.save(coordinator);
 
     return coordinator;
