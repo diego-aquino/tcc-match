@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 public class ProfessorService {
 
   @Autowired
-  private UserService userService;
+  private UserService<Professor> userService;
 
   @Autowired
-  private UserRepository userRepository;
+  private UserRepository<Professor> userRepository;
 
   @Autowired
   private AuthenticationService authenticationService;

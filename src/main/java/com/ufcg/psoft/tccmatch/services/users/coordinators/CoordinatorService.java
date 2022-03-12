@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 public class CoordinatorService {
 
   @Autowired
-  private UserService userService;
+  private UserService<Coordinator> userService;
 
   @Autowired
-  private UserRepository userRepository;
+  private UserRepository<Coordinator> userRepository;
 
   @Autowired
   private AuthenticationService authenticationService;

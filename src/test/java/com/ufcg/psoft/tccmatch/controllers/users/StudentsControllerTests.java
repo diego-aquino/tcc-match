@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
+import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
@@ -32,7 +33,7 @@ class StudentsControllerTests extends IntegrationTests {
   private String coordinatorToken;
 
   @Autowired
-  private UserService userService;
+  private UserService<Student> userService;
 
   @Autowired
   private StudentService studentService;
@@ -60,12 +61,15 @@ class StudentsControllerTests extends IntegrationTests {
       .andExpect(jsonPath("$.registryNumber", is(registryNumber)))
       .andExpect(jsonPath("$.completionPeriod", is(completionPeriod)));
 
-    Optional<User> optionalStudentCreated = userService.findUserByEmail(email);
+    Optional<Student> optionalStudentCreated = userService.findUserByEmail(email);
     assertTrue(optionalStudentCreated.isPresent());
 
-    User studentCreated = optionalStudentCreated.get();
-    assertEquals(email, studentCreated.getEmail());
+    Student studentCreated = optionalStudentCreated.get();
     assertEquals(User.Type.STUDENT, studentCreated.getType());
+    assertEquals(email, studentCreated.getEmail());
+    assertEquals(name, studentCreated.getName());
+    assertEquals(registryNumber, studentCreated.getRegistryNumber());
+    assertEquals(completionPeriod, studentCreated.getCompletionPeriod());
   }
 
   @Test

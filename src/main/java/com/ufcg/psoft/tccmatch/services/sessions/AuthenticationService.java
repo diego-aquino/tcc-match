@@ -41,7 +41,7 @@ public class AuthenticationService implements UserDetailsService {
   private AuthenticationManager authenticationManager;
 
   @Autowired
-  private UserService userService;
+  private UserService<User> userService;
 
   private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 

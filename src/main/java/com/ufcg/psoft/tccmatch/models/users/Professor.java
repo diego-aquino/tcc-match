@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 @Entity
 public class Professor extends User {
 
-  private static final int DEFAULT_GUIDANCE_QUOTA = 0;
+  public static final int DEFAULT_GUIDANCE_QUOTA = 0;
 
   @ElementCollection
   private Set<String> laboratories;

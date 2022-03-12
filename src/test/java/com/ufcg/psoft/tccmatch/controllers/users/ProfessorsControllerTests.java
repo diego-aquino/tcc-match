@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
@@ -34,7 +35,7 @@ class ProfessorsControllerTests extends IntegrationTests {
   private String coordinatorToken;
 
   @Autowired
-  private UserService userService;
+  private UserService<Professor> userService;
 
   @Autowired
   private ProfessorService professorService;
@@ -61,12 +62,14 @@ class ProfessorsControllerTests extends IntegrationTests {
       .andExpect(jsonPath("$.laboratories", is(List.copyOf(laboratories))))
       .andExpect(jsonPath("$.guidanceQuota", is(0)));
 
-    Optional<User> optionalProfessorCreated = userService.findUserByEmail(email);
+    Optional<Professor> optionalProfessorCreated = userService.findUserByEmail(email);
     assertTrue(optionalProfessorCreated.isPresent());
 
-    User professorCreated = optionalProfessorCreated.get();
-    assertEquals(email, professorCreated.getEmail());
+    Professor professorCreated = optionalProfessorCreated.get();
     assertEquals(User.Type.PROFESSOR, professorCreated.getType());
+    assertEquals(email, professorCreated.getEmail());
+    assertEquals(name, professorCreated.getName());
+    assertEquals(Professor.DEFAULT_GUIDANCE_QUOTA, professorCreated.getGuidanceQuota());
   }
 
   @Test
