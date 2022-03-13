@@ -13,6 +13,9 @@ public class UserService<GenericUser extends User> {
   @Autowired
   private UserRepository<GenericUser> userRepository;
 
+  @Autowired
+  private UserValidator userValidator;
+
   public void ensureEmailIsNotInUse(String email) {
     ensureEmailIsNotInUse(email, null);
   }
@@ -27,6 +30,21 @@ public class UserService<GenericUser extends User> {
     if (!existingUserId.equals(ignoreUserId)) {
       throw new EmailAlreadyInUseException();
     }
+  }
+
+  public void updateEmailIfProvided(Optional<String> optionalEmail, User user) {
+    if (optionalEmail.isEmpty()) return;
+
+    String newEmail = userValidator.validateEmail(optionalEmail.get());
+    ensureEmailIsNotInUse(newEmail, user.getId());
+    user.setEmail(newEmail);
+  }
+
+  public void updateNameIfProvided(Optional<String> optionalName, User user) {
+    if (optionalName.isEmpty()) return;
+
+    String newName = userValidator.validateName(optionalName.get());
+    user.setName(newName);
   }
 
   public Optional<GenericUser> findUserById(Long id) {

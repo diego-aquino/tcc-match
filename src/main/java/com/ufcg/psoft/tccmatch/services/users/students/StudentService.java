@@ -56,27 +56,12 @@ public class StudentService {
     }
 
     Student student = optionalStudent.get();
-    updateEmailIfProvided(updateStudentDTO.getEmail(), student);
-    updateNameIfProvided(updateStudentDTO.getName(), student);
+    userService.updateEmailIfProvided(updateStudentDTO.getEmail(), student);
+    userService.updateNameIfProvided(updateStudentDTO.getName(), student);
     updateCompletionPeriodIfProvided(updateStudentDTO.getCompletionPeriod(), student);
     userRepository.save(student);
 
     return student;
-  }
-
-  private void updateEmailIfProvided(Optional<String> optionalEmail, Student student) {
-    if (optionalEmail.isEmpty()) return;
-
-    String newEmail = studentValidator.validateEmail(optionalEmail.get());
-    userService.ensureEmailIsNotInUse(newEmail, student.getId());
-    student.setEmail(newEmail);
-  }
-
-  private void updateNameIfProvided(Optional<String> optionalName, Student student) {
-    if (optionalName.isEmpty()) return;
-
-    String newName = studentValidator.validateName(optionalName.get());
-    student.setName(newName);
   }
 
   private void updateCompletionPeriodIfProvided(
