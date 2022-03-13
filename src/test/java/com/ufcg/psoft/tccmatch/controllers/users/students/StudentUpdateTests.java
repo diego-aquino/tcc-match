@@ -101,6 +101,27 @@ class StudentUpdateTests extends StudentTests {
   }
 
   @Test
+  void validUpdateByCoordinator() throws Exception {
+    String newEmail = "newstudent@email.com";
+
+    UpdateStudentDTO updateStudentDTO = new UpdateStudentDTO(
+      Optional.of(newEmail),
+      Optional.empty(),
+      Optional.empty()
+    );
+
+    String coordinatorToken = loginProgrammaticallyWithDefaultCoordinator();
+
+    makeUpdateStudentRequest(student.getId(), coordinatorToken, updateStudentDTO)
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.id", is(student.getId().intValue())))
+      .andExpect(jsonPath("$.email", is(newEmail)))
+      .andExpect(jsonPath("$.name", is(student.getName())))
+      .andExpect(jsonPath("$.registryNumber", is(student.getRegistryNumber())))
+      .andExpect(jsonPath("$.completionPeriod", is(student.getCompletionPeriod())));
+  }
+
+  @Test
   void errorOnEmailAlreadyInUse() throws Exception {
     String existingStudentEmail = "existingstudent@email.com";
 

@@ -92,10 +92,12 @@ public class StudentService {
   }
 
   public boolean hasPermissionToUpdateStudent(User authenticatedUser, Long studentId) {
-    boolean hasPermissionToUpdateStudent =
-      authenticatedUser != null &&
+    if (authenticatedUser == null) return false;
+    if (authenticatedUser.getType() == User.Type.COORDINATOR) return true;
+
+    return (
       authenticatedUser.getType() == User.Type.STUDENT &&
-      authenticatedUser.getId().equals(studentId);
-    return hasPermissionToUpdateStudent;
+      authenticatedUser.getId().equals(studentId)
+    );
   }
 }
