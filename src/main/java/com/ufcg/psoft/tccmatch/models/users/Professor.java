@@ -29,7 +29,7 @@ public class Professor extends User {
     Set<String> laboratories,
     int guidanceQuota
   ) {
-    super(Type.STUDENT, email, encodedPassword, name);
+    super(Type.PROFESSOR, email, encodedPassword, name);
     this.laboratories = laboratories;
     this.guidanceQuota = guidanceQuota;
   }
