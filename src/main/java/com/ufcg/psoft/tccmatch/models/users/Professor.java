@@ -38,7 +38,15 @@ public class Professor extends User {
     return laboratories;
   }
 
+  public void setLaboratories(Set<String> laboratories) {
+    this.laboratories = laboratories;
+  }
+
   public int getGuidanceQuota() {
     return guidanceQuota;
+  }
+
+  public void setGuidanceQuota(int guidanceQuota) {
+    this.guidanceQuota = guidanceQuota;
   }
 }
