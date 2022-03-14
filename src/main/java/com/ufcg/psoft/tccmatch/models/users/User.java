@@ -35,16 +35,19 @@ public abstract class User implements UserDetails {
 
   private String encodedPassword;
 
+  private String name;
+
   protected User() {}
 
   protected User(Type type) {
-    this(type, null, null);
+    this(type, null, null, null);
   }
 
-  protected User(Type type, String email, String encodedPassword) {
+  protected User(Type type, String email, String encodedPassword, String name) {
     this.type = type;
     this.email = email;
     this.encodedPassword = encodedPassword;
+    this.name = name;
   }
 
   public Long getId() {
@@ -67,6 +70,10 @@ public abstract class User implements UserDetails {
   @Override
   public String getPassword() {
     return encodedPassword;
+  }
+
+  public String getName() {
+    return name;
   }
 
   public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -9,7 +9,7 @@ public class Coordinator extends User {
     super(Type.COORDINATOR);
   }
 
-  public Coordinator(String email, String encodedPassword) {
-    super(Type.COORDINATOR, email, encodedPassword);
+  public Coordinator(String email, String encodedPassword, String name) {
+    super(Type.COORDINATOR, email, encodedPassword, name);
   }
 }

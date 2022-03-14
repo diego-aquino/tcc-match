@@ -1,4 +1,4 @@
-package com.ufcg.psoft.tccmatch.controllers;
+package com.ufcg.psoft.tccmatch.controllers.sessions;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -16,17 +16,20 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class SessionsControllerTests extends IntegrationTests {
+class SessionTests extends IntegrationTests {
 
   private String userEmail = "user@email.com";
   private String userRawPassword = "12345678";
+  private String userName = "User";
 
   @Autowired
   private CoordinatorService coordinatorService;
 
   @Test
   void validLogin() throws Exception {
-    coordinatorService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
+    coordinatorService.createCoordinator(
+      new CreateCoordinatorDTO(userEmail, userRawPassword, userName)
+    );
 
     LoginDTO loginDTO = new LoginDTO(userEmail, userRawPassword);
 
@@ -37,7 +40,9 @@ class SessionsControllerTests extends IntegrationTests {
 
   @Test
   void errorOnLoginWithInvalidCredentials() throws Exception {
-    coordinatorService.createCoordinator(new CreateCoordinatorDTO(userEmail, userRawPassword));
+    coordinatorService.createCoordinator(
+      new CreateCoordinatorDTO(userEmail, userRawPassword, userName)
+    );
 
     String anotherEmail = "anotheruser@email.com";
     LoginDTO loginDTOWithAnotherEmail = new LoginDTO(anotherEmail, userRawPassword);

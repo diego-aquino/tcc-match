@@ -19,8 +19,11 @@ public class UserInitializer implements ApplicationRunner {
   @Value("${users.default-coordinator.password}")
   private String defaultCoordinatorPassword;
 
+  @Value("${users.default-coordinator.name}")
+  private String defaultCoordinatorName;
+
   @Autowired
-  private UserService userService;
+  private UserService<User> userService;
 
   @Autowired
   private CoordinatorService coordinatorService;
@@ -36,7 +39,11 @@ public class UserInitializer implements ApplicationRunner {
     if (existingCoordinator.isPresent()) return;
 
     coordinatorService.createCoordinator(
-      new CreateCoordinatorDTO(defaultCoordinatorEmail, defaultCoordinatorPassword)
+      new CreateCoordinatorDTO(
+        defaultCoordinatorEmail,
+        defaultCoordinatorPassword,
+        defaultCoordinatorName
+      )
     );
   }
 }

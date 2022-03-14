@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 public class CoordinatorService {
 
   @Autowired
-  private UserService userService;
+  private UserService<Coordinator> userService;
 
   @Autowired
-  private UserRepository userRepository;
+  private UserRepository<Coordinator> userRepository;
 
   @Autowired
   private AuthenticationService authenticationService;
@@ -27,12 +27,13 @@ public class CoordinatorService {
   public Coordinator createCoordinator(CreateCoordinatorDTO createCoordinatorDTO) {
     String email = userValidator.validateEmail(createCoordinatorDTO.getEmail());
     String rawPassword = userValidator.validatePassword((createCoordinatorDTO.getPassword()));
+    String name = userValidator.validateName((createCoordinatorDTO.getName()));
 
     userService.ensureEmailIsNotInUse(email);
 
     String encodedPassword = authenticationService.encodePassword(rawPassword);
 
-    Coordinator coordinator = new Coordinator(email, encodedPassword);
+    Coordinator coordinator = new Coordinator(email, encodedPassword, name);
     userRepository.save(coordinator);
 
     return coordinator;
