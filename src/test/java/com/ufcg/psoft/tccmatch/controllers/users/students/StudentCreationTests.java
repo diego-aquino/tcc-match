@@ -1,4 +1,4 @@
-package com.ufcg.psoft.tccmatch.controllers;
+package com.ufcg.psoft.tccmatch.controllers.users.students;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
+import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
@@ -21,7 +22,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class StudentsControllerTests extends IntegrationTests {
+class StudentCreationTests extends IntegrationTests {
 
   private String email = "student@email.com";
   private String rawPassword = "12345678";
@@ -32,7 +33,7 @@ class StudentsControllerTests extends IntegrationTests {
   private String coordinatorToken;
 
   @Autowired
-  private UserService userService;
+  private UserService<Student> userService;
 
   @Autowired
   private StudentService studentService;
@@ -60,12 +61,15 @@ class StudentsControllerTests extends IntegrationTests {
       .andExpect(jsonPath("$.registryNumber", is(registryNumber)))
       .andExpect(jsonPath("$.completionPeriod", is(completionPeriod)));
 
-    Optional<User> optionalStudentCreated = userService.findUserByEmail(email);
+    Optional<Student> optionalStudentCreated = userService.findUserByEmail(email);
     assertTrue(optionalStudentCreated.isPresent());
 
-    User studentCreated = optionalStudentCreated.get();
-    assertEquals(email, studentCreated.getEmail());
+    Student studentCreated = optionalStudentCreated.get();
     assertEquals(User.Type.STUDENT, studentCreated.getType());
+    assertEquals(email, studentCreated.getEmail());
+    assertEquals(name, studentCreated.getName());
+    assertEquals(registryNumber, studentCreated.getRegistryNumber());
+    assertEquals(completionPeriod, studentCreated.getCompletionPeriod());
   }
 
   @Test

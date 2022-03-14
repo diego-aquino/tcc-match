@@ -8,24 +8,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService<GenericUser extends User> {
 
   @Autowired
-  private UserRepository userRepository;
+  private UserRepository<GenericUser> userRepository;
 
   public void ensureEmailIsNotInUse(String email) {
-    Optional<User> existingStudent = userRepository.findByEmail(email);
+    Optional<GenericUser> existingStudent = userRepository.findByEmail(email);
 
     if (existingStudent.isPresent()) {
       throw new ConflictApiException("Email already in use.");
     }
   }
 
-  public Optional<User> findUserById(Long id) {
+  public Optional<GenericUser> findUserById(Long id) {
     return userRepository.findById(id);
   }
 
-  public Optional<User> findUserByEmail(String email) {
+  public Optional<GenericUser> findUserByEmail(String email) {
     return userRepository.findByEmail(email);
   }
 }
