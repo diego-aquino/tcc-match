@@ -1,4 +1,4 @@
-package com.ufcg.psoft.tccmatch.controller.tccGuidanceRequests;
+package com.ufcg.psoft.tccmatch.controllers.tccGuidanceRequests;
 
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests.CreateTCCGuidanceRequestRequestDTO;
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests.CreateTCCGuidanceRequestResponseDTO;

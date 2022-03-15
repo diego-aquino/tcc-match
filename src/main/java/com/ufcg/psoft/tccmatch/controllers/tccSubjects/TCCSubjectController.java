@@ -1,4 +1,4 @@
-package com.ufcg.psoft.tccmatch.controller.tccSubjects;
+package com.ufcg.psoft.tccmatch.controllers.tccSubjects;
 
 import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectRequestDTO;
 import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectResponseDTO;
