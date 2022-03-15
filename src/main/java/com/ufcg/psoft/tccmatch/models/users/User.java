@@ -62,6 +62,10 @@ public abstract class User implements UserDetails {
     return email;
   }
 
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
   @Override
   public String getUsername() {
     return email;
@@ -74,6 +78,10 @@ public abstract class User implements UserDetails {
 
   public String getName() {
     return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public Collection<? extends GrantedAuthority> getAuthorities() {
