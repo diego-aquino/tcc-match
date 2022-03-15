@@ -2,6 +2,7 @@ package com.ufcg.psoft.tccmatch.services.users;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateCoordinatorDTO;
 import com.ufcg.psoft.tccmatch.models.users.User;
+import com.ufcg.psoft.tccmatch.services.users.coordinators.CoordinatorService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,8 +19,14 @@ public class UserInitializer implements ApplicationRunner {
   @Value("${users.default-coordinator.password}")
   private String defaultCoordinatorPassword;
 
+  @Value("${users.default-coordinator.name}")
+  private String defaultCoordinatorName;
+
   @Autowired
-  private UserService userService;
+  private UserService<User> userService;
+
+  @Autowired
+  private CoordinatorService coordinatorService;
 
   @Override
   public void run(ApplicationArguments arguments) throws Exception {
@@ -31,8 +38,12 @@ public class UserInitializer implements ApplicationRunner {
 
     if (existingCoordinator.isPresent()) return;
 
-    userService.createCoordinator(
-      new CreateCoordinatorDTO(defaultCoordinatorEmail, defaultCoordinatorPassword)
+    coordinatorService.createCoordinator(
+      new CreateCoordinatorDTO(
+        defaultCoordinatorEmail,
+        defaultCoordinatorPassword,
+        defaultCoordinatorName
+      )
     );
   }
 }
