@@ -1,10 +1,7 @@
 package com.ufcg.psoft.tccmatch.controllers.fieldsOfStudy;
 
-// import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
-// import com.ufcg.psoft.tccmatch.dto.users.ProfessorResponseDTO;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.fieldsOfStudyResponse;
-// import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.fieldsOfStudy.FieldsOfStudyService;
