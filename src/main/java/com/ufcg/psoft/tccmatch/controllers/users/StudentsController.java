@@ -11,6 +11,7 @@ import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,5 +56,15 @@ public class StudentsController {
 
     Student updatedStudent = studentService.updateStudent(studentId, updateStudentDTO);
     return new ResponseEntity<>(new StudentResponseDTO(updatedStudent), HttpStatus.OK);
+  }
+
+  @DeleteMapping("{studentId}")
+  public ResponseEntity<StudentResponseDTO> removeStudent(
+    @PathVariable("studentId") Long studentId
+  ) {
+    authenticationService.ensureUserTypes(User.Type.COORDINATOR);
+
+    Student removedStudent = studentService.removeStudent(studentId);
+    return new ResponseEntity<>(new StudentResponseDTO(removedStudent), HttpStatus.OK);
   }
 }
