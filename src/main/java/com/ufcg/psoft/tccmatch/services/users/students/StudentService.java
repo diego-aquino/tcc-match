@@ -1,10 +1,14 @@
 package com.ufcg.psoft.tccmatch.services.users.students;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
+import com.ufcg.psoft.tccmatch.dto.users.UpdateStudentDTO;
+import com.ufcg.psoft.tccmatch.exceptions.users.UserNotFoundException;
 import com.ufcg.psoft.tccmatch.models.users.Student;
+import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +46,43 @@ public class StudentService {
     userRepository.save(student);
 
     return student;
+  }
+
+  public Student updateStudent(Long studentId, UpdateStudentDTO updateStudentDTO) {
+    Optional<Student> optionalStudent = userRepository.findById(studentId);
+
+    if (optionalStudent.isEmpty()) {
+      throw new UserNotFoundException();
+    }
+
+    Student student = optionalStudent.get();
+    userService.updateEmailIfProvided(updateStudentDTO.getEmail(), student);
+    userService.updateNameIfProvided(updateStudentDTO.getName(), student);
+    updateCompletionPeriodIfProvided(updateStudentDTO.getCompletionPeriod(), student);
+    userRepository.save(student);
+
+    return student;
+  }
+
+  private void updateCompletionPeriodIfProvided(
+    Optional<String> optionalCompletionPeriod,
+    Student student
+  ) {
+    if (optionalCompletionPeriod.isEmpty()) return;
+
+    String newCompletionPeriod = studentValidator.validateCompletionPeriod(
+      optionalCompletionPeriod.get()
+    );
+    student.setCompletionPeriod(newCompletionPeriod);
+  }
+
+  public boolean hasPermissionToUpdateStudent(User authenticatedUser, Long studentId) {
+    if (authenticatedUser == null) return false;
+    if (authenticatedUser.getType() == User.Type.COORDINATOR) return true;
+
+    return (
+      authenticatedUser.getType() == User.Type.STUDENT &&
+      authenticatedUser.getId().equals(studentId)
+    );
   }
 }

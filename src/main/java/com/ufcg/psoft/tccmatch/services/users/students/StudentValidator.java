@@ -1,6 +1,7 @@
 package com.ufcg.psoft.tccmatch.services.users.students;
 
-import com.ufcg.psoft.tccmatch.exceptions.api.BadRequestApiException;
+import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidCompletionPeriodException;
+import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidRegistryNumberException;
 import com.ufcg.psoft.tccmatch.services.users.UserValidator;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,12 @@ public class StudentValidator extends UserValidator {
   public String validateRegistryNumber(String registryNumber) {
     boolean isValidRegistryNumber = matchesPattern(registryNumber, REGISTRY_NUMBER_PATTERN);
     if (isValidRegistryNumber) return registryNumber.trim();
-    throw new BadRequestApiException("Invalid registry number.");
+    throw new InvalidRegistryNumberException();
   }
 
   public String validateCompletionPeriod(String completionPeriod) {
     boolean isValidCompletionPeriod = matchesPattern(completionPeriod, COMPLETION_PERIOD_PATTERN);
     if (isValidCompletionPeriod) return completionPeriod.trim();
-    throw new BadRequestApiException("Invalid completion period.");
+    throw new InvalidCompletionPeriodException();
   }
 }

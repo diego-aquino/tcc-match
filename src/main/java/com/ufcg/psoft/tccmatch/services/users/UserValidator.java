@@ -1,6 +1,8 @@
 package com.ufcg.psoft.tccmatch.services.users;
 
-import com.ufcg.psoft.tccmatch.exceptions.api.BadRequestApiException;
+import com.ufcg.psoft.tccmatch.exceptions.users.EmptyUserNameException;
+import com.ufcg.psoft.tccmatch.exceptions.users.InvalidEmailApiException;
+import com.ufcg.psoft.tccmatch.exceptions.users.PasswordTooShortException;
 import com.ufcg.psoft.tccmatch.services.Validator;
 import org.springframework.stereotype.Service;
 
@@ -13,18 +15,18 @@ public class UserValidator extends Validator {
   public String validateEmail(String email) {
     boolean isValidEmail = matchesPattern(email, EMAIL_ADDRESS_PATTERN);
     if (isValidEmail) return email.trim();
-    throw new BadRequestApiException("Invalid email.");
+    throw new InvalidEmailApiException();
   }
 
   public String validatePassword(String password) {
     boolean isValidPassword = password != null && password.trim().length() >= MIN_PASSWORD_LENGTH;
     if (isValidPassword) return password.trim();
-    throw new BadRequestApiException("Password too short.");
+    throw new PasswordTooShortException();
   }
 
   public String validateName(String name) {
     boolean isValidName = name != null && !name.isBlank();
     if (isValidName) return name;
-    throw new BadRequestApiException("User name is empty.");
+    throw new EmptyUserNameException();
   }
 }
