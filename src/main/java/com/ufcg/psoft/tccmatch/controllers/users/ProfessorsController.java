@@ -11,6 +11,7 @@ import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +40,7 @@ public class ProfessorsController {
   }
 
   @PatchMapping("{professorId}")
-  public ResponseEntity<ProfessorResponseDTO> updateStudent(
+  public ResponseEntity<ProfessorResponseDTO> updateProfessor(
     @PathVariable("professorId") Long professorId,
     @RequestBody UpdateProfessorDTO updateProfessorDTO
   ) {
@@ -55,5 +56,15 @@ public class ProfessorsController {
 
     Professor updatedProfessor = professorService.updateProfessor(professorId, updateProfessorDTO);
     return new ResponseEntity<>(new ProfessorResponseDTO(updatedProfessor), HttpStatus.OK);
+  }
+
+  @DeleteMapping("{professorId}")
+  public ResponseEntity<ProfessorResponseDTO> removeProfessor(
+    @PathVariable("professorId") Long professorId
+  ) {
+    authenticationService.ensureUserTypes(User.Type.COORDINATOR);
+
+    Professor removedProfessor = professorService.removeProfessor(professorId);
+    return new ResponseEntity<>(new ProfessorResponseDTO(removedProfessor), HttpStatus.OK);
   }
 }

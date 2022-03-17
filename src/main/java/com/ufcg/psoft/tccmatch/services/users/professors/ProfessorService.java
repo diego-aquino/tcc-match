@@ -85,6 +85,19 @@ public class ProfessorService {
     professor.setGuidanceQuota(newGuidanceQuota);
   }
 
+  public Professor removeProfessor(Long professorId) {
+    Optional<Professor> optionalProfessor = userRepository.findById(professorId);
+
+    if (optionalProfessor.isEmpty()) {
+      throw new UserNotFoundException();
+    }
+
+    Professor professor = optionalProfessor.get();
+    userRepository.delete(professor);
+
+    return professor;
+  }
+
   public boolean hasPermissionToUpdateProfessor(User authenticatedUser, Long professorId) {
     if (authenticatedUser == null) return false;
     if (authenticatedUser.getType() == User.Type.COORDINATOR) return true;

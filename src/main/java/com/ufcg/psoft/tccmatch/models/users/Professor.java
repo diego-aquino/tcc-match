@@ -3,13 +3,14 @@ package com.ufcg.psoft.tccmatch.models.users;
 import java.util.Set;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 
 @Entity
 public class Professor extends User {
 
   public static final int DEFAULT_GUIDANCE_QUOTA = 0;
 
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   private Set<String> laboratories;
 
   private int guidanceQuota;

@@ -63,6 +63,7 @@ class ProfessorCreationTests extends ProfessorTests {
     assertEquals(User.Type.PROFESSOR, professorCreated.getType());
     assertEquals(professorEmail, professorCreated.getEmail());
     assertEquals(professorName, professorCreated.getName());
+    assertEquals(professorLaboratories, professorCreated.getLaboratories());
     assertEquals(Professor.DEFAULT_GUIDANCE_QUOTA, professorCreated.getGuidanceQuota());
   }
 
