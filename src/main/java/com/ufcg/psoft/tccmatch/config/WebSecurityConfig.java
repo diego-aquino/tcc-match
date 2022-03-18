@@ -43,7 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         HttpMethod.POST,
         "/api/users/students",
         "/api/users/professors",
-        "/api/fields-of-study"
+        "/api/fields-of-study",
+        "/api/tcc-guidances"
       )
       .authenticated()
       .antMatchers(HttpMethod.PATCH, "/api/users/students/*", "/api/users/professors/*")
