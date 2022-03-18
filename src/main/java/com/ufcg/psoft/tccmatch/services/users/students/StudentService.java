@@ -70,9 +70,7 @@ public class StudentService {
   ) {
     if (optionalCompletionPeriod.isEmpty()) return;
 
-    String newCompletionPeriod = studentValidator.validateCompletionPeriod(
-      optionalCompletionPeriod.get()
-    );
+    String newCompletionPeriod = studentValidator.validatePeriod(optionalCompletionPeriod.get());
     student.setCompletionPeriod(newCompletionPeriod);
   }
 
