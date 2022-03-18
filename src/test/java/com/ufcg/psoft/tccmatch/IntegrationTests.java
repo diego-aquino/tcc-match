@@ -18,10 +18,10 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 public abstract class IntegrationTests {
 
   @Value("${users.default-coordinator.email}")
-  private String defaultCoordinatorEmail;
+  protected String defaultCoordinatorEmail;
 
   @Value("${users.default-coordinator.password}")
-  private String defaultCoordinatorPassword;
+  protected String defaultCoordinatorPassword;
 
   @Autowired
   protected MockMvc mvc;
