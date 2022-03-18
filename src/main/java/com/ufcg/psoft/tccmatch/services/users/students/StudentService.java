@@ -76,6 +76,19 @@ public class StudentService {
     student.setCompletionPeriod(newCompletionPeriod);
   }
 
+  public Student removeStudent(Long studentId) {
+    Optional<Student> optionalStudent = userRepository.findById(studentId);
+
+    if (optionalStudent.isEmpty()) {
+      throw new UserNotFoundException();
+    }
+
+    Student student = optionalStudent.get();
+    userRepository.delete(student);
+
+    return student;
+  }
+
   public boolean hasPermissionToUpdateStudent(User authenticatedUser, Long studentId) {
     if (authenticatedUser == null) return false;
     if (authenticatedUser.getType() == User.Type.COORDINATOR) return true;
