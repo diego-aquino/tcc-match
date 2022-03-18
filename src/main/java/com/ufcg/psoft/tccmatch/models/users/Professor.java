@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 @Entity
 public class Professor extends User {
 
+  private static final Type TYPE = Type.PROFESSOR;
   public static final int DEFAULT_GUIDANCE_QUOTA = 0;
 
   @ElementCollection(fetch = FetchType.EAGER)
@@ -16,7 +17,7 @@ public class Professor extends User {
   private int guidanceQuota;
 
   protected Professor() {
-    super(Type.PROFESSOR);
+    super(TYPE);
   }
 
   public Professor(String email, String encodedPassword, String name, Set<String> laboratories) {
@@ -30,7 +31,7 @@ public class Professor extends User {
     Set<String> laboratories,
     int guidanceQuota
   ) {
-    super(Type.PROFESSOR, email, encodedPassword, name);
+    super(TYPE, email, encodedPassword, name);
     this.laboratories = laboratories;
     this.guidanceQuota = guidanceQuota;
   }
