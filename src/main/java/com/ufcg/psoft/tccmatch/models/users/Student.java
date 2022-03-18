@@ -5,11 +5,13 @@ import javax.persistence.Entity;
 @Entity
 public class Student extends User {
 
+  private static final Type TYPE = Type.STUDENT;
+
   private String registryNumber;
   private String completionPeriod;
 
   protected Student() {
-    super(Type.STUDENT);
+    super(TYPE);
   }
 
   public Student(
@@ -19,7 +21,7 @@ public class Student extends User {
     String registryNumber,
     String completionPeriod
   ) {
-    super(Type.STUDENT, email, encodedPassword, name);
+    super(TYPE, email, encodedPassword, name);
     this.registryNumber = registryNumber;
     this.completionPeriod = completionPeriod;
   }
