@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
-import com.ufcg.psoft.tccmatch.exceptions.users.UserNotFoundException;
+import com.ufcg.psoft.tccmatch.exceptions.users.ProfessorNotFoundException;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
@@ -63,7 +63,7 @@ class StudentRemovalTests extends StudentTests {
 
     makeRemoveStudentRequest(nonExistentStudentId, coordinatorToken)
       .andExpect(status().isNotFound())
-      .andExpect(jsonPath("$.message", is(UserNotFoundException.message())));
+      .andExpect(jsonPath("$.message", is(ProfessorNotFoundException.message())));
   }
 
   private ResultActions makeRemoveStudentRequest(Long studentId, String token) throws Exception {

@@ -2,7 +2,7 @@ package com.ufcg.psoft.tccmatch.services.users.professors;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.dto.users.UpdateProfessorDTO;
-import com.ufcg.psoft.tccmatch.exceptions.users.UserNotFoundException;
+import com.ufcg.psoft.tccmatch.exceptions.users.ProfessorNotFoundException;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
@@ -50,7 +50,7 @@ public class ProfessorService {
     Optional<Professor> optionalProfessor = userRepository.findById(professorId);
 
     if (optionalProfessor.isEmpty()) {
-      throw new UserNotFoundException();
+      throw new ProfessorNotFoundException();
     }
 
     Professor professor = optionalProfessor.get();
@@ -89,7 +89,7 @@ public class ProfessorService {
     Optional<Professor> optionalProfessor = userRepository.findById(professorId);
 
     if (optionalProfessor.isEmpty()) {
-      throw new UserNotFoundException();
+      throw new ProfessorNotFoundException();
     }
 
     Professor professor = optionalProfessor.get();
@@ -106,5 +106,11 @@ public class ProfessorService {
       authenticatedUser.getType() == User.Type.PROFESSOR &&
       authenticatedUser.getId().equals(professorId)
     );
+  }
+
+  public Professor findByIdOrThrow(Long id) {
+    Optional<Professor> optionalUser = userService.findUserById(id);
+    if (optionalUser.isEmpty()) throw new ProfessorNotFoundException();
+    return optionalUser.get();
   }
 }
