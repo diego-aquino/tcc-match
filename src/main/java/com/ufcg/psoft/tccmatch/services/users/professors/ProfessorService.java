@@ -1,6 +1,7 @@
 package com.ufcg.psoft.tccmatch.services.users.professors;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
+import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
@@ -40,5 +41,10 @@ public class ProfessorService {
     userRepository.save(professor);
 
     return professor;
+  }
+
+  public void selectFieldOfStudy(Professor user, FieldOfStudy fieldOfStudy) {
+    user.addField(fieldOfStudy);
+    userRepository.save(user);
   }
 }

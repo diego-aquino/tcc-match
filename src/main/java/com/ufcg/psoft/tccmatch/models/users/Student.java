@@ -1,10 +1,16 @@
 package com.ufcg.psoft.tccmatch.models.users;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+
+import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 
 @Entity
 public class Student extends User {
 
+  private String name;
   private String registryNumber;
   private String completionPeriod;
 
@@ -20,8 +26,13 @@ public class Student extends User {
     String completionPeriod
   ) {
     super(Type.STUDENT, email, encodedPassword, name);
+    this.name = name;
     this.registryNumber = registryNumber;
     this.completionPeriod = completionPeriod;
+  }
+
+  public String getName() {
+    return name;
   }
 
   public String getRegistryNumber() {

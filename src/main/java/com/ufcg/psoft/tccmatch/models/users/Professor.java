@@ -4,6 +4,8 @@ import java.util.Set;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 
+
+
 @Entity
 public class Professor extends User {
 
@@ -11,7 +13,7 @@ public class Professor extends User {
 
   @ElementCollection
   private Set<String> laboratories;
-
+  
   private int guidanceQuota;
 
   protected Professor() {

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
+import com.ufcg.psoft.tccmatch.repositories.fieldsOfStudy.FieldsOfStudyRepository;
 import com.ufcg.psoft.tccmatch.services.fieldsOfStudy.FieldsOfStudyService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,12 +20,14 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class FieldsOfStudyControllerTest extends IntegrationTests {
+class FieldsOfStudyCreationTest extends IntegrationTests {
     private String name = "field";
     private String coordinatorToken;
 
     @Autowired
     private FieldsOfStudyService fieldsOfStudyService;
+    @Autowired
+    private FieldsOfStudyRepository fieldsOfStudyRepository;
 
     @BeforeEach
     void beforeEach() {
