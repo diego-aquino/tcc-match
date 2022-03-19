@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
 import com.ufcg.psoft.tccmatch.models.users.User;
 
 @Entity
@@ -28,15 +29,19 @@ public class TCCGuidanceProblem {
   private String description;
 
   @ManyToOne
+  private TCCGuidance tccGuidance;
+
+  @ManyToOne
   private User createdBy;
 
   public TCCGuidanceProblem() {
   };
 
-  public TCCGuidanceProblem(Category category, String description, User createdBy) {
+  public TCCGuidanceProblem(Category category, String description, User createdBy, TCCGuidance tccGuidance) {
     this.category = category;
     this.description = description;
     this.createdBy = createdBy;
+    this.tccGuidance = tccGuidance;
   }
 
   public Long getId() {
@@ -53,6 +58,10 @@ public class TCCGuidanceProblem {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public TCCGuidance getTCCGuidance() {
+    return tccGuidance;
   }
 
   public User getCreatedBy() {

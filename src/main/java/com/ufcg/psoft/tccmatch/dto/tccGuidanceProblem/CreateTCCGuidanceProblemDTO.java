@@ -3,12 +3,12 @@ package com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem;
 public class CreateTCCGuidanceProblemDTO {
   private String category;
   private String description;
-  private Long userWhoCreatedId;
+  private Long tccGuidanceId;
 
-  public CreateTCCGuidanceProblemDTO(String category, String description, Long userWhoCreatedId) {
+  public CreateTCCGuidanceProblemDTO(String category, String description, Long tccGuidanceId) {
     this.category = category;
     this.description = description;
-    this.userWhoCreatedId = userWhoCreatedId;
+    this.tccGuidanceId = tccGuidanceId;
   }
 
   public String getCategory() {
@@ -19,7 +19,7 @@ public class CreateTCCGuidanceProblemDTO {
     return description;
   }
 
-  public Long getUserWhoCreatedId() {
-    return userWhoCreatedId;
+  public Long getTCCGuidanceId() {
+    return tccGuidanceId;
   }
 }
