@@ -13,4 +13,10 @@ public class ProfessorValidator extends UserValidator {
     if (isValid) return laboratories;
     throw new LaboratoriesNotProvidedException();
   }
+
+  public int validateGuidanceQuota(Integer guidanceQuota) {
+    boolean isValid = guidanceQuota != null && guidanceQuota >= 0;
+    if (isValid) return guidanceQuota;
+    throw new InvalidGuidanceQuotaException();
+  }
 }

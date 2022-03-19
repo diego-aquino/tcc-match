@@ -5,11 +5,13 @@ import javax.persistence.Entity;
 @Entity
 public class Coordinator extends User {
 
+  private static final Type TYPE = Type.COORDINATOR;
+
   protected Coordinator() {
-    super(Type.COORDINATOR);
+    super(TYPE);
   }
 
   public Coordinator(String email, String encodedPassword, String name) {
-    super(Type.COORDINATOR, email, encodedPassword, name);
+    super(TYPE, email, encodedPassword, name);
   }
 }

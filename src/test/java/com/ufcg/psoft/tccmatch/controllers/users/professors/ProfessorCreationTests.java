@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.exceptions.users.EmailAlreadyInUseException;
 import com.ufcg.psoft.tccmatch.exceptions.users.EmptyUserNameException;
@@ -17,25 +16,15 @@ import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class ProfessorCreationTests extends IntegrationTests {
-
-  private String email = "professor@email.com";
-  private String rawPassword = "12345678";
-  private String name = "Professor";
-  private Set<String> laboratories = new HashSet<>();
+class ProfessorCreationTests extends ProfessorTests {
 
   private String coordinatorToken;
 
@@ -53,37 +42,38 @@ class ProfessorCreationTests extends IntegrationTests {
   @Test
   void validProfessorCreation() throws Exception {
     CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(
-      email,
-      rawPassword,
-      name,
-      laboratories
+      professorEmail,
+      professorRawPassword,
+      professorName,
+      professorLaboratories
     );
 
     makeCreateUserRequest(createProfessorDTO)
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.id", is(any(Integer.class))))
-      .andExpect(jsonPath("$.email", is(email)))
-      .andExpect(jsonPath("$.name", is(name)))
-      .andExpect(jsonPath("$.laboratories", is(List.copyOf(laboratories))))
-      .andExpect(jsonPath("$.guidanceQuota", is(0)));
+      .andExpect(jsonPath("$.email", is(professorEmail)))
+      .andExpect(jsonPath("$.name", is(professorName)))
+      .andExpect(jsonPath("$.laboratories", is(List.copyOf(professorLaboratories))))
+      .andExpect(jsonPath("$.guidanceQuota", is(Professor.DEFAULT_GUIDANCE_QUOTA)));
 
-    Optional<Professor> optionalProfessorCreated = userService.findUserByEmail(email);
+    Optional<Professor> optionalProfessorCreated = userService.findUserByEmail(professorEmail);
     assertTrue(optionalProfessorCreated.isPresent());
 
     Professor professorCreated = optionalProfessorCreated.get();
     assertEquals(User.Type.PROFESSOR, professorCreated.getType());
-    assertEquals(email, professorCreated.getEmail());
-    assertEquals(name, professorCreated.getName());
+    assertEquals(professorEmail, professorCreated.getEmail());
+    assertEquals(professorName, professorCreated.getName());
+    assertEquals(professorLaboratories, professorCreated.getLaboratories());
     assertEquals(Professor.DEFAULT_GUIDANCE_QUOTA, professorCreated.getGuidanceQuota());
   }
 
   @Test
   void errorOnEmailAlreadyInUse() throws Exception {
     CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(
-      email,
-      rawPassword,
-      name,
-      laboratories
+      professorEmail,
+      professorRawPassword,
+      professorName,
+      professorLaboratories
     );
 
     professorService.createProfessor(createProfessorDTO);
@@ -99,9 +89,9 @@ class ProfessorCreationTests extends IntegrationTests {
 
     CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(
       invalidEmail,
-      rawPassword,
-      name,
-      laboratories
+      professorRawPassword,
+      professorName,
+      professorLaboratories
     );
 
     makeCreateUserRequest(createProfessorDTO)
@@ -114,10 +104,10 @@ class ProfessorCreationTests extends IntegrationTests {
     String tooShortRawPassword = "1234567";
 
     CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(
-      email,
+      professorEmail,
       tooShortRawPassword,
-      name,
-      laboratories
+      professorName,
+      professorLaboratories
     );
 
     makeCreateUserRequest(createProfessorDTO)
@@ -130,10 +120,10 @@ class ProfessorCreationTests extends IntegrationTests {
     String emptyName = "";
 
     CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(
-      email,
-      rawPassword,
+      professorEmail,
+      professorRawPassword,
       emptyName,
-      laboratories
+      professorLaboratories
     );
 
     makeCreateUserRequest(createProfessorDTO)
@@ -143,7 +133,12 @@ class ProfessorCreationTests extends IntegrationTests {
 
   @Test
   void errorOnLaboratoriesNotProvided() throws Exception {
-    CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(email, rawPassword, name, null);
+    CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(
+      professorEmail,
+      professorRawPassword,
+      professorName,
+      null
+    );
 
     makeCreateUserRequest(createProfessorDTO)
       .andExpect(status().isBadRequest())
