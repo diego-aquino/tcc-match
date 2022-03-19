@@ -57,14 +57,8 @@ public class UserService<GenericUser extends User> {
   public Optional<GenericUser> findUserByEmail(String email) {
     return userRepository.findByEmail(email);
   }
-//  public void selectFieldOfStudy(Student user, FieldOfStudy fieldOfStudy) {
-//     // User user = this.findUserById(userId).get();
-//     user.addField(fieldOfStudy);
-//     userRepository.save((GenericUser)user);
-//   } 
-//   public void selectFieldOfStudy(Professor user, FieldOfStudy fieldOfStudy) {
-//     // User user = this.findUserById(userId).get();
-//     user.addField(fieldOfStudy);
-//     userRepository.save((GenericUser)user);
-//   } 
+  public void selectFieldOfStudy(User user, FieldOfStudy fieldOfStudy) {
+    user.addField(fieldOfStudy);
+    userRepository.save((GenericUser)user);
+  }
 }

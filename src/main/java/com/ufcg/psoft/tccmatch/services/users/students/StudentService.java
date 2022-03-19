@@ -86,9 +86,4 @@ public class StudentService {
       authenticatedUser.getId().equals(studentId)
     );
   }
-  public void selectFieldOfStudy(Student student, FieldOfStudy fieldOfStudy) {
-    student.addField(fieldOfStudy);
-    userRepository.save(student);
-  }
-
 }

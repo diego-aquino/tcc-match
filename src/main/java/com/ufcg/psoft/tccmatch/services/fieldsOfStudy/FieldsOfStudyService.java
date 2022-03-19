@@ -40,9 +40,6 @@ public class FieldsOfStudyService{
         return fieldsOfStudyRepository.findById(idField);
     }
     public void selectFieldOfStudy(User user, FieldOfStudy fieldOfStudy) {
-        if(user.getType() == User.Type.PROFESSOR)
-            professorService.selectFieldOfStudy((Professor)user, fieldOfStudy);
-        else if(user.getType() == User.Type.STUDENT)
-            studentService.selectFieldOfStudy((Student)user, fieldOfStudy);
+        userService.selectFieldOfStudy(user, fieldOfStudy);
     }
 }

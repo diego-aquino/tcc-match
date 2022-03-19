@@ -29,10 +29,7 @@ public class FieldsOfStudyController {
 
     @Autowired 
     private FieldsOfStudyService fieldsOfStudyService;
-
-    @Autowired
-    private UserService<Student> studentService;
-
+ 
     @PostMapping
     public ResponseEntity<fieldsOfStudyResponse> createFieldsOfStudy(
         @RequestBody String name
@@ -56,7 +53,6 @@ public class FieldsOfStudyController {
         else{
             FieldOfStudy fieldOfStudy = field.get();
             fieldsOfStudyService.selectFieldOfStudy(authenticatedUser, fieldOfStudy);
-            
             return new ResponseEntity<>(new fieldsOfStudyResponse(fieldOfStudy), HttpStatus.OK);
         }
     }

@@ -66,7 +66,9 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
     void beforeEach() {
       field = fieldsOfStudyService.createFieldsOfStudy(nameField);
       idField = field.getId();
+    }
 
+    void createStudentDTO(){
       CreateStudentDTO createStudentDTO = new CreateStudentDTO(
         studentEmail,
         rawPassword,
@@ -77,7 +79,9 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
   
       student = studentService.createStudent(createStudentDTO);
       studentToken = loginProgrammatically(studentEmail, rawPassword);
-
+    }
+    
+    void createProfessorDTO(){
       CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(
         professorEmail,
         rawPassword,
@@ -86,15 +90,17 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
       );
       professor = professorService.createProfessor(createProfessorDTO);
       professorToken = loginProgrammatically(professorEmail,rawPassword);
-
     }
+
     @Test
-    void invalidSelectField() throws Exception {
+    void invalidSelectFieldId() throws Exception {
+      createStudentDTO();
         selectFieldOfStudyRequest(123L, studentToken)
             .andExpect(status().isBadRequest());
     }
     @Test
     void validSelectFieldStudent() throws Exception {
+      createStudentDTO();
         selectFieldOfStudyRequest(idField, studentToken)
             .andExpect(status().isOk());
          
@@ -108,6 +114,7 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
     }
     @Test
     void validSelectFieldProfessor() throws Exception {
+      createProfessorDTO();
         selectFieldOfStudyRequest(idField, professorToken)
             .andExpect(status().isOk());
          

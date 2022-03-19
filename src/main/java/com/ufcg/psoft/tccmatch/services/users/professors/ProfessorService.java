@@ -41,10 +41,5 @@ public class ProfessorService {
     userRepository.save(professor);
 
     return professor;
-  }
-
-  public void selectFieldOfStudy(Professor user, FieldOfStudy fieldOfStudy) {
-    user.addField(fieldOfStudy);
-    userRepository.save(user);
-  }
+  } 
 }
