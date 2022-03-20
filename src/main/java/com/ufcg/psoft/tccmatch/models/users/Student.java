@@ -31,4 +31,8 @@ public class Student extends User {
   public String getCompletionPeriod() {
     return completionPeriod;
   }
+
+  public User.Type TCCSubjectCreatedByTypeSearch() {
+    return User.Type.PROFESSOR;
+  }
 }

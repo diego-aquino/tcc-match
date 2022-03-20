@@ -41,4 +41,8 @@ public class Professor extends User {
   public int getGuidanceQuota() {
     return guidanceQuota;
   }
+
+  public User.Type TCCSubjectCreatedByTypeSearch() {
+    return User.Type.STUDENT;
+  }
 }
