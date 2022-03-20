@@ -1,5 +1,6 @@
 package com.ufcg.psoft.tccmatch.models.tccSubject;
 
+import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import java.util.Set;
 import javax.persistence.Entity;
@@ -14,14 +15,16 @@ public class TCCSubject {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
   private String title;
+
   private String description;
+
   private String status;
 
   @ManyToMany
-  private Set<String> fieldsOfStudy; //Change to fields of study
+  private Set<FieldOfStudy> fieldsOfStudy; //Change to fields of study
 
   @ManyToOne
   private User createdBy;
@@ -32,7 +35,7 @@ public class TCCSubject {
     String title,
     String description,
     String status,
-    Set<String> fieldsOfStudy,
+    Set<FieldOfStudy> fieldsOfStudy,
     User createdBy
   ) {
     this.title = title;
@@ -42,7 +45,7 @@ public class TCCSubject {
     this.fieldsOfStudy = fieldsOfStudy;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
@@ -58,7 +61,7 @@ public class TCCSubject {
     return status;
   }
 
-  public Set<String> getFieldsOfStudy() {
+  public Set<FieldOfStudy> getFieldsOfStudy() {
     return fieldsOfStudy;
   }
 
