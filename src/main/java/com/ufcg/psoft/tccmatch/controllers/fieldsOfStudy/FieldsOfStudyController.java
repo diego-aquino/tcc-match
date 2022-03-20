@@ -10,6 +10,7 @@ import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
 import com.ufcg.psoft.tccmatch.dto.fieldsOfStudy.FieldOfStudyResponseDTO;
+import com.ufcg.psoft.tccmatch.exceptions.fieldsOfStudy.FieldNotFoundException;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.fieldsOfStudy.FieldsOfStudyService;
@@ -51,7 +52,7 @@ public class FieldsOfStudyController {
       Optional<FieldOfStudy> field = fieldsOfStudyService.findById(idField);
       
       if(field.isEmpty())
-          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+          throw new FieldNotFoundException();
       else{
           FieldOfStudy fieldOfStudy = field.get();
           fieldsOfStudyService.selectFieldOfStudy(authenticatedUser, fieldOfStudy);

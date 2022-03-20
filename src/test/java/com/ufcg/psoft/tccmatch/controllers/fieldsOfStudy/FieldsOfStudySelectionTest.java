@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
+import com.ufcg.psoft.tccmatch.exceptions.fieldsOfStudy.FieldNotFoundException;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
@@ -80,7 +81,7 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
       student = studentService.createStudent(createStudentDTO);
       studentToken = loginProgrammatically(studentEmail, rawPassword);
     }
-    
+
     void createProfessorDTO(){
       CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(
         professorEmail,
@@ -93,10 +94,11 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
     }
 
     @Test
-    void invalidSelectFieldId() throws Exception {
+    void errorFieldNotFound() throws Exception {
       createStudentDTO();
         selectFieldOfStudyRequest(123L, studentToken)
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.message", is(FieldNotFoundException.message())));
     }
     @Test
     void validSelectFieldStudent() throws Exception {
