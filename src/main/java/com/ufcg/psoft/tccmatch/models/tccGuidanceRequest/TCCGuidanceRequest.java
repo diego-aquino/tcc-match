@@ -1,8 +1,16 @@
 package com.ufcg.psoft.tccmatch.models.tccGuidanceRequest;
 
+import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+@Entity
 public class TCCGuidanceRequest {
 
   public enum Status {
@@ -11,20 +19,34 @@ public class TCCGuidanceRequest {
     APPROVED,
   }
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
   private Status status;
   private String message;
 
   @ManyToOne
-  private User createdBy; //Change to Student
+  private Student createdBy;
 
   @ManyToOne
-  private User requestedTo; //Change to Professor
+  private TCCSubject tccSubject;
 
-  public TCCGuidanceRequest(String message, User createdBy, User requestedTo) {
+  @ManyToOne
+  private Professor requestedTo;
+
+  public TCCGuidanceRequest() {}
+
+  public TCCGuidanceRequest(Student createdBy, Professor requestedTo, TCCSubject tccSubject) {
     this.status = Status.PENDING;
-    this.message = message;
+    this.message = "";
     this.createdBy = createdBy;
     this.requestedTo = requestedTo;
+    this.tccSubject = tccSubject;
+  }
+
+  public Long getId() {
+    return id;
   }
 
   public Status getStatus() {
@@ -39,11 +61,15 @@ public class TCCGuidanceRequest {
     return message;
   }
 
-  public User getCreatedBy() {
+  public Student getCreatedBy() {
     return createdBy;
   }
 
-  public User getRequestedTo() {
+  public Professor getRequestedTo() {
     return requestedTo;
+  }
+
+  public TCCSubject getTccSubject() {
+    return tccSubject;
   }
 }
