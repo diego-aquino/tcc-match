@@ -3,7 +3,6 @@ package com.ufcg.psoft.tccmatch.models.tccGuidanceRequest;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
-import com.ufcg.psoft.tccmatch.models.users.User;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

@@ -2,20 +2,20 @@ package com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests;
 
 public class CreateTCCGuidanceRequestRequestDTO {
 
-  private String message;
-
   private long tccSubjectId;
 
-  public CreateTCCGuidanceRequestRequestDTO(long tccSubjectId, String message) {
-    this.message = message;
-    this.tccSubjectId = tccSubjectId;
-  }
+  private long professorId;
 
-  public String getMessage() {
-    return message;
+  public CreateTCCGuidanceRequestRequestDTO(long tccSubjectId, long professorId) {
+    this.tccSubjectId = tccSubjectId;
+    this.professorId = professorId;
   }
 
   public long getTccSubjectId() {
     return tccSubjectId;
+  }
+
+  public long getProfessorId() {
+    return professorId;
   }
 }
