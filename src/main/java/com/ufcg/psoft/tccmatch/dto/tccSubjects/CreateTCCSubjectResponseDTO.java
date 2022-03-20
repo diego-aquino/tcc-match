@@ -1,23 +1,31 @@
 package com.ufcg.psoft.tccmatch.dto.tccSubjects;
 
+import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.User;
+import java.util.List;
 import java.util.Set;
 
 public class CreateTCCSubjectResponseDTO {
 
+  private Long id;
   private String title;
   private String description;
   private String status;
-  private Set<String> fieldsOfStudy;
-  private User createdBy;
+  private List<FieldOfStudy> fieldsOfStudy;
+  private Long createdBy;
 
   public CreateTCCSubjectResponseDTO(TCCSubject tccSubject) {
+    this.id = tccSubject.getId();
     this.title = tccSubject.getTitle();
     this.description = tccSubject.getDescription();
     this.status = tccSubject.getStatus();
-    this.fieldsOfStudy = tccSubject.getFieldsOfStudy();
-    this.createdBy = tccSubject.getCreatedBy();
+    this.fieldsOfStudy = List.copyOf(tccSubject.getFieldsOfStudy());
+    this.createdBy = tccSubject.getCreatedBy().getId();
+  }
+
+  public Long getId() {
+    return id;
   }
 
   public String getTitle() {
@@ -32,11 +40,11 @@ public class CreateTCCSubjectResponseDTO {
     return status;
   }
 
-  public Set<String> getFieldsOfStudy() {
+  public List<FieldOfStudy> getFieldsOfStudy() {
     return fieldsOfStudy;
   }
 
-  public User getCreatedBy() {
+  public Long getCreatedBy() {
     return createdBy;
   }
 }

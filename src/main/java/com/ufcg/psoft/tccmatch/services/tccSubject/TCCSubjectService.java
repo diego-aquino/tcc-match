@@ -6,6 +6,7 @@ import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.tccSubjects.TCCSubjectRepository;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,10 @@ public class TCCSubjectService {
 
   @Autowired
   TCCSubjectRepository tccSubjectRepository;
+
+  public Optional<TCCSubject> findTCCSubjectByTitle(String title) {
+    return tccSubjectRepository.findByTitle(title);
+  }
 
   public Optional<TCCSubject> findTCCSubjectById(Long id) {
     return tccSubjectRepository.findById(id);
@@ -33,8 +38,12 @@ public class TCCSubjectService {
     return tccSubject;
   }
 
-  public Set<TCCSubject> listTCCSubjects(User user, long createdById) {
-    return (Set<TCCSubject>) tccSubjectRepository.findAll(); //Testing... maybe it's better to leave it as List...
+  public Set<TCCSubject> listTCCSubjects(User user) {
+    return tccSubjectRepository.findByCreatedBy_Type(user.TCCSubjectCreatedByTypeSearch());
+  }
+
+  public Set<TCCSubject> listTCCSubjectsByUser(long createdById) {
+    return tccSubjectRepository.findByCreatedBy_Id(createdById);
   }
 
   public User getCreatedBySubjectId(long tccSubjectId) {
