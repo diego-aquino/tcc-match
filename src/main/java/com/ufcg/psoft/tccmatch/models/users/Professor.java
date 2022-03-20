@@ -51,4 +51,8 @@ public class Professor extends User {
   public void setGuidanceQuota(int guidanceQuota) {
     this.guidanceQuota = guidanceQuota;
   }
+
+  public User.Type TCCSubjectCreatedByTypeSearch() {
+    return User.Type.STUDENT;
+  }
 }

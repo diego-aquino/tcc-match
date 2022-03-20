@@ -2,7 +2,20 @@ package com.ufcg.psoft.tccmatch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectRequestDTO;
+import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
+import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
+import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
+import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.models.users.Student;
+import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
+import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
+import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
+import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +36,29 @@ public abstract class IntegrationTests {
   @Value("${users.default-coordinator.password}")
   protected String defaultCoordinatorPassword;
 
+  protected String studentEmail = "student@email.com";
+  protected String studentRawPassword = "12345678";
+  protected String studentName = "Student";
+  protected String studentRegistryNumber = "111000111";
+  protected String studentCompletionPeriod = "2024.1";
+
+  protected Student mockStudent;
+
+  protected String professorEmail = "professor@email.com";
+  protected String professorRawPassword = "12345678";
+  protected String professorName = "Professor";
+  protected Set<String> professorLaboratories = new HashSet<>();
+
+  protected Professor mockProfessor;
+
+  private String TCCSubjectTitle = "IA: Salvadora da terra, ou fim dos tempos?";
+  private String TCCSubjectDescription =
+    "Um estudo sobre as diversas implicações do acanço de IA na tecnologia.";
+  private String TCCSubjectStatus = "Nas etapas finais...";
+  private Set<FieldOfStudy> TCCSubjectFieldsOfStudy = new HashSet<FieldOfStudy>();
+
+  protected TCCSubject mockTCCSubject;
+
   @Autowired
   protected MockMvc mvc;
 
@@ -31,6 +67,15 @@ public abstract class IntegrationTests {
 
   @Autowired
   private AuthenticationService authenticationService;
+
+  @Autowired
+  private StudentService studentService;
+
+  @Autowired
+  private ProfessorService professorService;
+
+  @Autowired
+  private TCCSubjectService tccSubjectService;
 
   protected String toJSON(Object object) throws JsonProcessingException {
     return objectMapper.writeValueAsString(object);
@@ -43,6 +88,49 @@ public abstract class IntegrationTests {
 
   protected String loginProgrammaticallyWithDefaultCoordinator() {
     return loginProgrammatically(defaultCoordinatorEmail, defaultCoordinatorPassword);
+  }
+
+  protected void createMockTCCSubject(User TCCSubjectCreator) {
+    CreateTCCSubjectRequestDTO createTCCSubjectRequestDTO = new CreateTCCSubjectRequestDTO(
+      TCCSubjectTitle,
+      TCCSubjectDescription,
+      TCCSubjectStatus,
+      TCCSubjectFieldsOfStudy
+    );
+
+    mockTCCSubject =
+      tccSubjectService.createTCCSubject(createTCCSubjectRequestDTO, TCCSubjectCreator);
+  }
+
+  protected void createMockProfessor() {
+    CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(
+      professorEmail,
+      professorRawPassword,
+      professorName,
+      professorLaboratories
+    );
+
+    mockProfessor = professorService.createProfessor(createProfessorDTO);
+  }
+
+  protected void createMockStudent() {
+    CreateStudentDTO createStudentDTO = new CreateStudentDTO(
+      studentEmail,
+      studentRawPassword,
+      studentName,
+      studentRegistryNumber,
+      studentCompletionPeriod
+    );
+
+    mockStudent = studentService.createStudent(createStudentDTO);
+  }
+
+  protected String loginProgrammaticallyWithMockStudent() {
+    return loginProgrammatically(studentEmail, studentRawPassword);
+  }
+
+  protected String loginProgrammaticallyWithMockProfessor() {
+    return loginProgrammatically(professorEmail, professorRawPassword);
   }
 
   protected String loginProgrammatically(String email, String password) {
