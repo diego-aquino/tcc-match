@@ -1,6 +1,8 @@
 package com.ufcg.psoft.tccmatch.dto.tccGuidances;
 
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
+import java.util.Arrays;
+import java.util.List;
 
 public class TCCGuidanceResponseDTO {
 
@@ -42,5 +44,11 @@ public class TCCGuidanceResponseDTO {
 
   public boolean isFinished() {
     return isFinished;
+  }
+
+  public static List<TCCGuidanceResponseDTO> fromTCCGuidances(List<TCCGuidance> tccGuidances) {
+    return Arrays.asList(
+      tccGuidances.stream().map(TCCGuidanceResponseDTO::new).toArray(TCCGuidanceResponseDTO[]::new)
+    );
   }
 }

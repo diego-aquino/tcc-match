@@ -60,6 +60,19 @@ public class TCCGuidanceService {
     return tccGuidance;
   }
 
+  public List<TCCGuidance> listTCCGuidances(Optional<String> period, Optional<Boolean> isFinished) {
+    if (period.isPresent() && isFinished.isPresent()) {
+      return tccGuidanceRepository.findAllByPeriodAndIsFinished(period.get(), isFinished.get());
+    }
+    if (period.isPresent()) {
+      return tccGuidanceRepository.findAllByPeriod(period.get());
+    }
+    if (isFinished.isPresent()) {
+      return tccGuidanceRepository.findAllByIsFinished(isFinished.get());
+    }
+    return tccGuidanceRepository.findAll();
+  }
+
   public List<TCCGuidance> listAllTCCGuidances() {
     return tccGuidanceRepository.findAll();
   }
