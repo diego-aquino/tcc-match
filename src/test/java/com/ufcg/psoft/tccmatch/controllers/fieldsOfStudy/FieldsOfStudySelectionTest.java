@@ -42,12 +42,15 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
     private String name = "name";
     
     private String studentToken;
-    private String nameField = "field";
+    private String nameField1 = "field1";
+    private String nameField2 = "field2";
     private Student student;
     private Professor professor;
     private String professorToken;
     private FieldOfStudy field;
     private Long idField;
+    private FieldOfStudy field2;
+    private Long idField2;
 
     @Autowired
     private StudentService studentService;
@@ -62,11 +65,12 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
     private UserService<User> userService;
 
 
-
     @BeforeEach
     void beforeEach() {
-      field = fieldsOfStudyService.createFieldsOfStudy(nameField);
+      field = fieldsOfStudyService.createFieldsOfStudy(nameField1);
       idField = field.getId();
+      field2 = fieldsOfStudyService.createFieldsOfStudy(nameField2);
+      idField2 = field2.getId();
     }
 
     void createStudentDTO(){
@@ -114,6 +118,26 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
         assertEquals(fielder.getName(),field.getName());
 
     }
+    
+    @Test
+    void validSelectMultipleFieldStudent() throws Exception {
+        createStudentDTO();
+        selectFieldOfStudyRequest(idField, studentToken)
+            .andExpect(status().isOk());
+         
+        Set<FieldOfStudy>fields = userService.findUserById(student.getId()).get().getFields();
+        assertEquals(1,fields.size());
+        Iterator<FieldOfStudy> iterator = fields.iterator();
+        FieldOfStudy fielder = iterator.next();
+        assertEquals(fielder.getId(),field.getId());
+        assertEquals(fielder.getName(),field.getName());
+
+        selectFieldOfStudyRequest(idField2, studentToken)
+            .andExpect(status().isOk());
+        fields = userService.findUserById(student.getId()).get().getFields();
+        assertEquals(2,fields.size());
+    }
+
     @Test
     void validSelectFieldProfessor() throws Exception {
       createProfessorDTO();
