@@ -9,6 +9,7 @@ import com.ufcg.psoft.tccmatch.services.tccGuidances.TCCGuidanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,5 +33,15 @@ public class TCCGuidancesController {
 
     TCCGuidance tccGuidance = tccGuidanceService.createTCCGuidance(tccGuidanceDTO);
     return new ResponseEntity<>(new TCCGuidanceResponseDTO(tccGuidance), HttpStatus.CREATED);
+  }
+
+  @PostMapping("/finish/{tccGuidanceId}")
+  public ResponseEntity<TCCGuidanceResponseDTO> finishTCCGuidance(
+    @PathVariable("tccGuidanceId") Long tccGuidanceId
+  ) {
+    authenticationService.ensureUserTypes(User.Type.COORDINATOR);
+
+    TCCGuidance finishedTCCGuidance = tccGuidanceService.finishTCCGuidance(tccGuidanceId);
+    return new ResponseEntity<>(new TCCGuidanceResponseDTO(finishedTCCGuidance), HttpStatus.OK);
   }
 }

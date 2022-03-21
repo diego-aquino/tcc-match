@@ -11,6 +11,7 @@ import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,20 @@ public class TCCGuidanceService {
 
     TCCGuidance tccGuidance = new TCCGuidance(student, professor, tccSubject, period);
     tccGuidanceRepository.save(tccGuidance);
+    return tccGuidance;
+  }
+
+  public TCCGuidance finishTCCGuidance(Long tccGuidanceId) {
+    Optional<TCCGuidance> optionalTCCGuidance = tccGuidanceRepository.findById(tccGuidanceId);
+
+    if (optionalTCCGuidance.isEmpty()) {
+      throw new TCCGuidanceNotFoundException();
+    }
+
+    TCCGuidance tccGuidance = optionalTCCGuidance.get();
+    tccGuidance.markAsFinished();
+    tccGuidanceRepository.save(tccGuidance);
+
     return tccGuidance;
   }
 
