@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class TCCGuidanceRequest {
 
-  public enum Status {
+  public static enum Status {
     PENDING,
     DENIED,
     APPROVED,
@@ -58,6 +58,10 @@ public class TCCGuidanceRequest {
 
   public String getMessage() {
     return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
   }
 
   public Student getCreatedBy() {
