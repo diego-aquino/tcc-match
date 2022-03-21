@@ -36,7 +36,7 @@ class StudentCreationTests extends StudentTests {
 
   @BeforeEach
   void beforeEach() {
-    coordinatorToken = loginProgrammaticallyWithDefaultCoordinator();
+    coordinatorToken = loginWithDefaultCoordinator();
   }
 
   @Test

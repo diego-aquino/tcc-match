@@ -40,7 +40,7 @@ class StudentUpdateTests extends StudentTests {
     );
 
     student = studentService.createStudent(createStudentDTO);
-    studentToken = loginProgrammatically(studentEmail, studentRawPassword);
+    studentToken = login(studentEmail, studentRawPassword);
   }
 
   @Test
@@ -110,7 +110,7 @@ class StudentUpdateTests extends StudentTests {
       Optional.empty()
     );
 
-    String coordinatorToken = loginProgrammaticallyWithDefaultCoordinator();
+    String coordinatorToken = loginWithDefaultCoordinator();
 
     makeUpdateStudentRequest(student.getId(), coordinatorToken, updateStudentDTO)
       .andExpect(status().isOk())
@@ -203,7 +203,7 @@ class StudentUpdateTests extends StudentTests {
     );
 
     studentService.createStudent(createStudentDTO);
-    String anotherStudentToken = loginProgrammatically(anotherStudentEmail, studentRawPassword);
+    String anotherStudentToken = login(anotherStudentEmail, studentRawPassword);
 
     String newName = "New Student";
 

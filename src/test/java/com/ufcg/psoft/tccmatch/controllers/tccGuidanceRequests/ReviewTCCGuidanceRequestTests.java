@@ -1,10 +1,7 @@
 package com.ufcg.psoft.tccmatch.controllers.tccGuidanceRequests;
 
-import static org.hamcrest.Matchers.any;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -16,11 +13,11 @@ import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceRequests.TCCGuidanceRequest
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceRequests.TCCGuidanceRequestNotPending;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceRequests.TCCGuidanceRequestUnauthorizedProfessor;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest;
+import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.services.tccGuidanceRequest.TCCGuidanceRequestService;
-import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,20 +39,26 @@ public class ReviewTCCGuidanceRequestTests extends IntegrationTests {
   private String otherProfessorRawPassword = "12345678";
   private String otherProfessorName = "Professor Elmar";
 
+  private Professor professor;
+  private Student student;
+  private TCCSubject tccSubject;
+  private TCCGuidanceRequest tccGuidanceRequest;
+
   @BeforeEach
   void beforeEach() {
-    createMockProfessor();
-    createMockStudent();
-    createMockTCCSubject(mockProfessor);
-    createMockTCCGuidanceRequest(mockTCCSubject.getId(), mockProfessor.getId(), mockStudent);
+    professor = createMockProfessor();
+    student = createMockStudent();
+    tccSubject = createMockTCCSubject(professor);
+    tccGuidanceRequest =
+      createMockTCCGuidanceRequest(tccSubject.getId(), professor.getId(), student);
   }
 
   @Test
-  void ValidApprovedReviewTCCGuidanceRequest() throws Exception {
-    String professorToken = loginProgrammaticallyWithMockProfessor();
+  void validApprovedReviewTCCGuidanceRequest() throws Exception {
+    String professorToken = loginWithMockProfessor();
 
-    assertEquals(mockTCCGuidanceRequest.getStatus(), TCCGuidanceRequest.Status.PENDING);
-    assertEquals(mockTCCGuidanceRequest.getMessage(), "");
+    assertEquals(TCCGuidanceRequest.Status.PENDING, tccGuidanceRequest.getStatus());
+    assertEquals("", tccGuidanceRequest.getMessage());
 
     ReviewTCCGuidanceRequestRequestDTO reviewTCCGuidanceRequestRequestDTO = new ReviewTCCGuidanceRequestRequestDTO(
       true,
@@ -63,33 +66,32 @@ public class ReviewTCCGuidanceRequestTests extends IntegrationTests {
     );
 
     makeReviewTCCGuidanceRequestRequest(
-      mockTCCGuidanceRequest.getId(),
+      tccGuidanceRequest.getId(),
       reviewTCCGuidanceRequestRequestDTO,
       professorToken
     )
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.status", is("APPROVED")))
       .andExpect(jsonPath("$.message", is("Nice Job! Let's work together to not end the world!")))
-      .andExpect(jsonPath("$.createdBy", is(mockStudent.getId().intValue())))
-      .andExpect(jsonPath("$.requestedTo", is(mockProfessor.getId().intValue())))
-      .andExpect(jsonPath("$.tccSubject", is(mockTCCSubject.getId().intValue())));
+      .andExpect(jsonPath("$.createdBy", is(student.getId().intValue())))
+      .andExpect(jsonPath("$.requestedTo", is(professor.getId().intValue())))
+      .andExpect(jsonPath("$.tccSubject", is(tccSubject.getId().intValue())));
 
-    mockTCCGuidanceRequest =
-      tccGuidanceRequestService.findById(mockTCCGuidanceRequest.getId()).get();
+    tccGuidanceRequest = tccGuidanceRequestService.findById(tccGuidanceRequest.getId()).get();
 
-    assertEquals(TCCGuidanceRequest.Status.APPROVED, mockTCCGuidanceRequest.getStatus());
+    assertEquals(TCCGuidanceRequest.Status.APPROVED, tccGuidanceRequest.getStatus());
     assertEquals(
       "Nice Job! Let's work together to not end the world!",
-      mockTCCGuidanceRequest.getMessage()
+      tccGuidanceRequest.getMessage()
     );
   }
 
   @Test
-  void ValidRefusedReviewTCCGuidanceRequest() throws Exception {
-    String professorToken = loginProgrammaticallyWithMockProfessor();
+  void validRefusedReviewTCCGuidanceRequest() throws Exception {
+    String professorToken = loginWithMockProfessor();
 
-    assertEquals(mockTCCGuidanceRequest.getStatus(), TCCGuidanceRequest.Status.PENDING);
-    assertEquals(mockTCCGuidanceRequest.getMessage(), "");
+    assertEquals(TCCGuidanceRequest.Status.PENDING, tccGuidanceRequest.getStatus());
+    assertEquals("", tccGuidanceRequest.getMessage());
 
     ReviewTCCGuidanceRequestRequestDTO reviewTCCGuidanceRequestRequestDTO = new ReviewTCCGuidanceRequestRequestDTO(
       false,
@@ -97,25 +99,24 @@ public class ReviewTCCGuidanceRequestTests extends IntegrationTests {
     );
 
     makeReviewTCCGuidanceRequestRequest(
-      mockTCCGuidanceRequest.getId(),
+      tccGuidanceRequest.getId(),
       reviewTCCGuidanceRequestRequestDTO,
       professorToken
     )
       .andExpect(status().isOk());
 
-    mockTCCGuidanceRequest =
-      tccGuidanceRequestService.findById(mockTCCGuidanceRequest.getId()).get();
+    tccGuidanceRequest = tccGuidanceRequestService.findById(tccGuidanceRequest.getId()).get();
 
-    assertEquals(mockTCCGuidanceRequest.getStatus(), TCCGuidanceRequest.Status.DENIED);
+    assertEquals(TCCGuidanceRequest.Status.DENIED, tccGuidanceRequest.getStatus());
     assertEquals(
-      mockTCCGuidanceRequest.getMessage(),
-      "Bollocks! A.I is completely safe, what were you thinking?!"
+      "Bollocks! A.I is completely safe, what were you thinking?!",
+      tccGuidanceRequest.getMessage()
     );
   }
 
   @Test
-  void ReviewInexistentTCCGuidanceRequest() throws Exception {
-    String professorToken = loginProgrammaticallyWithMockProfessor();
+  void reviewInexistentTCCGuidanceRequest() throws Exception {
+    String professorToken = loginWithMockProfessor();
 
     ReviewTCCGuidanceRequestRequestDTO reviewTCCGuidanceRequestRequestDTO = new ReviewTCCGuidanceRequestRequestDTO(
       false,
@@ -128,11 +129,11 @@ public class ReviewTCCGuidanceRequestTests extends IntegrationTests {
   }
 
   @Test
-  void ReviewTCCGuidanceRequestTwice() throws Exception {
-    String professorToken = loginProgrammaticallyWithMockProfessor();
+  void reviewTCCGuidanceRequestTwice() throws Exception {
+    String professorToken = loginWithMockProfessor();
 
-    assertEquals(mockTCCGuidanceRequest.getStatus(), TCCGuidanceRequest.Status.PENDING);
-    assertEquals(mockTCCGuidanceRequest.getMessage(), "");
+    assertEquals(TCCGuidanceRequest.Status.PENDING, tccGuidanceRequest.getStatus());
+    assertEquals("", tccGuidanceRequest.getMessage());
 
     ReviewTCCGuidanceRequestRequestDTO reviewTCCGuidanceRequestRequestDTO = new ReviewTCCGuidanceRequestRequestDTO(
       true,
@@ -140,23 +141,22 @@ public class ReviewTCCGuidanceRequestTests extends IntegrationTests {
     );
 
     makeReviewTCCGuidanceRequestRequest(
-      mockTCCGuidanceRequest.getId(),
+      tccGuidanceRequest.getId(),
       reviewTCCGuidanceRequestRequestDTO,
       professorToken
     )
       .andExpect(status().isOk());
 
-    mockTCCGuidanceRequest =
-      tccGuidanceRequestService.findById(mockTCCGuidanceRequest.getId()).get();
+    tccGuidanceRequest = tccGuidanceRequestService.findById(tccGuidanceRequest.getId()).get();
 
-    assertEquals(mockTCCGuidanceRequest.getStatus(), TCCGuidanceRequest.Status.APPROVED);
+    assertEquals(TCCGuidanceRequest.Status.APPROVED, tccGuidanceRequest.getStatus());
     assertEquals(
-      mockTCCGuidanceRequest.getMessage(),
-      "Nice Job! Let's work together to not end the world!"
+      "Nice Job! Let's work together to not end the world!",
+      tccGuidanceRequest.getMessage()
     );
 
     makeReviewTCCGuidanceRequestRequest(
-      mockTCCGuidanceRequest.getId(),
+      tccGuidanceRequest.getId(),
       reviewTCCGuidanceRequestRequestDTO,
       professorToken
     )
@@ -165,7 +165,7 @@ public class ReviewTCCGuidanceRequestTests extends IntegrationTests {
   }
 
   @Test
-  void ReviewTCCGuidanceRequestWrongProfessor() throws Exception {
+  void reviewTCCGuidanceRequestWrongProfessor() throws Exception {
     CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(
       otherProfessorEmail,
       otherProfessorRawPassword,
@@ -174,10 +174,7 @@ public class ReviewTCCGuidanceRequestTests extends IntegrationTests {
     );
 
     professorService.createProfessor(createProfessorDTO);
-    String otherProfessorToken = loginProgrammatically(
-      otherProfessorEmail,
-      otherProfessorRawPassword
-    );
+    String otherProfessorToken = login(otherProfessorEmail, otherProfessorRawPassword);
 
     ReviewTCCGuidanceRequestRequestDTO reviewTCCGuidanceRequestRequestDTO = new ReviewTCCGuidanceRequestRequestDTO(
       true,
@@ -185,7 +182,7 @@ public class ReviewTCCGuidanceRequestTests extends IntegrationTests {
     );
 
     makeReviewTCCGuidanceRequestRequest(
-      mockTCCGuidanceRequest.getId(),
+      tccGuidanceRequest.getId(),
       reviewTCCGuidanceRequestRequestDTO,
       otherProfessorToken
     )

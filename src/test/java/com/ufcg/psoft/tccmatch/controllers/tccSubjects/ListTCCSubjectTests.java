@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectRequestDTO;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import java.util.HashSet;
 import java.util.List;
@@ -22,107 +24,110 @@ import org.springframework.test.web.servlet.ResultActions;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class ListTCCSubjectTests extends IntegrationTests {
 
-  private String TCCSubjectTitle = "IA: Salvadora da terra, ou fim dos tempos?";
-  private String TCCSubjectDescription =
+  private Professor professor;
+  private Student student;
+
+  private String tccSubjectTitle = "IA: Salvadora da terra, ou fim dos tempos?";
+  private String tccSubjectDescription =
     "Um estudo sobre as diversas implicações do acanço de IA na tecnologia.";
-  private String TCCSubjectStatus = "Nas etapas finais...";
-  private Set<FieldOfStudy> TCCSubjectFieldsOfStudy = new HashSet<FieldOfStudy>();
+  private String tccSubjectStatus = "Nas etapas finais...";
+  private Set<FieldOfStudy> tccSubjectFieldsOfStudy = new HashSet<>();
 
   @Autowired
   private TCCSubjectService tccSubjectService;
 
   @BeforeEach
   void beforeEach() {
-    createMockProfessor();
-    createMockStudent();
+    professor = createMockProfessor();
+    student = createMockStudent();
 
     CreateTCCSubjectRequestDTO mockTCCSubject1 = new CreateTCCSubjectRequestDTO(
-      TCCSubjectTitle,
-      TCCSubjectDescription,
-      TCCSubjectStatus,
-      TCCSubjectFieldsOfStudy
+      tccSubjectTitle,
+      tccSubjectDescription,
+      tccSubjectStatus,
+      tccSubjectFieldsOfStudy
     );
 
     CreateTCCSubjectRequestDTO mockTCCSubject2 = new CreateTCCSubjectRequestDTO(
-      TCCSubjectTitle + " 2",
-      TCCSubjectDescription + " 2",
-      TCCSubjectStatus + " 2",
-      TCCSubjectFieldsOfStudy
+      tccSubjectTitle + " 2",
+      tccSubjectDescription + " 2",
+      tccSubjectStatus + " 2",
+      tccSubjectFieldsOfStudy
     );
 
     CreateTCCSubjectRequestDTO mockTCCSubject3 = new CreateTCCSubjectRequestDTO(
-      TCCSubjectTitle + " 3",
-      TCCSubjectDescription + " 3",
-      TCCSubjectStatus + " 3",
-      TCCSubjectFieldsOfStudy
+      tccSubjectTitle + " 3",
+      tccSubjectDescription + " 3",
+      tccSubjectStatus + " 3",
+      tccSubjectFieldsOfStudy
     );
     CreateTCCSubjectRequestDTO mockTCCSubject4 = new CreateTCCSubjectRequestDTO(
-      TCCSubjectTitle + " 4",
-      TCCSubjectDescription + " 4",
-      TCCSubjectStatus + " 4",
-      TCCSubjectFieldsOfStudy
+      tccSubjectTitle + " 4",
+      tccSubjectDescription + " 4",
+      tccSubjectStatus + " 4",
+      tccSubjectFieldsOfStudy
     );
 
     CreateTCCSubjectRequestDTO mockTCCSubject5 = new CreateTCCSubjectRequestDTO(
-      TCCSubjectTitle + " 5",
-      TCCSubjectDescription + " 5",
-      TCCSubjectStatus + " 5",
-      TCCSubjectFieldsOfStudy
+      tccSubjectTitle + " 5",
+      tccSubjectDescription + " 5",
+      tccSubjectStatus + " 5",
+      tccSubjectFieldsOfStudy
     );
-    tccSubjectService.createTCCSubject(mockTCCSubject1, mockProfessor);
-    tccSubjectService.createTCCSubject(mockTCCSubject2, mockProfessor);
-    tccSubjectService.createTCCSubject(mockTCCSubject3, mockProfessor);
-    tccSubjectService.createTCCSubject(mockTCCSubject4, mockStudent);
-    tccSubjectService.createTCCSubject(mockTCCSubject5, mockStudent);
+    tccSubjectService.createTCCSubject(mockTCCSubject1, professor);
+    tccSubjectService.createTCCSubject(mockTCCSubject2, professor);
+    tccSubjectService.createTCCSubject(mockTCCSubject3, professor);
+    tccSubjectService.createTCCSubject(mockTCCSubject4, student);
+    tccSubjectService.createTCCSubject(mockTCCSubject5, student);
   }
 
   @Test
-  void ListTCCSubjectsCreatedByProfessors() throws Exception {
-    String studentToken = loginProgrammaticallyWithMockStudent();
+  void listTCCSubjectsCreatedByProfessors() throws Exception {
+    String studentToken = loginWithMockStudent();
 
-    makeListTCCJubjectsRequest(studentToken)
+    makeListTCCSubjectsRequest(studentToken)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", is(any(List.class))))
       .andExpect(jsonPath("$", hasSize(3)));
   }
 
   @Test
-  void ListTCCSubjectsCreatedByStudents() throws Exception {
-    String professorToken = loginProgrammaticallyWithMockProfessor();
+  void listTCCSubjectsCreatedByStudents() throws Exception {
+    String professorToken = loginWithMockProfessor();
 
-    makeListTCCJubjectsRequest(professorToken)
+    makeListTCCSubjectsRequest(professorToken)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", is(any(List.class))))
       .andExpect(jsonPath("$", hasSize(2)));
   }
 
   @Test
-  void ListTCCSubjectsCreatedByProfessor() throws Exception {
-    String professorToken = loginProgrammaticallyWithMockProfessor();
+  void listTCCSubjectsCreatedByProfessor() throws Exception {
+    String professorToken = loginWithMockProfessor();
 
-    makeListTCCJubjectsRequestByProfessor(mockProfessor.getId(), professorToken)
+    makeListTCCSubjectsRequestByProfessor(professor.getId(), professorToken)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", is(any(List.class))))
       .andExpect(jsonPath("$", hasSize(3)));
   }
 
   @Test
-  void UnauthorizedListTCCSubjectsCreatedByProfessor() throws Exception { //Unauthorized Professor trying to reach other professors TCCSubjects
-    String professorToken = loginProgrammaticallyWithMockProfessor();
+  void unauthorizedListTCCSubjectsCreatedByProfessor() throws Exception { //Unauthorized Professor trying to reach other professors TCCSubjects
+    String professorToken = loginWithMockProfessor();
 
-    makeListTCCJubjectsRequestByProfessor(mockProfessor.getId(), professorToken)
+    makeListTCCSubjectsRequestByProfessor(professor.getId(), professorToken)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", is(any(List.class))))
       .andExpect(jsonPath("$", hasSize(3)));
   }
 
-  private ResultActions makeListTCCJubjectsRequest(String userToken) throws Exception {
+  private ResultActions makeListTCCSubjectsRequest(String userToken) throws Exception {
     return mvc.perform(
       authenticated(get("/api/tcc-subjects"), userToken).contentType(MediaType.APPLICATION_JSON)
     );
   }
 
-  private ResultActions makeListTCCJubjectsRequestByProfessor(long professorId, String userToken)
+  private ResultActions makeListTCCSubjectsRequestByProfessor(long professorId, String userToken)
     throws Exception {
     return mvc.perform(
       authenticated(get("/api/tcc-subjects?createdBy=" + professorId), userToken)
