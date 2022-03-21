@@ -23,8 +23,6 @@ import org.springframework.test.web.servlet.ResultActions;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ListTCCGuidanceRequestTests extends IntegrationTests {
 
-  private String userToken;
-
   @Autowired
   private TCCSubjectService tccSubjectService;
 
@@ -40,7 +38,7 @@ public class ListTCCGuidanceRequestTests extends IntegrationTests {
 
   @Test
   void ListTCCGuidanceRequest() throws Exception {
-    userToken = loginProgrammaticallyWithMockProfessor();
+    String professorToken = loginProgrammaticallyWithMockProfessor();
 
     CreateTCCGuidanceRequestRequestDTO createTCCGuidanceRequestRequestDTO = new CreateTCCGuidanceRequestRequestDTO(
       mockTCCSubject.getId(),
@@ -51,7 +49,7 @@ public class ListTCCGuidanceRequestTests extends IntegrationTests {
       mockStudent
     );
 
-    makeListTCCGuidanceRequestRequest()
+    makeListTCCGuidanceRequestRequest(professorToken)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", is(any(List.class))))
       .andExpect(jsonPath("$", hasSize(1)));
@@ -59,15 +57,15 @@ public class ListTCCGuidanceRequestTests extends IntegrationTests {
 
   @Test
   void ListTCCGuidanceNoRequests() throws Exception {
-    userToken = loginProgrammaticallyWithMockProfessor();
+    String professorToken = loginProgrammaticallyWithMockProfessor();
 
-    makeListTCCGuidanceRequestRequest()
+    makeListTCCGuidanceRequestRequest(professorToken)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", is(any(List.class))))
       .andExpect(jsonPath("$", hasSize(0)));
   }
 
-  private ResultActions makeListTCCGuidanceRequestRequest() throws Exception {
+  private ResultActions makeListTCCGuidanceRequestRequest(String userToken) throws Exception {
     return mvc.perform(
       authenticated(get("/api/tcc-guidance-requests"), userToken)
         .contentType(MediaType.APPLICATION_JSON)

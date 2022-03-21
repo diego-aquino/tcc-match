@@ -32,15 +32,13 @@ class TCCSubjectCreationTests extends IntegrationTests {
   private String TCCSubjectStatus = "Nas etapas finais...";
   private Set<FieldOfStudy> TCCSubjectFieldsOfStudy = new HashSet<FieldOfStudy>();
 
-  private String userToken;
-
   @Autowired
   private TCCSubjectService tccSubjectService;
 
   @Test
   void TCCSubjectCreationByStudent() throws Exception {
     createMockStudent();
-    userToken = loginProgrammaticallyWithMockStudent();
+    String studentToken = loginProgrammaticallyWithMockStudent();
 
     CreateTCCSubjectRequestDTO createTCCSubjectRequestDTO = new CreateTCCSubjectRequestDTO(
       TCCSubjectTitle,
@@ -49,7 +47,7 @@ class TCCSubjectCreationTests extends IntegrationTests {
       TCCSubjectFieldsOfStudy
     );
 
-    makeCreateTCCSubjectRequest(createTCCSubjectRequestDTO)
+    makeCreateTCCSubjectRequest(createTCCSubjectRequestDTO, studentToken)
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.id", is(any(Integer.class))))
       .andExpect(jsonPath("$.title", is(TCCSubjectTitle)))
@@ -76,7 +74,7 @@ class TCCSubjectCreationTests extends IntegrationTests {
   @Test
   void TCCSubjectCreationByProfessor() throws Exception {
     createMockProfessor();
-    userToken = loginProgrammaticallyWithMockProfessor();
+    String professorToken = loginProgrammaticallyWithMockProfessor();
 
     CreateTCCSubjectRequestDTO createTCCSubjectRequestDTO = new CreateTCCSubjectRequestDTO(
       TCCSubjectTitle,
@@ -85,7 +83,7 @@ class TCCSubjectCreationTests extends IntegrationTests {
       TCCSubjectFieldsOfStudy
     );
 
-    makeCreateTCCSubjectRequest(createTCCSubjectRequestDTO)
+    makeCreateTCCSubjectRequest(createTCCSubjectRequestDTO, professorToken)
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.id", is(any(Integer.class))))
       .andExpect(jsonPath("$.title", is(TCCSubjectTitle)))
@@ -110,7 +108,8 @@ class TCCSubjectCreationTests extends IntegrationTests {
   }
 
   private ResultActions makeCreateTCCSubjectRequest(
-    CreateTCCSubjectRequestDTO tccSubjectRequestDTO
+    CreateTCCSubjectRequestDTO tccSubjectRequestDTO,
+    String userToken
   ) throws Exception {
     return mvc.perform(
       authenticated(post("/api/tcc-subjects"), userToken)

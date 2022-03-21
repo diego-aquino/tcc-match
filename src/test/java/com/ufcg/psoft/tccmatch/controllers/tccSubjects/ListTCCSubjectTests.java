@@ -28,8 +28,6 @@ class ListTCCSubjectTests extends IntegrationTests {
   private String TCCSubjectStatus = "Nas etapas finais...";
   private Set<FieldOfStudy> TCCSubjectFieldsOfStudy = new HashSet<FieldOfStudy>();
 
-  private String userToken;
-
   @Autowired
   private TCCSubjectService tccSubjectService;
 
@@ -80,9 +78,9 @@ class ListTCCSubjectTests extends IntegrationTests {
 
   @Test
   void ListTCCSubjectsCreatedByProfessors() throws Exception {
-    userToken = loginProgrammaticallyWithMockStudent();
+    String studentToken = loginProgrammaticallyWithMockStudent();
 
-    makeListTCCJubjectsRequest()
+    makeListTCCJubjectsRequest(studentToken)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", is(any(List.class))))
       .andExpect(jsonPath("$", hasSize(3)));
@@ -90,9 +88,9 @@ class ListTCCSubjectTests extends IntegrationTests {
 
   @Test
   void ListTCCSubjectsCreatedByStudents() throws Exception {
-    userToken = loginProgrammaticallyWithMockProfessor();
+    String professorToken = loginProgrammaticallyWithMockProfessor();
 
-    makeListTCCJubjectsRequest()
+    makeListTCCJubjectsRequest(professorToken)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", is(any(List.class))))
       .andExpect(jsonPath("$", hasSize(2)));
@@ -100,9 +98,9 @@ class ListTCCSubjectTests extends IntegrationTests {
 
   @Test
   void ListTCCSubjectsCreatedByProfessor() throws Exception {
-    userToken = loginProgrammaticallyWithMockProfessor(); //Remember to change this
+    String professorToken = loginProgrammaticallyWithMockProfessor();
 
-    makeListTCCJubjectsRequestByProfessor(mockProfessor.getId())
+    makeListTCCJubjectsRequestByProfessor(mockProfessor.getId(), professorToken)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", is(any(List.class))))
       .andExpect(jsonPath("$", hasSize(3)));
@@ -110,21 +108,22 @@ class ListTCCSubjectTests extends IntegrationTests {
 
   @Test
   void UnauthorizedListTCCSubjectsCreatedByProfessor() throws Exception { //Unauthorized Professor trying to reach other professors TCCSubjects
-    userToken = loginProgrammaticallyWithMockProfessor();
+    String professorToken = loginProgrammaticallyWithMockProfessor();
 
-    makeListTCCJubjectsRequestByProfessor(mockProfessor.getId())
+    makeListTCCJubjectsRequestByProfessor(mockProfessor.getId(), professorToken)
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", is(any(List.class))))
       .andExpect(jsonPath("$", hasSize(3)));
   }
 
-  private ResultActions makeListTCCJubjectsRequest() throws Exception {
+  private ResultActions makeListTCCJubjectsRequest(String userToken) throws Exception {
     return mvc.perform(
       authenticated(get("/api/tcc-subjects"), userToken).contentType(MediaType.APPLICATION_JSON)
     );
   }
 
-  private ResultActions makeListTCCJubjectsRequestByProfessor(long professorId) throws Exception {
+  private ResultActions makeListTCCJubjectsRequestByProfessor(long professorId, String userToken)
+    throws Exception {
     return mvc.perform(
       authenticated(get("/api/tcc-subjects?createdBy=" + professorId), userToken)
         .contentType(MediaType.APPLICATION_JSON)

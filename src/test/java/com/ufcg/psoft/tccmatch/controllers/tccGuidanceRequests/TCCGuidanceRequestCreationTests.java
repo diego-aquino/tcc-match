@@ -25,8 +25,6 @@ import org.springframework.test.web.servlet.ResultActions;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class TCCGuidanceRequestCreationTests extends IntegrationTests {
 
-  private String userToken;
-
   @Autowired
   private TCCSubjectService tccSubjectService;
 
@@ -42,14 +40,14 @@ class TCCGuidanceRequestCreationTests extends IntegrationTests {
   @Test
   void TCCGuidanceRequestWithProfessorTCCSubject() throws Exception {
     createMockTCCSubject(mockProfessor);
-    userToken = loginProgrammaticallyWithMockStudent();
+    String studentToken = loginProgrammaticallyWithMockStudent();
 
     CreateTCCGuidanceRequestRequestDTO createTCCGuidanceRequestRequestDTO = new CreateTCCGuidanceRequestRequestDTO(
       mockTCCSubject.getId(),
       mockProfessor.getId()
     );
 
-    makeCreateTCCGuidanceRequestRequest(createTCCGuidanceRequestRequestDTO)
+    makeCreateTCCGuidanceRequestRequest(createTCCGuidanceRequestRequestDTO, studentToken)
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.id", is(any(Integer.class))))
       .andExpect(jsonPath("$.status", is("PENDING")))
@@ -62,14 +60,14 @@ class TCCGuidanceRequestCreationTests extends IntegrationTests {
   @Test
   void TCCGuidanceRequestWithStudentTCCSubject() throws Exception {
     createMockTCCSubject(mockStudent);
-    userToken = loginProgrammaticallyWithMockStudent();
+    String studentToken = loginProgrammaticallyWithMockStudent();
 
     CreateTCCGuidanceRequestRequestDTO createTCCGuidanceRequestRequestDTO = new CreateTCCGuidanceRequestRequestDTO(
       mockTCCSubject.getId(),
       mockProfessor.getId()
     );
 
-    makeCreateTCCGuidanceRequestRequest(createTCCGuidanceRequestRequestDTO)
+    makeCreateTCCGuidanceRequestRequest(createTCCGuidanceRequestRequestDTO, studentToken)
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.id", is(any(Integer.class))))
       .andExpect(jsonPath("$.status", is("PENDING")))
@@ -80,7 +78,8 @@ class TCCGuidanceRequestCreationTests extends IntegrationTests {
   }
 
   private ResultActions makeCreateTCCGuidanceRequestRequest(
-    CreateTCCGuidanceRequestRequestDTO tccGuidanceRequestRequestDTO
+    CreateTCCGuidanceRequestRequestDTO tccGuidanceRequestRequestDTO,
+    String userToken
   ) throws Exception {
     return mvc.perform(
       authenticated(post("/api/tcc-guidance-requests"), userToken)
