@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class ProfessorService {
 
   @Autowired
-  private UserService<Professor> userService;
+  private UserService<User> userService;
 
   @Autowired
   private UserRepository<Professor> userRepository;
@@ -109,8 +109,12 @@ public class ProfessorService {
   }
 
   public Professor findByIdOrThrow(Long id) {
-    Optional<Professor> optionalUser = userService.findUserById(id);
-    if (optionalUser.isEmpty()) throw new ProfessorNotFoundException();
-    return optionalUser.get();
+    Optional<User> optionalProfessor = userService.findUserById(id);
+
+    boolean professorWasFound =
+      optionalProfessor.isPresent() && optionalProfessor.get().getType() == User.Type.PROFESSOR;
+    if (!professorWasFound) throw new ProfessorNotFoundException();
+
+    return (Professor) optionalProfessor.get();
   }
 }

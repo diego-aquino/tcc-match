@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class StudentService {
 
   @Autowired
-  private UserService<Student> userService;
+  private UserService<User> userService;
 
   @Autowired
   private UserRepository<Student> userRepository;
@@ -98,8 +98,12 @@ public class StudentService {
   }
 
   public Student findByIdOrThrow(Long id) {
-    Optional<Student> optionalUser = userService.findUserById(id);
-    if (optionalUser.isEmpty()) throw new StudentNotFoundException();
-    return optionalUser.get();
+    Optional<User> optionalStudent = userService.findUserById(id);
+
+    boolean studentWasFound =
+      optionalStudent.isPresent() && optionalStudent.get().getType() == User.Type.STUDENT;
+    if (!studentWasFound) throw new StudentNotFoundException();
+
+    return (Student) optionalStudent.get();
   }
 }
