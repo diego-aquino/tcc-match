@@ -50,7 +50,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         "/api/users/professors",
         "/api/fields-of-study",
         "/api/tcc-subjects",
-        "/api/tcc-guidance-requests"
+        "/api/tcc-guidance-requests",
+        "/api/tcc-guidance-requests/review/*"
       )
       .authenticated()
       .antMatchers(HttpMethod.PATCH, "/api/users/students/*", "/api/users/professors/*")
