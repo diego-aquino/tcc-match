@@ -27,7 +27,6 @@ public abstract class User implements UserDetails {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  //@Transient - Commented annotation to make findByCreatedBy_Type() in TCCRespository work
   private Type type;
 
   @Column(unique = true)
@@ -106,9 +105,5 @@ public abstract class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
-  }
-
-  public User.Type TCCSubjectCreatedByTypeSearch() {
-    return type;
   }
 }
