@@ -12,13 +12,13 @@ public class CreateTCCGuidanceRequestResponseDTO {
   private Long tccSubject;
   private Long requestedTo;
 
-  public CreateTCCGuidanceRequestResponseDTO(TCCGuidanceRequest ttcGuidanceRequest) {
-    this.id = ttcGuidanceRequest.getId();
-    this.status = ttcGuidanceRequest.getStatus();
-    this.message = ttcGuidanceRequest.getMessage();
-    this.createdBy = ttcGuidanceRequest.getCreatedBy().getId();
-    this.requestedTo = ttcGuidanceRequest.getRequestedTo().getId();
-    this.tccSubject = ttcGuidanceRequest.getTccSubject().getId();
+  public CreateTCCGuidanceRequestResponseDTO(TCCGuidanceRequest tccGuidanceRequest) {
+    this.id = tccGuidanceRequest.getId();
+    this.status = tccGuidanceRequest.getStatus();
+    this.message = tccGuidanceRequest.getMessage();
+    this.createdBy = tccGuidanceRequest.getCreatedBy().getId();
+    this.requestedTo = tccGuidanceRequest.getRequestedTo().getId();
+    this.tccSubject = tccGuidanceRequest.getTccSubject().getId();
   }
 
   public Long getId() {
