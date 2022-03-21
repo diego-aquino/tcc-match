@@ -3,17 +3,20 @@ package com.ufcg.psoft.tccmatch;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests.CreateTCCGuidanceRequestRequestDTO;
+import com.ufcg.psoft.tccmatch.dto.tccGuidances.CreateTCCGuidanceDTO;
 import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectRequestDTO;
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest;
+import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.tccGuidanceRequest.TCCGuidanceRequestService;
+import com.ufcg.psoft.tccmatch.services.tccGuidances.TCCGuidanceService;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
@@ -76,6 +79,24 @@ public abstract class IntegrationTests {
 
   @Autowired
   private TCCGuidanceRequestService tccGuidanceRequestService;
+
+  @Autowired
+  private TCCGuidanceService tccGuidanceService;
+
+  protected TCCGuidance createMockTCCGuidance(
+    long studentId,
+    long professorId,
+    long tccSubjectId,
+    String period
+  ) {
+    CreateTCCGuidanceDTO requestDTO = new CreateTCCGuidanceDTO(
+      studentId,
+      professorId,
+      tccSubjectId,
+      period
+    );
+    return tccGuidanceService.createTCCGuidance(requestDTO);
+  }
 
   protected TCCGuidanceRequest createMockTCCGuidanceRequest(
     long tccSubjectId,

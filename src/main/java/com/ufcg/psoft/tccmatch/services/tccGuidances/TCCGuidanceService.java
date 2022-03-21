@@ -63,4 +63,8 @@ public class TCCGuidanceService {
   public List<TCCGuidance> listAllTCCGuidances() {
     return tccGuidanceRepository.findAll();
   }
+
+  public Optional<TCCGuidance> findTCCGuidanceById(Long id) {
+    return tccGuidanceRepository.findById(id);
+  }
 }
