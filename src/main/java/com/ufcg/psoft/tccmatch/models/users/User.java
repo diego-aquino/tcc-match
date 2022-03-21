@@ -106,4 +106,12 @@ public abstract class User implements UserDetails {
   public boolean isEnabled() {
     return true;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) return false;
+    if (!(obj instanceof User)) return false;
+    User user = (User) obj;
+    return this.getId() == user.getId();
+  }
 }
