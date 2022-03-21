@@ -10,6 +10,7 @@ import com.ufcg.psoft.tccmatch.services.Validator;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +43,9 @@ public class TCCGuidanceService {
     TCCGuidance tccGuidance = new TCCGuidance(student, professor, tccSubject, period);
     tccGuidanceRepository.save(tccGuidance);
     return tccGuidance;
+  }
+
+  public List<TCCGuidance> listAllTCCGuidances() {
+    return tccGuidanceRepository.findAll();
   }
 }
