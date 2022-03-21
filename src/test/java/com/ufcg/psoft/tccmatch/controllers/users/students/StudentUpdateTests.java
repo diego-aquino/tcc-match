@@ -10,7 +10,7 @@ import com.ufcg.psoft.tccmatch.exceptions.users.EmailAlreadyInUseException;
 import com.ufcg.psoft.tccmatch.exceptions.users.EmptyUserNameException;
 import com.ufcg.psoft.tccmatch.exceptions.users.ForbiddenUserUpdateException;
 import com.ufcg.psoft.tccmatch.exceptions.users.InvalidEmailApiException;
-import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidCompletionPeriodException;
+import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidPeriodException;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
 import java.util.Optional;
@@ -187,7 +187,7 @@ class StudentUpdateTests extends StudentTests {
 
     makeUpdateStudentRequest(student.getId(), studentToken, updateStudentDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is(InvalidCompletionPeriodException.message())));
+      .andExpect(jsonPath("$.message", is(InvalidPeriodException.message())));
   }
 
   @Test

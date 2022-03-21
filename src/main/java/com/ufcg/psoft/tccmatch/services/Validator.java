@@ -1,6 +1,6 @@
 package com.ufcg.psoft.tccmatch.services;
 
-import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidCompletionPeriodException;
+import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidPeriodException;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ public class Validator {
   public String validatePeriod(String period) {
     boolean isValidPeriod = matchesPattern(period, PERIOD_PATTERN);
     if (isValidPeriod) return period.trim();
-    throw new InvalidCompletionPeriodException();
+    throw new InvalidPeriodException();
   }
 
   public static boolean matchesPattern(String nullableValue, String regexPattern) {
