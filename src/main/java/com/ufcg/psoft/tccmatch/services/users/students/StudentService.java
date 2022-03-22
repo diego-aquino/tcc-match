@@ -2,7 +2,7 @@ package com.ufcg.psoft.tccmatch.services.users.students;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
 import com.ufcg.psoft.tccmatch.dto.users.UpdateStudentDTO;
-import com.ufcg.psoft.tccmatch.exceptions.users.UserNotFoundException;
+import com.ufcg.psoft.tccmatch.exceptions.users.StudentNotFoundException;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class StudentService {
 
   @Autowired
-  private UserService<Student> userService;
+  private UserService<User> userService;
 
   @Autowired
   private UserRepository<Student> userRepository;
@@ -34,7 +34,7 @@ public class StudentService {
     String registryNumber = studentValidator.validateRegistryNumber(
       createStudentDTO.getRegistryNumber()
     );
-    String completionPeriod = studentValidator.validateCompletionPeriod(
+    String completionPeriod = studentValidator.validatePeriod(
       createStudentDTO.getCompletionPeriod()
     );
 
@@ -52,7 +52,7 @@ public class StudentService {
     Optional<Student> optionalStudent = userRepository.findById(studentId);
 
     if (optionalStudent.isEmpty()) {
-      throw new UserNotFoundException();
+      throw new StudentNotFoundException();
     }
 
     Student student = optionalStudent.get();
@@ -70,9 +70,7 @@ public class StudentService {
   ) {
     if (optionalCompletionPeriod.isEmpty()) return;
 
-    String newCompletionPeriod = studentValidator.validateCompletionPeriod(
-      optionalCompletionPeriod.get()
-    );
+    String newCompletionPeriod = studentValidator.validatePeriod(optionalCompletionPeriod.get());
     student.setCompletionPeriod(newCompletionPeriod);
   }
 
@@ -80,7 +78,7 @@ public class StudentService {
     Optional<Student> optionalStudent = userRepository.findById(studentId);
 
     if (optionalStudent.isEmpty()) {
-      throw new UserNotFoundException();
+      throw new StudentNotFoundException();
     }
 
     Student student = optionalStudent.get();
@@ -97,5 +95,15 @@ public class StudentService {
       authenticatedUser.getType() == User.Type.STUDENT &&
       authenticatedUser.getId().equals(studentId)
     );
+  }
+
+  public Student findByIdOrThrow(Long id) {
+    Optional<User> optionalStudent = userService.findUserById(id);
+
+    boolean studentWasFound =
+      optionalStudent.isPresent() && optionalStudent.get().getType() == User.Type.STUDENT;
+    if (!studentWasFound) throw new StudentNotFoundException();
+
+    return (Student) optionalStudent.get();
   }
 }

@@ -2,9 +2,7 @@ package com.ufcg.psoft.tccmatch.dto.tccSubjects;
 
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
-import com.ufcg.psoft.tccmatch.models.users.User;
 import java.util.List;
-import java.util.Set;
 
 public class CreateTCCSubjectResponseDTO {
 

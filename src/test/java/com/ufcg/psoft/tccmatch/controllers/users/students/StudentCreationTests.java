@@ -11,7 +11,7 @@ import com.ufcg.psoft.tccmatch.exceptions.users.EmailAlreadyInUseException;
 import com.ufcg.psoft.tccmatch.exceptions.users.EmptyUserNameException;
 import com.ufcg.psoft.tccmatch.exceptions.users.InvalidEmailApiException;
 import com.ufcg.psoft.tccmatch.exceptions.users.PasswordTooShortException;
-import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidCompletionPeriodException;
+import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidPeriodException;
 import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidRegistryNumberException;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
@@ -36,7 +36,7 @@ class StudentCreationTests extends StudentTests {
 
   @BeforeEach
   void beforeEach() {
-    coordinatorToken = loginProgrammaticallyWithDefaultCoordinator();
+    coordinatorToken = loginWithDefaultCoordinator();
   }
 
   @Test
@@ -167,7 +167,7 @@ class StudentCreationTests extends StudentTests {
 
     makeCreateStudentRequest(createStudentDTO)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is(InvalidCompletionPeriodException.message())));
+      .andExpect(jsonPath("$.message", is(InvalidPeriodException.message())));
   }
 
   private ResultActions makeCreateStudentRequest(CreateStudentDTO createStudentDTO)

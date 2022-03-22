@@ -20,37 +20,36 @@ import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class FieldsOfStudyControllerTest extends IntegrationTests {
-    private String name = "field";
-    private String coordinatorToken;
 
-    @Autowired
-    private FieldsOfStudyService fieldsOfStudyService;
+  private String name = "field";
+  private String coordinatorToken;
 
-    @BeforeEach
-    void beforeEach() {
-      coordinatorToken = loginProgrammaticallyWithDefaultCoordinator();
-    }
-  
-    @Test
-    void validFieldOfStudyCreation() throws Exception{
-        makeCreateFieldOfStudyRequest(name)
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.id", is(any(Integer.class))))
-            .andExpect(jsonPath("$.name", is(name)));
-        Optional<FieldOfStudy> optionalFieldtCreated = fieldsOfStudyService.findByName(name);
-        assertTrue(optionalFieldtCreated.isPresent());
+  @Autowired
+  private FieldsOfStudyService fieldsOfStudyService;
 
-        FieldOfStudy fieldCreated = optionalFieldtCreated.get();
-        assertEquals(name,fieldCreated.getName());
+  @BeforeEach
+  void beforeEach() {
+    coordinatorToken = loginWithDefaultCoordinator();
+  }
 
-    }   
+  @Test
+  void validFieldOfStudyCreation() throws Exception {
+    makeCreateFieldOfStudyRequest(name)
+      .andExpect(status().isCreated())
+      .andExpect(jsonPath("$.id", is(any(Integer.class))))
+      .andExpect(jsonPath("$.name", is(name)));
+    Optional<FieldOfStudy> optionalFieldCreated = fieldsOfStudyService.findByName(name);
+    assertTrue(optionalFieldCreated.isPresent());
 
-    private ResultActions makeCreateFieldOfStudyRequest(String field)
-     throws Exception{
-        return mvc.perform(
-            authenticated(post("/api/fields-of-study"),coordinatorToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(field)
-        );
-    }
+    FieldOfStudy fieldCreated = optionalFieldCreated.get();
+    assertEquals(name, fieldCreated.getName());
+  }
+
+  private ResultActions makeCreateFieldOfStudyRequest(String field) throws Exception {
+    return mvc.perform(
+      authenticated(post("/api/fields-of-study"), coordinatorToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(field)
+    );
+  }
 }

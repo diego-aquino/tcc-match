@@ -1,22 +1,16 @@
 package com.ufcg.psoft.tccmatch.controllers.tccGuidanceRequests;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests.CreateTCCGuidanceRequestRequestDTO;
-import com.ufcg.psoft.tccmatch.services.tccGuidanceRequest.TCCGuidanceRequestService;
-import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.models.users.Student;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -25,26 +19,23 @@ import org.springframework.test.web.servlet.ResultActions;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class TCCGuidanceRequestCreationTests extends IntegrationTests {
 
-  @Autowired
-  private TCCSubjectService tccSubjectService;
-
-  @Autowired
-  private TCCGuidanceRequestService tccGuidanceRequestService;
+  private Professor professor;
+  private Student student;
 
   @BeforeEach
   void beforeEach() {
-    createMockProfessor();
-    createMockStudent();
+    professor = createMockProfessor();
+    student = createMockStudent();
   }
 
   @Test
-  void TCCGuidanceRequestWithProfessorTCCSubject() throws Exception {
-    createMockTCCSubject(mockProfessor);
-    String studentToken = loginProgrammaticallyWithMockStudent();
+  void tccGuidanceRequestWithProfessorTCCSubject() throws Exception {
+    TCCSubject tccSubject = createMockTCCSubject(professor);
+    String studentToken = loginWithMockStudent();
 
     CreateTCCGuidanceRequestRequestDTO createTCCGuidanceRequestRequestDTO = new CreateTCCGuidanceRequestRequestDTO(
-      mockTCCSubject.getId(),
-      mockProfessor.getId()
+      tccSubject.getId(),
+      professor.getId()
     );
 
     makeCreateTCCGuidanceRequestRequest(createTCCGuidanceRequestRequestDTO, studentToken)
@@ -52,19 +43,19 @@ class TCCGuidanceRequestCreationTests extends IntegrationTests {
       .andExpect(jsonPath("$.id", is(any(Integer.class))))
       .andExpect(jsonPath("$.status", is("PENDING")))
       .andExpect(jsonPath("$.message", is("")))
-      .andExpect(jsonPath("$.createdBy", is(mockStudent.getId().intValue())))
-      .andExpect(jsonPath("$.requestedTo", is(mockProfessor.getId().intValue())))
-      .andExpect(jsonPath("$.tccSubject", is(mockTCCSubject.getId().intValue())));
+      .andExpect(jsonPath("$.createdBy", is(student.getId().intValue())))
+      .andExpect(jsonPath("$.requestedTo", is(professor.getId().intValue())))
+      .andExpect(jsonPath("$.tccSubject", is(tccSubject.getId().intValue())));
   }
 
   @Test
-  void TCCGuidanceRequestWithStudentTCCSubject() throws Exception {
-    createMockTCCSubject(mockStudent);
-    String studentToken = loginProgrammaticallyWithMockStudent();
+  void tccGuidanceRequestWithStudentTCCSubject() throws Exception {
+    TCCSubject tccSubject = createMockTCCSubject(student);
+    String studentToken = loginWithMockStudent();
 
     CreateTCCGuidanceRequestRequestDTO createTCCGuidanceRequestRequestDTO = new CreateTCCGuidanceRequestRequestDTO(
-      mockTCCSubject.getId(),
-      mockProfessor.getId()
+      tccSubject.getId(),
+      professor.getId()
     );
 
     makeCreateTCCGuidanceRequestRequest(createTCCGuidanceRequestRequestDTO, studentToken)
@@ -72,9 +63,9 @@ class TCCGuidanceRequestCreationTests extends IntegrationTests {
       .andExpect(jsonPath("$.id", is(any(Integer.class))))
       .andExpect(jsonPath("$.status", is("PENDING")))
       .andExpect(jsonPath("$.message", is("")))
-      .andExpect(jsonPath("$.createdBy", is(mockStudent.getId().intValue())))
-      .andExpect(jsonPath("$.requestedTo", is(mockProfessor.getId().intValue())))
-      .andExpect(jsonPath("$.tccSubject", is(mockTCCSubject.getId().intValue())));
+      .andExpect(jsonPath("$.createdBy", is(student.getId().intValue())))
+      .andExpect(jsonPath("$.requestedTo", is(professor.getId().intValue())))
+      .andExpect(jsonPath("$.tccSubject", is(tccSubject.getId().intValue())));
   }
 
   private ResultActions makeCreateTCCGuidanceRequestRequest(

@@ -2,13 +2,13 @@ package com.ufcg.psoft.tccmatch.exceptions.users.students;
 
 import com.ufcg.psoft.tccmatch.exceptions.api.BadRequestApiException;
 
-public class InvalidCompletionPeriodException extends BadRequestApiException {
+public class InvalidPeriodException extends BadRequestApiException {
 
-  public InvalidCompletionPeriodException() {
+  public InvalidPeriodException() {
     super(message());
   }
 
   public static String message() {
-    return "Invalid completion period.";
+    return "Invalid period.";
   }
 }
