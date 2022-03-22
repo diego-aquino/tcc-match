@@ -2,21 +2,15 @@ package com.ufcg.psoft.tccmatch.models.users;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
-
-import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,9 +39,6 @@ public abstract class User implements UserDetails {
 
   private String name;
   
-  @ManyToMany(fetch = FetchType.EAGER)
-protected Set<FieldOfStudy>fields;
-
   protected User() {}
 
   protected User(Type type) {
@@ -59,7 +50,6 @@ protected Set<FieldOfStudy>fields;
     this.email = email;
     this.encodedPassword = encodedPassword;
     this.name = name;
-    this.fields = new HashSet<>();
   }
 
   public Long getId() {
@@ -96,10 +86,6 @@ protected Set<FieldOfStudy>fields;
     this.name = name;
   }
 
-  public Set<FieldOfStudy> getFields(){
-    return this.fields;
-  }
-
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Collections.emptyList();
   }
@@ -122,10 +108,6 @@ protected Set<FieldOfStudy>fields;
   @Override
   public boolean isEnabled() {
     return true;
-  }
-  
-  public void addField(FieldOfStudy fieldOfStudy) {
-    fields.add(fieldOfStudy);
   }
 
 }

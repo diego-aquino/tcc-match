@@ -5,7 +5,11 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 
+import java.util.HashSet;
 
+import javax.persistence.ManyToMany;
+
+import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 
 @Entity
 public class Professor extends User {
@@ -17,7 +21,10 @@ public class Professor extends User {
   private Set<String> laboratories;
   
   private int guidanceQuota;
-
+  
+  @ManyToMany(fetch = FetchType.EAGER)
+  private Set<FieldOfStudy>fields;
+  
   protected Professor() {
     super(TYPE);
   }
@@ -36,6 +43,7 @@ public class Professor extends User {
     super(TYPE, email, encodedPassword, name);
     this.laboratories = laboratories;
     this.guidanceQuota = guidanceQuota;
+    this.fields = new HashSet<>();
   }
 
   public Set<String> getLaboratories() {
@@ -53,4 +61,11 @@ public class Professor extends User {
   public void setGuidanceQuota(int guidanceQuota) {
     this.guidanceQuota = guidanceQuota;
   }
+  public Set<FieldOfStudy> getFields(){
+    return this.fields;
+  }
+  public void addField(FieldOfStudy fieldOfStudy) {
+    fields.add(fieldOfStudy);
+  }
+
 }

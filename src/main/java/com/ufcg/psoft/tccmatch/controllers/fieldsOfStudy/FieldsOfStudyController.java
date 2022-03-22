@@ -42,7 +42,7 @@ public class FieldsOfStudyController {
     FieldOfStudy fieldOfStudy = fieldsOfStudyService.createFieldsOfStudy(name);
     return new ResponseEntity<>(new FieldOfStudyResponseDTO(fieldOfStudy), HttpStatus.CREATED);
   }
-  @PatchMapping("/select/{fieldOfStudyId}")
+  @PostMapping("/select/{fieldOfStudyId}")
   public ResponseEntity<FieldOfStudyResponseDTO> selectFieldOfStudy(
       @PathVariable("fieldOfStudyId") Long idField
   ){

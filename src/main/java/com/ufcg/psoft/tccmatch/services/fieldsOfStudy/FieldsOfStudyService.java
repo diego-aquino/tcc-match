@@ -5,7 +5,6 @@ import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.fieldsOfStudy.FieldsOfStudyRepository;
-import com.ufcg.psoft.tccmatch.services.users.UserService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
 
@@ -19,9 +18,6 @@ public class FieldsOfStudyService{
     @Autowired
     private FieldsOfStudyRepository fieldsOfStudyRepository;
 
-    @Autowired
-    private UserService<User> userService;
-    
     @Autowired
     private StudentService studentService;
 
@@ -40,6 +36,10 @@ public class FieldsOfStudyService{
         return fieldsOfStudyRepository.findById(idField);
     }
     public void selectFieldOfStudy(User user, FieldOfStudy fieldOfStudy) {
-        userService.selectFieldOfStudy(user, fieldOfStudy);
+        if(user.getType() == User.Type.PROFESSOR)
+            professorService.selectFieldOfStudy((Professor)user, fieldOfStudy);
+        else if(user.getType() == User.Type.STUDENT)
+            studentService.selectFieldOfStudy((Student)user, fieldOfStudy);
     }
 }
+

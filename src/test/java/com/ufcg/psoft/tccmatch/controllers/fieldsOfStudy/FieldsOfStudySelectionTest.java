@@ -110,7 +110,7 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
         selectFieldOfStudyRequest(idField, studentToken)
             .andExpect(status().isOk());
          
-        Set<FieldOfStudy>fields = userService.findUserById(student.getId()).get().getFields();
+        Set<FieldOfStudy>fields = ((Student)userService.findUserById(student.getId()).get()).getFields();
         assertEquals(1,fields.size());
         Iterator<FieldOfStudy> iterator = fields.iterator();
         FieldOfStudy fielder = iterator.next();
@@ -125,7 +125,7 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
         selectFieldOfStudyRequest(idField, studentToken)
             .andExpect(status().isOk());
          
-        Set<FieldOfStudy>fields = userService.findUserById(student.getId()).get().getFields();
+        Set<FieldOfStudy>fields = ((Student)userService.findUserById(student.getId()).get()).getFields();
         assertEquals(1,fields.size());
         Iterator<FieldOfStudy> iterator = fields.iterator();
         FieldOfStudy fielder = iterator.next();
@@ -134,17 +134,35 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
 
         selectFieldOfStudyRequest(idField2, studentToken)
             .andExpect(status().isOk());
-        fields = userService.findUserById(student.getId()).get().getFields();
+        fields = ((Student)userService.findUserById(student.getId()).get()).getFields();
         assertEquals(2,fields.size());
     }
+    @Test
+    void validSelectMultipleEqualFieldStudent() throws Exception {
+        createStudentDTO();
+        selectFieldOfStudyRequest(idField, studentToken)
+            .andExpect(status().isOk());
+         
+        Set<FieldOfStudy>fields = ((Student)userService.findUserById(student.getId()).get()).getFields();
+        assertEquals(1,fields.size());
+        Iterator<FieldOfStudy> iterator = fields.iterator();
+        FieldOfStudy fielder = iterator.next();
+        assertEquals(fielder.getId(),field.getId());
+        assertEquals(fielder.getName(),field.getName());
 
+        selectFieldOfStudyRequest(idField, studentToken)
+            .andExpect(status().isOk());
+        fields = ((Student)userService.findUserById(student.getId()).get()).getFields();
+        assertEquals(1,fields.size());
+    }
+    
     @Test
     void validSelectFieldProfessor() throws Exception {
       createProfessorDTO();
         selectFieldOfStudyRequest(idField, professorToken)
             .andExpect(status().isOk());
          
-        Set<FieldOfStudy>fields = userService.findUserById(professor.getId()).get().getFields();
+        Set<FieldOfStudy>fields = ((Professor)userService.findUserById(professor.getId()).get()).getFields();
         assertEquals(1,fields.size());
 
         Iterator<FieldOfStudy> iterator = fields.iterator();
@@ -156,7 +174,7 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
     private ResultActions selectFieldOfStudyRequest(Long idField, String studentToken) throws Exception{
         String endpoint = String.format("/api/fields-of-study/select/%d", idField);
         return mvc.perform(
-            authenticated(patch(endpoint),studentToken)
+            authenticated(post(endpoint),studentToken)
             .contentType(MediaType.APPLICATION_JSON)
             );
     }

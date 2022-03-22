@@ -1,9 +1,6 @@
 package com.ufcg.psoft.tccmatch.services.users;
 
 import com.ufcg.psoft.tccmatch.exceptions.users.EmailAlreadyInUseException;
-import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
-import com.ufcg.psoft.tccmatch.models.users.Professor;
-import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import java.util.Optional;
@@ -57,8 +54,5 @@ public class UserService<GenericUser extends User> {
   public Optional<GenericUser> findUserByEmail(String email) {
     return userRepository.findByEmail(email);
   }
-  public void selectFieldOfStudy(User user, FieldOfStudy fieldOfStudy) {
-    user.addField(fieldOfStudy);
-    userRepository.save((GenericUser)user);
-  }
+
 }
