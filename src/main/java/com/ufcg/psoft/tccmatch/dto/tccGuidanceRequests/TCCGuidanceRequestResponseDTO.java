@@ -3,7 +3,7 @@ package com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest.Status;
 
-public class CreateTCCGuidanceRequestResponseDTO {
+public class TCCGuidanceRequestResponseDTO {
 
   private Long id;
   private Status status;
@@ -12,7 +12,7 @@ public class CreateTCCGuidanceRequestResponseDTO {
   private Long tccSubject;
   private Long requestedTo;
 
-  public CreateTCCGuidanceRequestResponseDTO(TCCGuidanceRequest tccGuidanceRequest) {
+  public TCCGuidanceRequestResponseDTO(TCCGuidanceRequest tccGuidanceRequest) {
     this.id = tccGuidanceRequest.getId();
     this.status = tccGuidanceRequest.getStatus();
     this.message = tccGuidanceRequest.getMessage();

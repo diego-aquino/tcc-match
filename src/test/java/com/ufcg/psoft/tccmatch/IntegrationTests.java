@@ -2,15 +2,18 @@ package com.ufcg.psoft.tccmatch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests.CreateTCCGuidanceRequestRequestDTO;
 import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectRequestDTO;
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
+import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
+import com.ufcg.psoft.tccmatch.services.tccGuidanceRequest.TCCGuidanceRequestService;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
@@ -58,6 +61,8 @@ public abstract class IntegrationTests {
   private Set<FieldOfStudy> TCCSubjectFieldsOfStudy = new HashSet<FieldOfStudy>();
 
   protected TCCSubject mockTCCSubject;
+  
+  protected TCCGuidanceRequest mockTCCGuidanceRequest;
 
   @Autowired
   protected MockMvc mvc;
@@ -76,6 +81,9 @@ public abstract class IntegrationTests {
 
   @Autowired
   private TCCSubjectService tccSubjectService;
+  
+  @Autowired
+  private TCCGuidanceRequestService tccGuidanceRequestService;
 
   protected String toJSON(Object object) throws JsonProcessingException {
     return objectMapper.writeValueAsString(object);
@@ -90,6 +98,18 @@ public abstract class IntegrationTests {
     return loginProgrammatically(defaultCoordinatorEmail, defaultCoordinatorPassword);
   }
 
+  protected void createMockTCCGuidanceRequest(long TCCSubjectId,long professorId,Student issuingStudent) {
+	    CreateTCCGuidanceRequestRequestDTO createTCCGuidanceRequestRequestDTO = new CreateTCCGuidanceRequestRequestDTO(
+	    		TCCSubjectId,
+	    		professorId
+	    	    );
+	    	    
+	    	    mockTCCGuidanceRequest = tccGuidanceRequestService.createTCCGuidanceRequest(
+	    	      createTCCGuidanceRequestRequestDTO,
+	    	      issuingStudent
+	    	    );
+  }
+  
   protected void createMockTCCSubject(User TCCSubjectCreator) {
     CreateTCCSubjectRequestDTO createTCCSubjectRequestDTO = new CreateTCCSubjectRequestDTO(
       TCCSubjectTitle,
