@@ -49,13 +49,8 @@ public class ProfessorService {
   }
 
   public Professor updateProfessor(Long professorId, UpdateProfessorDTO updateProfessorDTO) {
-    Optional<Professor> optionalProfessor = userRepository.findById(professorId);
+    Professor professor = findByIdOrThrow(professorId);
 
-    if (optionalProfessor.isEmpty()) {
-      throw new ProfessorNotFoundException();
-    }
-
-    Professor professor = optionalProfessor.get();
     userService.updateEmailIfProvided(updateProfessorDTO.getEmail(), professor);
     userService.updateNameIfProvided(updateProfessorDTO.getName(), professor);
     updateLaboratoriesIfProvided(updateProfessorDTO.getLaboratories(), professor);
@@ -88,15 +83,8 @@ public class ProfessorService {
   }
 
   public Professor removeProfessor(Long professorId) {
-    Optional<Professor> optionalProfessor = userRepository.findById(professorId);
-
-    if (optionalProfessor.isEmpty()) {
-      throw new ProfessorNotFoundException();
-    }
-
-    Professor professor = optionalProfessor.get();
+    Professor professor = findByIdOrThrow(professorId);
     userRepository.delete(professor);
-
     return professor;
   }
 
