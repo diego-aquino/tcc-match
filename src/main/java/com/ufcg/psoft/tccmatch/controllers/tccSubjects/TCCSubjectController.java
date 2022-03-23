@@ -3,6 +3,7 @@ package com.ufcg.psoft.tccmatch.controllers.tccSubjects;
 import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectRequestDTO;
 import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectResponseDTO;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +43,17 @@ public class TCCSubjectController {
       new CreateTCCSubjectResponseDTO(newTCCSubject),
       HttpStatus.CREATED
     );
+  }
+
+  @PostMapping("/show-interest/{tccSubjectId}")
+  public ResponseEntity<String> createTCCSubject(@PathVariable long tccSubjectId) {
+    authenticationService.ensureUserTypes(User.Type.PROFESSOR);
+
+    User user = authenticationService.getAuthenticatedUser();
+
+    tccSubjectService.showInterestTccSubject(tccSubjectId, (Professor) user);
+
+    return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
   }
 
   @GetMapping

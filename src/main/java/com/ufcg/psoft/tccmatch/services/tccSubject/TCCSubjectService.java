@@ -1,7 +1,10 @@
 package com.ufcg.psoft.tccmatch.services.tccSubject;
 
 import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectRequestDTO;
+import com.ufcg.psoft.tccmatch.exceptions.tccSubjects.InvalidTCCSubjectException;
+import com.ufcg.psoft.tccmatch.exceptions.tccSubjects.TCCSubjectNotFoundException;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.tccSubjects.TCCSubjectRepository;
 import java.util.Collections;
@@ -62,5 +65,16 @@ public class TCCSubjectService {
     Optional<TCCSubject> tccSubject = findTCCSubjectById(tccSubjectId);
 
     return tccSubject.get().getCreatedBy();
+  }
+
+  public void showInterestTccSubject(long tccSubjectId, Professor user) {
+    Optional<TCCSubject> tccSubjectOp = findTCCSubjectById(tccSubjectId);
+    if (tccSubjectOp.isEmpty()) throw new TCCSubjectNotFoundException();
+
+    TCCSubject tccSubject = tccSubjectOp.get();
+    if (
+      tccSubject.getCreatedBy().getType() != User.Type.STUDENT
+    ) throw new InvalidTCCSubjectException();
+    // Notify Student on Professor showing interest in tccSubject
   }
 }
