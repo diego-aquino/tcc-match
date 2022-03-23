@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectRequestDTO;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
+import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
@@ -36,49 +37,61 @@ class ListTCCSubjectTests extends IntegrationTests {
   @Autowired
   private TCCSubjectService tccSubjectService;
 
+  private List<TCCSubject> tccSubjects;
+
   @BeforeEach
   void beforeEach() {
     professor = createMockProfessor();
     student = createMockStudent();
 
-    CreateTCCSubjectRequestDTO mockTCCSubject1 = new CreateTCCSubjectRequestDTO(
-      tccSubjectTitle,
-      tccSubjectDescription,
-      tccSubjectStatus,
-      tccSubjectFieldsOfStudy
-    );
-
-    CreateTCCSubjectRequestDTO mockTCCSubject2 = new CreateTCCSubjectRequestDTO(
-      tccSubjectTitle + " 2",
-      tccSubjectDescription + " 2",
-      tccSubjectStatus + " 2",
-      tccSubjectFieldsOfStudy
-    );
-
-    CreateTCCSubjectRequestDTO mockTCCSubject3 = new CreateTCCSubjectRequestDTO(
-      tccSubjectTitle + " 3",
-      tccSubjectDescription + " 3",
-      tccSubjectStatus + " 3",
-      tccSubjectFieldsOfStudy
-    );
-    CreateTCCSubjectRequestDTO mockTCCSubject4 = new CreateTCCSubjectRequestDTO(
-      tccSubjectTitle + " 4",
-      tccSubjectDescription + " 4",
-      tccSubjectStatus + " 4",
-      tccSubjectFieldsOfStudy
-    );
-
-    CreateTCCSubjectRequestDTO mockTCCSubject5 = new CreateTCCSubjectRequestDTO(
-      tccSubjectTitle + " 5",
-      tccSubjectDescription + " 5",
-      tccSubjectStatus + " 5",
-      tccSubjectFieldsOfStudy
-    );
-    tccSubjectService.createTCCSubject(mockTCCSubject1, professor);
-    tccSubjectService.createTCCSubject(mockTCCSubject2, professor);
-    tccSubjectService.createTCCSubject(mockTCCSubject3, professor);
-    tccSubjectService.createTCCSubject(mockTCCSubject4, student);
-    tccSubjectService.createTCCSubject(mockTCCSubject5, student);
+    tccSubjects =
+      List.of(
+        tccSubjectService.createTCCSubject(
+          new CreateTCCSubjectRequestDTO(
+            tccSubjectTitle,
+            tccSubjectDescription,
+            tccSubjectStatus,
+            tccSubjectFieldsOfStudy
+          ),
+          professor
+        ),
+        tccSubjectService.createTCCSubject(
+          new CreateTCCSubjectRequestDTO(
+            tccSubjectTitle + " 2",
+            tccSubjectDescription + " 2",
+            tccSubjectStatus + " 2",
+            tccSubjectFieldsOfStudy
+          ),
+          professor
+        ),
+        tccSubjectService.createTCCSubject(
+          new CreateTCCSubjectRequestDTO(
+            tccSubjectTitle + " 3",
+            tccSubjectDescription + " 3",
+            tccSubjectStatus + " 3",
+            tccSubjectFieldsOfStudy
+          ),
+          professor
+        ),
+        tccSubjectService.createTCCSubject(
+          new CreateTCCSubjectRequestDTO(
+            tccSubjectTitle + " 4",
+            tccSubjectDescription + " 4",
+            tccSubjectStatus + " 4",
+            tccSubjectFieldsOfStudy
+          ),
+          student
+        ),
+        tccSubjectService.createTCCSubject(
+          new CreateTCCSubjectRequestDTO(
+            tccSubjectTitle + " 5",
+            tccSubjectDescription + " 5",
+            tccSubjectStatus + " 5",
+            tccSubjectFieldsOfStudy
+          ),
+          student
+        )
+      );
   }
 
   @Test
@@ -87,8 +100,37 @@ class ListTCCSubjectTests extends IntegrationTests {
 
     makeListTCCSubjectsRequest(studentToken)
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$", is(any(List.class))))
-      .andExpect(jsonPath("$", hasSize(3)));
+      .andExpect(jsonPath("$", hasSize(3)))
+      .andExpect(jsonPath("$.[0].id", is(tccSubjects.get(0).getId().intValue())))
+      .andExpect(jsonPath("$.[0].title", is(tccSubjects.get(0).getTitle())))
+      .andExpect(jsonPath("$.[0].description", is(tccSubjects.get(0).getDescription())))
+      .andExpect(jsonPath("$.[0].status", is(tccSubjects.get(0).getStatus().toString())))
+      .andExpect(
+        jsonPath("$.[0].fieldsOfStudy", is(List.copyOf(tccSubjects.get(0).getFieldsOfStudy())))
+      )
+      .andExpect(
+        jsonPath("$.[0].createdBy", is(tccSubjects.get(0).getCreatedBy().getId().intValue()))
+      )
+      .andExpect(jsonPath("$.[1].id", is(tccSubjects.get(1).getId().intValue())))
+      .andExpect(jsonPath("$.[1].title", is(tccSubjects.get(1).getTitle())))
+      .andExpect(jsonPath("$.[1].description", is(tccSubjects.get(1).getDescription())))
+      .andExpect(jsonPath("$.[1].status", is(tccSubjects.get(1).getStatus().toString())))
+      .andExpect(
+        jsonPath("$.[1].fieldsOfStudy", is(List.copyOf(tccSubjects.get(1).getFieldsOfStudy())))
+      )
+      .andExpect(
+        jsonPath("$.[1].createdBy", is(tccSubjects.get(1).getCreatedBy().getId().intValue()))
+      )
+      .andExpect(jsonPath("$.[2].id", is(tccSubjects.get(2).getId().intValue())))
+      .andExpect(jsonPath("$.[2].title", is(tccSubjects.get(2).getTitle())))
+      .andExpect(jsonPath("$.[2].description", is(tccSubjects.get(2).getDescription())))
+      .andExpect(jsonPath("$.[2].status", is(tccSubjects.get(2).getStatus().toString())))
+      .andExpect(
+        jsonPath("$.[2].fieldsOfStudy", is(List.copyOf(tccSubjects.get(2).getFieldsOfStudy())))
+      )
+      .andExpect(
+        jsonPath("$.[2].createdBy", is(tccSubjects.get(2).getCreatedBy().getId().intValue()))
+      );
   }
 
   @Test
@@ -97,8 +139,27 @@ class ListTCCSubjectTests extends IntegrationTests {
 
     makeListTCCSubjectsRequest(professorToken)
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$", is(any(List.class))))
-      .andExpect(jsonPath("$", hasSize(2)));
+      .andExpect(jsonPath("$", hasSize(2)))
+      .andExpect(jsonPath("$.[0].id", is(tccSubjects.get(3).getId().intValue())))
+      .andExpect(jsonPath("$.[0].title", is(tccSubjects.get(3).getTitle())))
+      .andExpect(jsonPath("$.[0].description", is(tccSubjects.get(3).getDescription())))
+      .andExpect(jsonPath("$.[0].status", is(tccSubjects.get(3).getStatus().toString())))
+      .andExpect(
+        jsonPath("$.[0].fieldsOfStudy", is(List.copyOf(tccSubjects.get(3).getFieldsOfStudy())))
+      )
+      .andExpect(
+        jsonPath("$.[0].createdBy", is(tccSubjects.get(3).getCreatedBy().getId().intValue()))
+      )
+      .andExpect(jsonPath("$.[1].id", is(tccSubjects.get(4).getId().intValue())))
+      .andExpect(jsonPath("$.[1].title", is(tccSubjects.get(4).getTitle())))
+      .andExpect(jsonPath("$.[1].description", is(tccSubjects.get(4).getDescription())))
+      .andExpect(jsonPath("$.[1].status", is(tccSubjects.get(4).getStatus().toString())))
+      .andExpect(
+        jsonPath("$.[1].fieldsOfStudy", is(List.copyOf(tccSubjects.get(4).getFieldsOfStudy())))
+      )
+      .andExpect(
+        jsonPath("$.[1].createdBy", is(tccSubjects.get(4).getCreatedBy().getId().intValue()))
+      );
   }
 
   @Test
@@ -107,8 +168,37 @@ class ListTCCSubjectTests extends IntegrationTests {
 
     makeListTCCSubjectsRequestByProfessor(professor.getId(), professorToken)
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$", is(any(List.class))))
-      .andExpect(jsonPath("$", hasSize(3)));
+      .andExpect(jsonPath("$", hasSize(3)))
+      .andExpect(jsonPath("$.[0].id", is(tccSubjects.get(0).getId().intValue())))
+      .andExpect(jsonPath("$.[0].title", is(tccSubjects.get(0).getTitle())))
+      .andExpect(jsonPath("$.[0].description", is(tccSubjects.get(0).getDescription())))
+      .andExpect(jsonPath("$.[0].status", is(tccSubjects.get(0).getStatus().toString())))
+      .andExpect(
+        jsonPath("$.[0].fieldsOfStudy", is(List.copyOf(tccSubjects.get(0).getFieldsOfStudy())))
+      )
+      .andExpect(
+        jsonPath("$.[0].createdBy", is(tccSubjects.get(0).getCreatedBy().getId().intValue()))
+      )
+      .andExpect(jsonPath("$.[1].id", is(tccSubjects.get(1).getId().intValue())))
+      .andExpect(jsonPath("$.[1].title", is(tccSubjects.get(1).getTitle())))
+      .andExpect(jsonPath("$.[1].description", is(tccSubjects.get(1).getDescription())))
+      .andExpect(jsonPath("$.[1].status", is(tccSubjects.get(1).getStatus().toString())))
+      .andExpect(
+        jsonPath("$.[1].fieldsOfStudy", is(List.copyOf(tccSubjects.get(1).getFieldsOfStudy())))
+      )
+      .andExpect(
+        jsonPath("$.[1].createdBy", is(tccSubjects.get(1).getCreatedBy().getId().intValue()))
+      )
+      .andExpect(jsonPath("$.[2].id", is(tccSubjects.get(2).getId().intValue())))
+      .andExpect(jsonPath("$.[2].title", is(tccSubjects.get(2).getTitle())))
+      .andExpect(jsonPath("$.[2].description", is(tccSubjects.get(2).getDescription())))
+      .andExpect(jsonPath("$.[2].status", is(tccSubjects.get(2).getStatus().toString())))
+      .andExpect(
+        jsonPath("$.[2].fieldsOfStudy", is(List.copyOf(tccSubjects.get(2).getFieldsOfStudy())))
+      )
+      .andExpect(
+        jsonPath("$.[2].createdBy", is(tccSubjects.get(2).getCreatedBy().getId().intValue()))
+      );
   }
 
   @Test
