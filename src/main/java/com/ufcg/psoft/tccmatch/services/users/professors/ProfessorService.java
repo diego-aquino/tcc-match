@@ -2,9 +2,8 @@ package com.ufcg.psoft.tccmatch.services.users.professors;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.dto.users.UpdateProfessorDTO;
-import com.ufcg.psoft.tccmatch.exceptions.users.UserNotFoundException;
-import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.exceptions.users.ProfessorNotFoundException;
+import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
@@ -97,10 +96,12 @@ public class ProfessorService {
       authenticatedUser.getId().equals(professorId)
     );
   }
+
   public void selectFieldOfStudy(Professor professor, FieldOfStudy fieldOfStudy) {
     professor.addField(fieldOfStudy);
     userRepository.save(professor);
   }
+
   public Professor findByIdOrThrow(Long id) {
     Optional<User> optionalProfessor = userService.findUserById(id);
 
