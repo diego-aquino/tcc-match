@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
-import com.ufcg.psoft.tccmatch.repositories.fieldsOfStudy.FieldsOfStudyRepository;
 import com.ufcg.psoft.tccmatch.services.fieldsOfStudy.FieldsOfStudyService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,40 +19,37 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class FieldsOfStudyCreationTest extends IntegrationTests {
-    private String name = "field";
-    private String coordinatorToken;
+class FieldsOfStudyControllerTest extends IntegrationTests {
 
-    @Autowired
-    private FieldsOfStudyService fieldsOfStudyService;
-    @Autowired
-    private FieldsOfStudyRepository fieldsOfStudyRepository;
+  private String name = "field";
+  private String coordinatorToken;
 
-    @BeforeEach
-    void beforeEach() {
-      coordinatorToken = loginProgrammaticallyWithDefaultCoordinator();
-    }
-  
-    @Test
-    void validFieldOfStudyCreation() throws Exception{
-        makeCreateFieldOfStudyRequest(name)
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.id", is(any(Integer.class))))
-            .andExpect(jsonPath("$.name", is(name)));
-        Optional<FieldOfStudy> optionalFieldtCreated = fieldsOfStudyService.findByName(name);
-        assertTrue(optionalFieldtCreated.isPresent());
+  @Autowired
+  private FieldsOfStudyService fieldsOfStudyService;
 
-        FieldOfStudy fieldCreated = optionalFieldtCreated.get();
-        assertEquals(name,fieldCreated.getName());
+  @BeforeEach
+  void beforeEach() {
+    coordinatorToken = loginWithDefaultCoordinator();
+  }
 
-    }   
+  @Test
+  void validFieldOfStudyCreation() throws Exception {
+    makeCreateFieldOfStudyRequest(name)
+      .andExpect(status().isCreated())
+      .andExpect(jsonPath("$.id", is(any(Integer.class))))
+      .andExpect(jsonPath("$.name", is(name)));
+    Optional<FieldOfStudy> optionalFieldCreated = fieldsOfStudyService.findByName(name);
+    assertTrue(optionalFieldCreated.isPresent());
 
-    private ResultActions makeCreateFieldOfStudyRequest(String field)
-     throws Exception{
-        return mvc.perform(
-            authenticated(post("/api/fields-of-study"),coordinatorToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(field)
-        );
-    }
+    FieldOfStudy fieldCreated = optionalFieldCreated.get();
+    assertEquals(name, fieldCreated.getName());
+  }
+
+  private ResultActions makeCreateFieldOfStudyRequest(String field) throws Exception {
+    return mvc.perform(
+      authenticated(post("/api/fields-of-study"), coordinatorToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(field)
+    );
+  }
 }

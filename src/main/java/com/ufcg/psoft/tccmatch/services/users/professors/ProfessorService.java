@@ -4,6 +4,7 @@ import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.dto.users.UpdateProfessorDTO;
 import com.ufcg.psoft.tccmatch.exceptions.users.UserNotFoundException;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
+import com.ufcg.psoft.tccmatch.exceptions.users.ProfessorNotFoundException;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class ProfessorService {
 
   @Autowired
-  private UserService<Professor> userService;
+  private UserService<User> userService;
 
   @Autowired
   private UserRepository<Professor> userRepository;
@@ -51,7 +52,7 @@ public class ProfessorService {
     Optional<Professor> optionalProfessor = userRepository.findById(professorId);
 
     if (optionalProfessor.isEmpty()) {
-      throw new UserNotFoundException();
+      throw new ProfessorNotFoundException();
     }
 
     Professor professor = optionalProfessor.get();
@@ -90,7 +91,7 @@ public class ProfessorService {
     Optional<Professor> optionalProfessor = userRepository.findById(professorId);
 
     if (optionalProfessor.isEmpty()) {
-      throw new UserNotFoundException();
+      throw new ProfessorNotFoundException();
     }
 
     Professor professor = optionalProfessor.get();
@@ -111,5 +112,14 @@ public class ProfessorService {
   public void selectFieldOfStudy(Professor professor, FieldOfStudy fieldOfStudy) {
     professor.addField(fieldOfStudy);
     userRepository.save(professor);
+  }
+  public Professor findByIdOrThrow(Long id) {
+    Optional<User> optionalProfessor = userService.findUserById(id);
+
+    boolean professorWasFound =
+      optionalProfessor.isPresent() && optionalProfessor.get().getType() == User.Type.PROFESSOR;
+    if (!professorWasFound) throw new ProfessorNotFoundException();
+
+    return (Professor) optionalProfessor.get();
   }
 }
