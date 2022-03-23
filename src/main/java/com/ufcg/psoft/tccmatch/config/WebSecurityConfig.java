@@ -49,6 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         "/api/users/students",
         "/api/users/professors",
         "/api/fields-of-study",
+        "/api/fields-of-study/select/*",
         "/api/tcc-subjects",
         "/api/tcc-guidance-requests",
         "/api/tcc-guidance-requests/review/*",
