@@ -5,38 +5,23 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.tccGuidances.CreateTCCGuidanceDTO;
 import com.ufcg.psoft.tccmatch.exceptions.tccSubjects.TCCSubjectNotFoundException;
 import com.ufcg.psoft.tccmatch.exceptions.users.ProfessorNotFoundException;
 import com.ufcg.psoft.tccmatch.exceptions.users.StudentNotFoundException;
 import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidPeriodException;
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
-import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
-import com.ufcg.psoft.tccmatch.models.users.Professor;
-import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.services.tccGuidances.TCCGuidanceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class TCCGuidanceCreationTests extends IntegrationTests {
+class TCCGuidanceCreationTests extends TCCGuidanceTests {
 
   @Autowired
   private TCCGuidanceService tccGuidanceService;
-
-  private Student student;
-  private Professor professor;
-  private TCCSubject tccSubject;
-
-  private String coordinatorToken;
-
-  private String period = "2020.2";
 
   @BeforeEach
   void beforeEach() {

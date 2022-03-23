@@ -11,6 +11,7 @@ import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,38 @@ public class TCCGuidanceService {
     return tccGuidance;
   }
 
+  public TCCGuidance finishTCCGuidance(Long tccGuidanceId) {
+    Optional<TCCGuidance> optionalTCCGuidance = tccGuidanceRepository.findById(tccGuidanceId);
+
+    if (optionalTCCGuidance.isEmpty()) {
+      throw new TCCGuidanceNotFoundException();
+    }
+
+    TCCGuidance tccGuidance = optionalTCCGuidance.get();
+    tccGuidance.markAsFinished();
+    tccGuidanceRepository.save(tccGuidance);
+
+    return tccGuidance;
+  }
+
+  public List<TCCGuidance> listTCCGuidances(Optional<String> period, Optional<Boolean> isFinished) {
+    if (period.isPresent() && isFinished.isPresent()) {
+      return tccGuidanceRepository.findAllByPeriodAndIsFinished(period.get(), isFinished.get());
+    }
+    if (period.isPresent()) {
+      return tccGuidanceRepository.findAllByPeriod(period.get());
+    }
+    if (isFinished.isPresent()) {
+      return tccGuidanceRepository.findAllByIsFinished(isFinished.get());
+    }
+    return tccGuidanceRepository.findAll();
+  }
+
   public List<TCCGuidance> listAllTCCGuidances() {
     return tccGuidanceRepository.findAll();
+  }
+
+  public Optional<TCCGuidance> findTCCGuidanceById(Long id) {
+    return tccGuidanceRepository.findById(id);
   }
 }

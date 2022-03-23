@@ -64,4 +64,8 @@ public class TCCGuidance {
   public boolean isFinished() {
     return isFinished;
   }
+
+  public void markAsFinished() {
+    this.isFinished = true;
+  }
 }
