@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TCCGuidanceRepository extends JpaRepository<TCCGuidance, Long> {
   List<TCCGuidance> findAllByPeriod(String period);
+
   List<TCCGuidance> findAllByIsFinished(boolean isFinished);
+
   List<TCCGuidance> findAllByPeriodAndIsFinished(String period, boolean isFinished);
 }

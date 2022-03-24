@@ -1,6 +1,7 @@
 package com.ufcg.psoft.tccmatch.services.tccGuidances;
 
 import com.ufcg.psoft.tccmatch.dto.tccGuidances.CreateTCCGuidanceDTO;
+import com.ufcg.psoft.tccmatch.exceptions.tccGuidances.TCCGuidanceNotFoundException;
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
@@ -37,8 +38,7 @@ public class TCCGuidanceService {
     Student student = studentService.findByIdOrThrow(tccGuidanceDTO.getStudentId());
     Professor professor = professorService.findByIdOrThrow(tccGuidanceDTO.getProfessorId());
     TCCSubject tccSubject = tccSubjectService.findTCCSubjectByIdOrThrow(
-      tccGuidanceDTO.getTccSubjectId()
-    );
+        tccGuidanceDTO.getTccSubjectId());
     String period = validator.validatePeriod(tccGuidanceDTO.getPeriod());
 
     TCCGuidance tccGuidance = new TCCGuidance(student, professor, tccSubject, period);

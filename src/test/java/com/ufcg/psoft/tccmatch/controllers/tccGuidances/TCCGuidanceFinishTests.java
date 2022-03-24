@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.ufcg.psoft.tccmatch.exceptions.tccGuidances.TCCGuidanceNotFoundException;
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
-import com.ufcg.psoft.tccmatch.services.tccGuidances.TCCGuidanceNotFoundException;
 import com.ufcg.psoft.tccmatch.services.tccGuidances.TCCGuidanceService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,23 +28,21 @@ class TCCGuidanceFinishTests extends TCCGuidanceTests {
     tccSubject = createMockTCCSubject(student);
     coordinatorToken = loginWithDefaultCoordinator();
 
-    tccGuidance =
-      createMockTCCGuidance(student.getId(), professor.getId(), tccSubject.getId(), period);
+    tccGuidance = createMockTCCGuidance(student.getId(), professor.getId(), tccSubject.getId(), period);
   }
 
   @Test
   void validFinish() throws Exception {
     makeFinishTCCGuidanceRequest(tccGuidance.getId(), coordinatorToken)
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.id", is(tccGuidance.getId().intValue())))
-      .andExpect(jsonPath("$.studentId", is(student.getId().intValue())))
-      .andExpect(jsonPath("$.professorId", is(professor.getId().intValue())))
-      .andExpect(jsonPath("$.tccSubjectId", is(tccSubject.getId().intValue())))
-      .andExpect(jsonPath("$.finished", is(true)));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(tccGuidance.getId().intValue())))
+        .andExpect(jsonPath("$.studentId", is(student.getId().intValue())))
+        .andExpect(jsonPath("$.professorId", is(professor.getId().intValue())))
+        .andExpect(jsonPath("$.tccSubjectId", is(tccSubject.getId().intValue())))
+        .andExpect(jsonPath("$.finished", is(true)));
 
     Optional<TCCGuidance> optionalTCCGuidanceFinished = tccGuidanceService.findTCCGuidanceById(
-      tccGuidance.getId()
-    );
+        tccGuidance.getId());
     assertTrue(optionalTCCGuidanceFinished.isPresent());
 
     TCCGuidance tccGuidance = optionalTCCGuidanceFinished.get();
@@ -59,17 +57,15 @@ class TCCGuidanceFinishTests extends TCCGuidanceTests {
     Long nonExistentTCCGuidanceId = 1000L;
 
     makeFinishTCCGuidanceRequest(nonExistentTCCGuidanceId, coordinatorToken)
-      .andExpect(status().isNotFound())
-      .andExpect(jsonPath("$.message", is(TCCGuidanceNotFoundException.message())));
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.message", is(TCCGuidanceNotFoundException.message())));
   }
 
   private ResultActions makeFinishTCCGuidanceRequest(Long tccGuidanceId, String coordinatorToken)
-    throws Exception {
+      throws Exception {
     return mvc.perform(
-      authenticated(
-        post(String.format("/api/tcc-guidances/finish/%d", tccGuidanceId)),
-        coordinatorToken
-      )
-    );
+        authenticated(
+            post(String.format("/api/tcc-guidances/finish/%d", tccGuidanceId)),
+            coordinatorToken));
   }
 }
