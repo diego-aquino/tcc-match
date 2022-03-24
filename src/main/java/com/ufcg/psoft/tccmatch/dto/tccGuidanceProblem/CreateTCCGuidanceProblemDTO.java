@@ -19,7 +19,7 @@ public class CreateTCCGuidanceProblemDTO {
     return description;
   }
 
-  public Long getTCCGuidanceId() {
+  public Long getTccGuidanceId() {
     return tccGuidanceId;
   }
 }

@@ -32,7 +32,7 @@ public class TCCGuidanceProblemResponseDTO {
     return description;
   }
 
-  public Long getTCCGuidanceId() {
+  public Long getTccGuidanceId() {
     return tccGuidanceId;
   }
 

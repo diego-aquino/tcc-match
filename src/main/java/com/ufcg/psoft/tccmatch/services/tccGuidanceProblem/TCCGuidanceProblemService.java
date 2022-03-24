@@ -32,7 +32,7 @@ public class TCCGuidanceProblemService {
   public TCCGuidanceProblem createTCCGuidanceProblem(CreateTCCGuidanceProblemDTO tccGuidanceProblemDTO) {
     Category category = tccGuidanceProblemValidator.validateCategory(tccGuidanceProblemDTO.getCategory());
     Optional<TCCGuidance> optionalTCCGuidance = tccGuidanceRepository
-        .findById(tccGuidanceProblemDTO.getTCCGuidanceId());
+        .findById(tccGuidanceProblemDTO.getTccGuidanceId());
     if (optionalTCCGuidance.isEmpty())
       throw new TCCGuidanceNotFoundException();
     TCCGuidance tccGuidance = optionalTCCGuidance.get();

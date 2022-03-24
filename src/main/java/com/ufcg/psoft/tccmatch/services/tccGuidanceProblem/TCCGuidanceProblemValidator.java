@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TCCGuidanceProblemValidator {
   public Category validateCategory(String category) {
-    boolean isValid = category != null;
+    boolean isValid = category != null || category == "";
     if (isValid)
       return Category.valueOf(category.toUpperCase());
     throw new CategoryIsNotProvidedException();
