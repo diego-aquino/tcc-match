@@ -2,9 +2,8 @@ package com.ufcg.psoft.tccmatch.services.users.professors;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.dto.users.UpdateProfessorDTO;
-import com.ufcg.psoft.tccmatch.exceptions.users.UserNotFoundException;
-import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.exceptions.users.ProfessorNotFoundException;
+import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
@@ -48,13 +47,8 @@ public class ProfessorService {
   }
 
   public Professor updateProfessor(Long professorId, UpdateProfessorDTO updateProfessorDTO) {
-    Optional<Professor> optionalProfessor = userRepository.findById(professorId);
+    Professor professor = findByIdOrThrow(professorId);
 
-    if (optionalProfessor.isEmpty()) {
-      throw new ProfessorNotFoundException();
-    }
-
-    Professor professor = optionalProfessor.get();
     userService.updateEmailIfProvided(updateProfessorDTO.getEmail(), professor);
     userService.updateNameIfProvided(updateProfessorDTO.getName(), professor);
     updateLaboratoriesIfProvided(updateProfessorDTO.getLaboratories(), professor);
@@ -86,15 +80,8 @@ public class ProfessorService {
   }
 
   public Professor removeProfessor(Long professorId) {
-    Optional<Professor> optionalProfessor = userRepository.findById(professorId);
-
-    if (optionalProfessor.isEmpty()) {
-      throw new ProfessorNotFoundException();
-    }
-
-    Professor professor = optionalProfessor.get();
+    Professor professor = findByIdOrThrow(professorId);
     userRepository.delete(professor);
-
     return professor;
   }
 
