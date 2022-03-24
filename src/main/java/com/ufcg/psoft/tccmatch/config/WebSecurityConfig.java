@@ -41,7 +41,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         HttpMethod.GET,
         "/api/notifications",
         "/api/tcc-subjects",
-        "api/tcc-guidance-requests"
+        "/api/tcc-guidance-requests",
+        "/api/fields-of-study/professors",
+        "/api/tcc-guidance-problems"
       )
       .authenticated()
       .antMatchers(
@@ -49,9 +51,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         "/api/users/students",
         "/api/users/professors",
         "/api/fields-of-study",
+        "/api/fields-of-study/select/*",
         "/api/tcc-subjects",
         "/api/tcc-guidance-requests",
         "/api/tcc-guidance-requests/review/*",
+        "/api/tcc-guidances",
+        "/api/tcc-guidances/finish/*",
+        "/api/tcc-guidance-problems",
         "/api/tcc-subjects/show-interest/*"
       )
       .authenticated()

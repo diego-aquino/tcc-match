@@ -1,12 +1,13 @@
 package com.ufcg.psoft.tccmatch.controllers.tccSubjects;
 
 import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectRequestDTO;
-import com.ufcg.psoft.tccmatch.dto.tccSubjects.CreateTCCSubjectResponseDTO;
+import com.ufcg.psoft.tccmatch.dto.tccSubjects.TCCSubjectResponseDTO;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class TCCSubjectController {
   AuthenticationService authenticationService;
 
   @PostMapping
-  public ResponseEntity<CreateTCCSubjectResponseDTO> createTCCSubject(
+  public ResponseEntity<TCCSubjectResponseDTO> createTCCSubject(
     @RequestBody CreateTCCSubjectRequestDTO tccSubjectDTO
   ) {
     authenticationService.ensureUserTypes(User.Type.PROFESSOR, User.Type.STUDENT);
@@ -39,10 +40,7 @@ public class TCCSubjectController {
 
     TCCSubject newTCCSubject = tccSubjectService.createTCCSubject(tccSubjectDTO, user);
 
-    return new ResponseEntity<CreateTCCSubjectResponseDTO>(
-      new CreateTCCSubjectResponseDTO(newTCCSubject),
-      HttpStatus.CREATED
-    );
+    return new ResponseEntity<>(new TCCSubjectResponseDTO(newTCCSubject), HttpStatus.CREATED);
   }
 
   @PostMapping("/show-interest/{tccSubjectId}")
@@ -57,18 +55,20 @@ public class TCCSubjectController {
   }
 
   @GetMapping
-  public ResponseEntity<Set<TCCSubject>> listTCCSubjects(
+  public ResponseEntity<List<TCCSubjectResponseDTO>> listTCCSubjects(
     @RequestParam(name = "createdBy", required = false) Long createdById
   ) {
     authenticationService.ensureUserTypes(User.Type.PROFESSOR, User.Type.STUDENT);
 
     User user = authenticationService.getAuthenticatedUser();
-    Set<TCCSubject> TCCSubjects;
 
-    if (createdById == null) TCCSubjects =
-      tccSubjectService.listTCCSubjects(user); else TCCSubjects =
-      tccSubjectService.listTCCSubjectsByUser(createdById);
+    Set<TCCSubject> tccSubjects;
+    if (createdById == null) {
+      tccSubjects = tccSubjectService.listTCCSubjectsVisibleToUser(user);
+    } else {
+      tccSubjects = tccSubjectService.listTCCSubjectsCreatedByUser(createdById);
+    }
 
-    return new ResponseEntity<Set<TCCSubject>>(TCCSubjects, HttpStatus.OK);
+    return new ResponseEntity<>(TCCSubjectResponseDTO.fromTCCSubjects(tccSubjects), HttpStatus.OK);
   }
 }

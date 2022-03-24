@@ -2,11 +2,11 @@ package com.ufcg.psoft.tccmatch.dto.tccSubjects;
 
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
-import com.ufcg.psoft.tccmatch.models.users.User;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class CreateTCCSubjectResponseDTO {
+public class TCCSubjectResponseDTO {
 
   private Long id;
   private String title;
@@ -15,7 +15,7 @@ public class CreateTCCSubjectResponseDTO {
   private List<FieldOfStudy> fieldsOfStudy;
   private Long createdBy;
 
-  public CreateTCCSubjectResponseDTO(TCCSubject tccSubject) {
+  public TCCSubjectResponseDTO(TCCSubject tccSubject) {
     this.id = tccSubject.getId();
     this.title = tccSubject.getTitle();
     this.description = tccSubject.getDescription();
@@ -46,5 +46,11 @@ public class CreateTCCSubjectResponseDTO {
 
   public Long getCreatedBy() {
     return createdBy;
+  }
+
+  public static List<TCCSubjectResponseDTO> fromTCCSubjects(Set<TCCSubject> tccSubjects) {
+    return Arrays.asList(
+      tccSubjects.stream().map(TCCSubjectResponseDTO::new).toArray(TCCSubjectResponseDTO[]::new)
+    );
   }
 }

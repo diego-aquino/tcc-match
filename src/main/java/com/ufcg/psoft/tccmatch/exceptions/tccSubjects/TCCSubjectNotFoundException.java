@@ -9,6 +9,6 @@ public class TCCSubjectNotFoundException extends NotFoundApiException {
   }
 
   public static String message() {
-    return "TCC Subject not found.";
+    return "TCC subject not found.";
   }
 }

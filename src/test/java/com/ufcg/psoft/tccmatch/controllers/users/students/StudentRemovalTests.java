@@ -31,11 +31,12 @@ class StudentRemovalTests extends StudentTests {
   @BeforeEach
   void beforeEach() {
     CreateStudentDTO createStudentDTO = new CreateStudentDTO(
-        studentEmail,
-        studentRawPassword,
-        studentName,
-        studentRegistryNumber,
-        studentCompletionPeriod);
+      studentEmail,
+      studentRawPassword,
+      studentName,
+      studentRegistryNumber,
+      studentCompletionPeriod
+    );
 
     student = studentService.createStudent(createStudentDTO);
 
@@ -45,12 +46,12 @@ class StudentRemovalTests extends StudentTests {
   @Test
   void validRemoval() throws Exception {
     makeRemoveStudentRequest(student.getId(), coordinatorToken)
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id", is(student.getId().intValue())))
-        .andExpect(jsonPath("$.email", is(student.getEmail())))
-        .andExpect(jsonPath("$.name", is(student.getName())))
-        .andExpect(jsonPath("$.registryNumber", is(student.getRegistryNumber())))
-        .andExpect(jsonPath("$.completionPeriod", is(student.getCompletionPeriod())));
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.id", is(student.getId().intValue())))
+      .andExpect(jsonPath("$.email", is(student.getEmail())))
+      .andExpect(jsonPath("$.name", is(student.getName())))
+      .andExpect(jsonPath("$.registryNumber", is(student.getRegistryNumber())))
+      .andExpect(jsonPath("$.completionPeriod", is(student.getCompletionPeriod())));
 
     Optional<Student> optionalStudentRemoved = userService.findUserById(student.getId());
     assertTrue(optionalStudentRemoved.isEmpty());
@@ -61,8 +62,8 @@ class StudentRemovalTests extends StudentTests {
     Long nonExistentStudentId = 1000L;
 
     makeRemoveStudentRequest(nonExistentStudentId, coordinatorToken)
-        .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.message", is(StudentNotFoundException.message())));
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.message", is(StudentNotFoundException.message())));
   }
 
   private ResultActions makeRemoveStudentRequest(Long studentId, String token) throws Exception {
