@@ -8,6 +8,6 @@ public class TCCGuidanceNotFoundException extends NotFoundApiException {
   }
 
   public static String message() {
-    return "TCCGuidance not found.";
+    return "TCC guidance not found.";
   }
 }
