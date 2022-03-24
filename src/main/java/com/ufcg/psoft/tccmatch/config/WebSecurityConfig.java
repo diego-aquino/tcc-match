@@ -37,14 +37,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http
       .authorizeRequests()
-      .antMatchers(HttpMethod.GET, "/api/notifications")
+      .antMatchers(
+        HttpMethod.GET,
+        "/api/notifications",
+        "/api/tcc-subjects",
+        "api/tcc-guidance-requests"
+      )
       .authenticated()
       .antMatchers(
         HttpMethod.POST,
         "/api/users/students",
         "/api/users/professors",
         "/api/fields-of-study",
-        "/api/tcc-guidances"
+        "/api/fields-of-study/select/*",
+        "/api/tcc-subjects",
+        "/api/tcc-guidance-requests",
+        "/api/tcc-guidance-requests/review/*",
+        "/api/tcc-guidances",
+        "/api/tcc-guidances/finish/*"
       )
       .authenticated()
       .antMatchers(HttpMethod.PATCH, "/api/users/students/*", "/api/users/professors/*")

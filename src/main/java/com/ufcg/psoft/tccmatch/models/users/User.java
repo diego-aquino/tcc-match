@@ -2,6 +2,7 @@ package com.ufcg.psoft.tccmatch.models.users;
 
 import java.util.Collection;
 import java.util.Collections;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,7 +27,6 @@ public abstract class User implements UserDetails {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Transient
   private Type type;
 
   @Column(unique = true)
@@ -36,7 +35,7 @@ public abstract class User implements UserDetails {
   private String encodedPassword;
 
   private String name;
-
+  
   protected User() {}
 
   protected User(Type type) {
@@ -106,5 +105,13 @@ public abstract class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) return false;
+    if (!(obj instanceof User)) return false;
+    User user = (User) obj;
+    return this.getId() == user.getId();
   }
 }

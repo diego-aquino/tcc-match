@@ -1,6 +1,13 @@
 package com.ufcg.psoft.tccmatch.models.users;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+
+import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 
 @Entity
 public class Student extends User {
@@ -13,7 +20,9 @@ public class Student extends User {
   protected Student() {
     super(TYPE);
   }
-
+  @ManyToMany(fetch = FetchType.EAGER)
+  private Set<FieldOfStudy>fields;
+  
   public Student(
     String email,
     String encodedPassword,
@@ -24,6 +33,7 @@ public class Student extends User {
     super(TYPE, email, encodedPassword, name);
     this.registryNumber = registryNumber;
     this.completionPeriod = completionPeriod;
+    this.fields = new HashSet<>();
   }
 
   public String getRegistryNumber() {
@@ -41,4 +51,14 @@ public class Student extends User {
   public void setCompletionPeriod(String completionPeriod) {
     this.completionPeriod = completionPeriod;
   }
+  
+  public Set<FieldOfStudy> getFields(){
+    return this.fields;
+  }
+
+  public void addField(FieldOfStudy fieldOfStudy) {
+    fields.add(fieldOfStudy);
+  }
+
 }
+

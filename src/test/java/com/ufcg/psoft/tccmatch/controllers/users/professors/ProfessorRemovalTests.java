@@ -40,7 +40,7 @@ class ProfessorRemovalTests extends ProfessorTests {
 
     professor = professorService.createProfessor(createProfessorDTO);
 
-    coordinatorToken = loginProgrammaticallyWithDefaultCoordinator();
+    coordinatorToken = loginWithDefaultCoordinator();
   }
 
   @Test

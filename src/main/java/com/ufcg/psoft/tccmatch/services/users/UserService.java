@@ -54,4 +54,5 @@ public class UserService<GenericUser extends User> {
   public Optional<GenericUser> findUserByEmail(String email) {
     return userRepository.findByEmail(email);
   }
+
 }

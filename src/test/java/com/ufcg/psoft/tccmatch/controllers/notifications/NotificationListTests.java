@@ -46,7 +46,7 @@ class NotificationListTests extends IntegrationTests {
     }
 
     coordinator = optionalCoordinator.get();
-    coordinatorToken = loginProgrammaticallyWithDefaultCoordinator();
+    coordinatorToken = loginWithDefaultCoordinator();
   }
 
   @Test

@@ -42,7 +42,7 @@ class ProfessorUpdateTests extends ProfessorTests {
     );
 
     professor = professorService.createProfessor(createProfessorDTO);
-    professorToken = loginProgrammatically(professorEmail, professorRawPassword);
+    professorToken = login(professorEmail, professorRawPassword);
   }
 
   @Test
@@ -136,7 +136,7 @@ class ProfessorUpdateTests extends ProfessorTests {
       Optional.empty()
     );
 
-    String coordinatorToken = loginProgrammaticallyWithDefaultCoordinator();
+    String coordinatorToken = loginWithDefaultCoordinator();
 
     makeUpdateProfessorRequest(professor.getId(), coordinatorToken, updateProfessorDTO)
       .andExpect(status().isOk())
@@ -231,10 +231,7 @@ class ProfessorUpdateTests extends ProfessorTests {
     );
 
     professorService.createProfessor(createProfessorDTO);
-    String anotherProfessorToken = loginProgrammatically(
-      anotherProfessorEmail,
-      professorRawPassword
-    );
+    String anotherProfessorToken = login(anotherProfessorEmail, professorRawPassword);
 
     String newName = "New Professor";
 
