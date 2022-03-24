@@ -17,6 +17,10 @@ abstract class TCCGuidanceProblemTests extends IntegrationTests {
   protected String period = "2020.2";
 
   protected String category = "COMMUNICATION";
-  protected String description = "O professor não se comunica direito.";
+  protected String description = "A comunicação está nos atrapalhando.";
   protected TCCGuidance tccGuidance;
+
+  protected String coordinatorToken;
+  protected String studentToken;
+  protected String professorToken;
 }

@@ -21,12 +21,11 @@ class TCCGuidanceProblemCreationTests extends TCCGuidanceProblemTests {
     professor = createMockProfessor();
     tccSubject = createMockTCCSubject(student);
     tccGuidance = createMockTCCGuidance(student.getId(), professor.getId(), tccSubject.getId(), period);
+    studentToken = loginWithMockStudent();
   }
 
   @Test
   void validTCCGuidanceProblemCreation() throws Exception {
-    String studentToken = loginWithMockStudent();
-
     CreateTCCGuidanceProblemDTO createTCCGuidanceProblemDTO = new CreateTCCGuidanceProblemDTO(
         category,
         description,
@@ -43,7 +42,6 @@ class TCCGuidanceProblemCreationTests extends TCCGuidanceProblemTests {
   @Test
   void errorOnTCCGuidanceNotFound() throws Exception {
     Long tccGuidanceIdNotFound = 1000L;
-    String studentToken = loginWithMockStudent();
 
     CreateTCCGuidanceProblemDTO createTCCGuidanceProblemDTO = new CreateTCCGuidanceProblemDTO(
         category,
@@ -58,7 +56,6 @@ class TCCGuidanceProblemCreationTests extends TCCGuidanceProblemTests {
   @Test
   void errorOnCategoryIsNotProvided() throws Exception {
     String categoryNotProvided = null;
-    String studentToken = loginWithMockStudent();
 
     CreateTCCGuidanceProblemDTO createTCCGuidanceProblemDTO = new CreateTCCGuidanceProblemDTO(
         categoryNotProvided,
