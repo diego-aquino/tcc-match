@@ -12,16 +12,19 @@ public class FieldOfStudy {
     private Long id;
 
     private String name;
-    public FieldOfStudy(){}
-    
-    public FieldOfStudy(String name){
+
+    public FieldOfStudy() {
+    }
+
+    public FieldOfStudy(String name) {
         this.name = name;
     }
-    
+
     public Long getId() {
         return id;
     }
-    public String getName(){
+
+    public String getName() {
         return name;
     }
 

@@ -32,8 +32,7 @@ public class TCCGuidancesController {
 
   @PostMapping
   public ResponseEntity<TCCGuidanceResponseDTO> createTCCGuidance(
-    @RequestBody CreateTCCGuidanceDTO tccGuidanceDTO
-  ) {
+      @RequestBody CreateTCCGuidanceDTO tccGuidanceDTO) {
     authenticationService.ensureUserTypes(User.Type.COORDINATOR);
 
     TCCGuidance tccGuidance = tccGuidanceService.createTCCGuidance(tccGuidanceDTO);
@@ -42,8 +41,7 @@ public class TCCGuidancesController {
 
   @PostMapping("/finish/{tccGuidanceId}")
   public ResponseEntity<TCCGuidanceResponseDTO> finishTCCGuidance(
-    @PathVariable("tccGuidanceId") Long tccGuidanceId
-  ) {
+      @PathVariable("tccGuidanceId") Long tccGuidanceId) {
     authenticationService.ensureUserTypes(User.Type.COORDINATOR);
 
     TCCGuidance finishedTCCGuidance = tccGuidanceService.finishTCCGuidance(tccGuidanceId);
@@ -52,21 +50,18 @@ public class TCCGuidancesController {
 
   @GetMapping
   public ResponseEntity<List<TCCGuidanceResponseDTO>> listTCCGuidances(
-    @RequestParam("period") Optional<String> period,
-    @RequestParam("finished") Optional<Boolean> isFinished
-  ) {
+      @RequestParam("period") Optional<String> period,
+      @RequestParam("finished") Optional<Boolean> isFinished) {
     authenticationService.ensureUserTypes(
-      User.Type.STUDENT,
-      User.Type.PROFESSOR,
-      User.Type.COORDINATOR
-    );
+        User.Type.STUDENT,
+        User.Type.PROFESSOR,
+        User.Type.COORDINATOR);
 
     List<TCCGuidance> tccGuidances = tccGuidanceService.listTCCGuidances(period, isFinished);
 
     return new ResponseEntity<>(
-      TCCGuidanceResponseDTO.fromTCCGuidances(tccGuidances),
-      HttpStatus.OK
-    );
+        TCCGuidanceResponseDTO.fromTCCGuidances(tccGuidances),
+        HttpStatus.OK);
   }
 
   @GetMapping

@@ -1,9 +1,8 @@
-package com.ufcg.psoft.tccmatch.services.tccGuidances;
+package com.ufcg.psoft.tccmatch.exceptions.tccGuidances;
 
 import com.ufcg.psoft.tccmatch.exceptions.api.NotFoundApiException;
 
 public class TCCGuidanceNotFoundException extends NotFoundApiException {
-
   public TCCGuidanceNotFoundException() {
     super(message());
   }
