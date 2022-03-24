@@ -36,7 +36,7 @@ class TCCGuidanceProblemCreationTests extends TCCGuidanceProblemTests {
         .andExpect(jsonPath("$.id", is(any(Integer.class))))
         .andExpect(jsonPath("$.category", is(createTCCGuidanceProblemDTO.getCategory())))
         .andExpect(jsonPath("$.description", is(createTCCGuidanceProblemDTO.getDescription())))
-        .andExpect(jsonPath("$.tccGuidanceId", is(any(Integer.class))));
+        .andExpect(jsonPath("$.tccGuidanceId", is(tccGuidance.getId().intValue())));
   }
 
   @Test
