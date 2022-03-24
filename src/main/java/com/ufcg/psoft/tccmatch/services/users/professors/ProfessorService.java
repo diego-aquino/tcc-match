@@ -2,12 +2,14 @@ package com.ufcg.psoft.tccmatch.services.users.professors;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.dto.users.UpdateProfessorDTO;
-import com.ufcg.psoft.tccmatch.exceptions.users.UserNotFoundException;
+import com.ufcg.psoft.tccmatch.exceptions.users.ProfessorNotFoundException;
+import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class ProfessorService {
 
   @Autowired
-  private UserService<Professor> userService;
+  private UserService<User> userService;
 
   @Autowired
   private UserRepository<Professor> userRepository;
@@ -47,13 +49,8 @@ public class ProfessorService {
   }
 
   public Professor updateProfessor(Long professorId, UpdateProfessorDTO updateProfessorDTO) {
-    Optional<Professor> optionalProfessor = userRepository.findById(professorId);
+    Professor professor = findByIdOrThrow(professorId);
 
-    if (optionalProfessor.isEmpty()) {
-      throw new UserNotFoundException();
-    }
-
-    Professor professor = optionalProfessor.get();
     userService.updateEmailIfProvided(updateProfessorDTO.getEmail(), professor);
     userService.updateNameIfProvided(updateProfessorDTO.getName(), professor);
     updateLaboratoriesIfProvided(updateProfessorDTO.getLaboratories(), professor);
@@ -86,15 +83,8 @@ public class ProfessorService {
   }
 
   public Professor removeProfessor(Long professorId) {
-    Optional<Professor> optionalProfessor = userRepository.findById(professorId);
-
-    if (optionalProfessor.isEmpty()) {
-      throw new UserNotFoundException();
-    }
-
-    Professor professor = optionalProfessor.get();
+    Professor professor = findByIdOrThrow(professorId);
     userRepository.delete(professor);
-
     return professor;
   }
 
@@ -106,5 +96,24 @@ public class ProfessorService {
       authenticatedUser.getType() == User.Type.PROFESSOR &&
       authenticatedUser.getId().equals(professorId)
     );
+  }
+
+  public void selectFieldOfStudy(Professor professor, FieldOfStudy fieldOfStudy) {
+    professor.addField(fieldOfStudy);
+    userRepository.save(professor);
+  }
+
+  public Professor findByIdOrThrow(Long id) {
+    Optional<User> optionalProfessor = userService.findUserById(id);
+
+    boolean professorWasFound =
+      optionalProfessor.isPresent() && optionalProfessor.get().getType() == User.Type.PROFESSOR;
+    if (!professorWasFound) throw new ProfessorNotFoundException();
+
+    return (Professor) optionalProfessor.get();
+  }
+
+  public List<Professor> findAllProfessors() {
+    return userRepository.findAllByType(User.Type.PROFESSOR);
   }
 }

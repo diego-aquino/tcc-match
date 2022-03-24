@@ -5,9 +5,7 @@ import com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests.ReviewTCCGuidanceRequestR
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceRequests.TCCGuidanceRequestNotFound;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceRequests.TCCGuidanceRequestNotPending;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceRequests.TCCGuidanceRequestUnauthorizedProfessor;
-import com.ufcg.psoft.tccmatch.exceptions.tccSubjects.InvalidTCCSubjectException;
 import com.ufcg.psoft.tccmatch.exceptions.tccSubjects.TCCSubjectNotFoundException;
-import com.ufcg.psoft.tccmatch.exceptions.users.UserNotFoundException;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
@@ -15,7 +13,7 @@ import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.tccGuidanceRequests.TCCGuidanceRequestRepository;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
-import com.ufcg.psoft.tccmatch.services.users.UserService;
+import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,7 @@ public class TCCGuidanceRequestService {
   TCCSubjectService tccSubjectService;
 
   @Autowired
-  UserService<Professor> professorService;
+  ProfessorService professorService;
 
   public Optional<TCCGuidanceRequest> findById(Long id) {
     return tccGuidanceRequestRepository.findById(id);
@@ -45,26 +43,24 @@ public class TCCGuidanceRequestService {
     CreateTCCGuidanceRequestRequestDTO createTccGuidanceRequestDTO,
     Student user
   ) {
-    Optional<TCCSubject> tccSubjectOp = tccSubjectService.findTCCSubjectById(
+    Optional<TCCSubject> optionalTCCSubject = tccSubjectService.findTCCSubjectById(
       createTccGuidanceRequestDTO.getTccSubjectId()
     );
-    if (tccSubjectOp.isEmpty()) throw new TCCSubjectNotFoundException();
 
-    TCCSubject tccSubject = tccSubjectOp.get();
-    User userCreatedSubject = tccSubject.getCreatedBy();
+    if (optionalTCCSubject.isEmpty()) {
+      throw new TCCSubjectNotFoundException();
+    }
+
+    TCCSubject tccSubject = optionalTCCSubject.get();
+    User creator = tccSubject.getCreatedBy();
 
     TCCGuidanceRequest tccGuidanceRequest;
-
-    if (userCreatedSubject.getType() == User.Type.PROFESSOR) {
-      tccGuidanceRequest = new TCCGuidanceRequest(user, (Professor) userCreatedSubject, tccSubject);
+    if (user.getType() == User.Type.PROFESSOR) {
+      tccGuidanceRequest = new TCCGuidanceRequest(user, (Professor) creator, tccSubject);
     } else {
-      Optional<Professor> professorOp = professorService.findUserById(
+      Professor professor = professorService.findByIdOrThrow(
         createTccGuidanceRequestDTO.getProfessorId()
       );
-      if (professorOp.isEmpty()) throw new UserNotFoundException();
-
-      Professor professor = professorOp.get();
-
       tccGuidanceRequest = new TCCGuidanceRequest(user, professor, tccSubject);
     }
 

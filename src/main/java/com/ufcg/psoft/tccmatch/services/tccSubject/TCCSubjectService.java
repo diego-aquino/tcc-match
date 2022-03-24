@@ -30,12 +30,18 @@ public class TCCSubjectService {
     TCC_SUBJECT_SEARCH_BY_USER_TYPE = Collections.unmodifiableMap(newMap);
   }
 
-  public Optional<TCCSubject> findTCCSubjectByTitle(String title) {
-    return tccSubjectRepository.findByTitle(title);
+  public Optional<TCCSubject> findTCCSubjectByTitle(String tccSubjectTitle) {
+    return tccSubjectRepository.findByTitle(tccSubjectTitle);
   }
 
-  public Optional<TCCSubject> findTCCSubjectById(Long id) {
-    return tccSubjectRepository.findById(id);
+  public Optional<TCCSubject> findTCCSubjectById(Long tccSubjectId) {
+    return tccSubjectRepository.findById(tccSubjectId);
+  }
+
+  public TCCSubject findTCCSubjectByIdOrThrow(Long tccSubjectId) {
+    Optional<TCCSubject> optionalUser = tccSubjectRepository.findById(tccSubjectId);
+    if (optionalUser.isEmpty()) throw new TCCSubjectNotFoundException();
+    return optionalUser.get();
   }
 
   public TCCSubject createTCCSubject(CreateTCCSubjectRequestDTO tccSubjectDTO, User user) {
@@ -52,12 +58,12 @@ public class TCCSubjectService {
     return tccSubject;
   }
 
-  public Set<TCCSubject> listTCCSubjects(User user) {
-    User.Type TCCSubjectCreatedByTypeToList = TCC_SUBJECT_SEARCH_BY_USER_TYPE.get(user.getType());
-    return tccSubjectRepository.findByCreatedBy_Type(TCCSubjectCreatedByTypeToList);
+  public Set<TCCSubject> listTCCSubjectsVisibleToUser(User user) {
+    User.Type userTypeToSearch = TCC_SUBJECT_SEARCH_BY_USER_TYPE.get(user.getType());
+    return tccSubjectRepository.findByCreatedBy_Type(userTypeToSearch);
   }
 
-  public Set<TCCSubject> listTCCSubjectsByUser(long createdById) {
+  public Set<TCCSubject> listTCCSubjectsCreatedByUser(long createdById) {
     return tccSubjectRepository.findByCreatedBy_Id(createdById);
   }
 

@@ -9,8 +9,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests.CreateTCCGuidanceRequestRequestDTO;
+import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest;
+import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.services.tccGuidanceRequest.TCCGuidanceRequestService;
-import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,41 +26,53 @@ import org.springframework.test.web.servlet.ResultActions;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ListTCCGuidanceRequestTests extends IntegrationTests {
 
-  @Autowired
-  private TCCSubjectService tccSubjectService;
+  private Professor professor;
+  private Student student;
+  private TCCSubject tccSubject;
 
   @Autowired
   private TCCGuidanceRequestService tccGuidanceRequestService;
 
   @BeforeEach
   void beforeEach() {
-    createMockProfessor();
-    createMockStudent();
-    createMockTCCSubject(mockProfessor);
+    professor = createMockProfessor();
+    student = createMockStudent();
+    tccSubject = createMockTCCSubject(professor);
   }
 
   @Test
   void ListTCCGuidanceRequest() throws Exception {
-    String professorToken = loginProgrammaticallyWithMockProfessor();
+    String professorToken = loginWithMockProfessor();
 
     CreateTCCGuidanceRequestRequestDTO createTCCGuidanceRequestRequestDTO = new CreateTCCGuidanceRequestRequestDTO(
-      mockTCCSubject.getId(),
-      mockProfessor.getId()
+      tccSubject.getId(),
+      professor.getId()
     );
-    tccGuidanceRequestService.createTCCGuidanceRequest(
+    TCCGuidanceRequest tccGuidanceRequest = tccGuidanceRequestService.createTCCGuidanceRequest(
       createTCCGuidanceRequestRequestDTO,
-      mockStudent
+      student
     );
 
     makeListTCCGuidanceRequestRequest(professorToken)
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$", is(any(List.class))))
-      .andExpect(jsonPath("$", hasSize(1)));
+      .andExpect(jsonPath("$", hasSize(1)))
+      .andExpect(jsonPath("$.[0].id", is(tccGuidanceRequest.getId().intValue())))
+      .andExpect(jsonPath("$.[0].status", is(tccGuidanceRequest.getStatus().toString())))
+      .andExpect(jsonPath("$.[0].message", is(tccGuidanceRequest.getMessage())))
+      .andExpect(
+        jsonPath("$.[0].createdBy", is(tccGuidanceRequest.getCreatedBy().getId().intValue()))
+      )
+      .andExpect(
+        jsonPath("$.[0].requestedTo", is(tccGuidanceRequest.getRequestedTo().getId().intValue()))
+      )
+      .andExpect(
+        jsonPath("$.[0].tccSubject", is(tccGuidanceRequest.getTccSubject().getId().intValue()))
+      );
   }
 
   @Test
   void ListTCCGuidanceNoRequests() throws Exception {
-    String professorToken = loginProgrammaticallyWithMockProfessor();
+    String professorToken = loginWithMockProfessor();
 
     makeListTCCGuidanceRequestRequest(professorToken)
       .andExpect(status().isOk())
