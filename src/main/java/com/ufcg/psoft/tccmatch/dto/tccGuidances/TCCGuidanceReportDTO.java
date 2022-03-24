@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ufcg.psoft.tccmatch.dto.fieldsOfStudy.FieldOfStudyResponseDTO;
+import com.ufcg.psoft.tccmatch.dto.tccSubjects.TCCSubjectResponseDTO;
 import com.ufcg.psoft.tccmatch.dto.users.UserResponseDTO;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
@@ -16,13 +17,13 @@ public class TCCGuidanceReportDTO {
     private List<FieldOfStudyResponseDTO> tccFieldOfStudy;
     private String period;
     private boolean isFinished;
-    private Long tccSubjectId;
+    private TCCSubjectResponseDTO tccSubject;
     private UserResponseDTO student;
     private UserResponseDTO professor;
 
     public TCCGuidanceReportDTO(TCCGuidance tccGuidance) {
       this.id = tccGuidance.getId();
-      this.tccSubjectId = tccGuidance.getTCCSubject().getId();
+      this.tccSubject = new TCCSubjectResponseDTO(tccGuidance.getTCCSubject());
       this.student = new UserResponseDTO(tccGuidance.getStudent());
       this.professor = new UserResponseDTO(tccGuidance.getProfessor());
       this.tccFieldOfStudy = convertSetFields(tccGuidance.getTCCSubject().getFieldsOfStudy());
@@ -44,8 +45,8 @@ public class TCCGuidanceReportDTO {
     return this.tccFieldOfStudy;
   }
 
-  public Long getTccSubjectId() {
-    return tccSubjectId;
+  public TCCSubjectResponseDTO getTccSubjectId() {
+    return tccSubject;
   }
 
   public UserResponseDTO getStudent() {
