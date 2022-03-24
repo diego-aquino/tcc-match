@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Iterator;
 import java.util.Set;
-import org.springframework.http.MediaType;
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.exceptions.fieldsOfStudy.FieldNotFoundException;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
@@ -17,6 +16,7 @@ import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.fieldsOfStudy.FieldsOfStudyService;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
@@ -56,85 +56,85 @@ class FieldsOfStudySelectionTest extends IntegrationTests {
     student = createMockStudent();
     studentToken = loginWithMockStudent();
     selectFieldOfStudyRequest(123L, studentToken)
-        .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.message", is(FieldNotFoundException.message())));
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.message", is(FieldNotFoundException.message())));
   }
+
   @Test
   void validSelectFieldStudent() throws Exception {
     student = createMockStudent();
     studentToken = loginWithMockStudent();
-    selectFieldOfStudyRequest(idField, studentToken)
-      .andExpect(status().isOk());
-      
-    Set<FieldOfStudy>fields = ((Student)userService.findUserById(student.getId()).get()).getFields();
-    assertEquals(1,fields.size());
+    selectFieldOfStudyRequest(idField, studentToken).andExpect(status().isOk());
+
+    Set<FieldOfStudy> fields =
+      ((Student) userService.findUserById(student.getId()).get()).getFields();
+    assertEquals(1, fields.size());
     Iterator<FieldOfStudy> iterator = fields.iterator();
     FieldOfStudy fielder = iterator.next();
-    assertEquals(fielder.getId(),field.getId());
-    assertEquals(fielder.getName(),field.getName());
+    assertEquals(fielder.getId(), field.getId());
+    assertEquals(fielder.getName(), field.getName());
   }
-  
+
   @Test
   void validSelectMultipleFieldStudent() throws Exception {
     student = createMockStudent();
     studentToken = loginWithMockStudent();
-    selectFieldOfStudyRequest(idField, studentToken)
-      .andExpect(status().isOk());
-      
-    Set<FieldOfStudy>fields = ((Student)userService.findUserById(student.getId()).get()).getFields();
-    assertEquals(1,fields.size());
+    selectFieldOfStudyRequest(idField, studentToken).andExpect(status().isOk());
+
+    Set<FieldOfStudy> fields =
+      ((Student) userService.findUserById(student.getId()).get()).getFields();
+    assertEquals(1, fields.size());
     Iterator<FieldOfStudy> iterator = fields.iterator();
     FieldOfStudy fielder = iterator.next();
-    assertEquals(fielder.getId(),field.getId());
-    assertEquals(fielder.getName(),field.getName());
+    assertEquals(fielder.getId(), field.getId());
+    assertEquals(fielder.getName(), field.getName());
 
-    selectFieldOfStudyRequest(idField2, studentToken)
-        .andExpect(status().isOk());
-    fields = ((Student)userService.findUserById(student.getId()).get()).getFields();
-    assertEquals(2,fields.size());
+    selectFieldOfStudyRequest(idField2, studentToken).andExpect(status().isOk());
+    fields = ((Student) userService.findUserById(student.getId()).get()).getFields();
+    assertEquals(2, fields.size());
   }
+
   @Test
   void validSelectMultipleEqualFieldStudent() throws Exception {
     student = createMockStudent();
     studentToken = loginWithMockStudent();
-    selectFieldOfStudyRequest(idField, studentToken)
-      .andExpect(status().isOk());
-    
-    Set<FieldOfStudy>fields = ((Student)userService.findUserById(student.getId()).get()).getFields();
-    assertEquals(1,fields.size());
+    selectFieldOfStudyRequest(idField, studentToken).andExpect(status().isOk());
+
+    Set<FieldOfStudy> fields =
+      ((Student) userService.findUserById(student.getId()).get()).getFields();
+    assertEquals(1, fields.size());
     Iterator<FieldOfStudy> iterator = fields.iterator();
     FieldOfStudy fielder = iterator.next();
-    assertEquals(fielder.getId(),field.getId());
-    assertEquals(fielder.getName(),field.getName());
+    assertEquals(fielder.getId(), field.getId());
+    assertEquals(fielder.getName(), field.getName());
 
-    selectFieldOfStudyRequest(idField, studentToken)
-        .andExpect(status().isOk());
-    fields = ((Student)userService.findUserById(student.getId()).get()).getFields();
-    assertEquals(1,fields.size());
+    selectFieldOfStudyRequest(idField, studentToken).andExpect(status().isOk());
+    fields = ((Student) userService.findUserById(student.getId()).get()).getFields();
+    assertEquals(1, fields.size());
   }
-  
+
   @Test
   void validSelectFieldProfessor() throws Exception {
     professor = createMockProfessor();
     professorToken = loginWithMockProfessor();
-    
-    selectFieldOfStudyRequest(idField, professorToken)
-        .andExpect(status().isOk());
-      
-    Set<FieldOfStudy>fields = ((Professor)userService.findUserById(professor.getId()).get()).getFields();
-    assertEquals(1,fields.size());
+
+    selectFieldOfStudyRequest(idField, professorToken).andExpect(status().isOk());
+
+    Set<FieldOfStudy> fields =
+      ((Professor) userService.findUserById(professor.getId()).get()).getFields();
+    assertEquals(1, fields.size());
 
     Iterator<FieldOfStudy> iterator = fields.iterator();
     FieldOfStudy fielder = iterator.next();
-    assertEquals(fielder.getId(),field.getId());
-    assertEquals(fielder.getName(),field.getName());
-
+    assertEquals(fielder.getId(), field.getId());
+    assertEquals(fielder.getName(), field.getName());
   }
-  private ResultActions selectFieldOfStudyRequest(Long idField, String studentToken) throws Exception{
+
+  private ResultActions selectFieldOfStudyRequest(Long idField, String studentToken)
+    throws Exception {
     String endpoint = String.format("/api/fields-of-study/select/%d", idField);
     return mvc.perform(
-        authenticated(post(endpoint),studentToken)
-        .contentType(MediaType.APPLICATION_JSON)
-        );
+      authenticated(post(endpoint), studentToken).contentType(MediaType.APPLICATION_JSON)
+    );
   }
 }

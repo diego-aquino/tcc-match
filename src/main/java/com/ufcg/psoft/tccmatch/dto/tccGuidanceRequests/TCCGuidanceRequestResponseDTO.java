@@ -2,6 +2,9 @@ package com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests;
 
 import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest.Status;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public class TCCGuidanceRequestResponseDTO {
 
@@ -43,5 +46,16 @@ public class TCCGuidanceRequestResponseDTO {
 
   public Long getRequestedTo() {
     return requestedTo;
+  }
+
+  public static List<TCCGuidanceRequestResponseDTO> fromTCCGuidanceRequests(
+    Set<TCCGuidanceRequest> tccGuidanceRequests
+  ) {
+    return Arrays.asList(
+      tccGuidanceRequests
+        .stream()
+        .map(TCCGuidanceRequestResponseDTO::new)
+        .toArray(TCCGuidanceRequestResponseDTO[]::new)
+    );
   }
 }

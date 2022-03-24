@@ -38,22 +38,22 @@ public class FieldsOfStudyController {
     FieldOfStudy fieldOfStudy = fieldsOfStudyService.createFieldsOfStudy(name);
     return new ResponseEntity<>(new FieldOfStudyResponseDTO(fieldOfStudy), HttpStatus.CREATED);
   }
+
   @PostMapping("/select/{fieldOfStudyId}")
   public ResponseEntity<FieldOfStudyResponseDTO> selectFieldOfStudy(
-      @PathVariable("fieldOfStudyId") Long idField
-  ){
-      authenticationService.ensureUserTypes(User.Type.STUDENT,User.Type.PROFESSOR);;
-      User authenticatedUser = authenticationService.getAuthenticatedUser();
+    @PathVariable("fieldOfStudyId") Long idField
+  ) {
+    authenticationService.ensureUserTypes(User.Type.STUDENT, User.Type.PROFESSOR);
+    User authenticatedUser = authenticationService.getAuthenticatedUser();
+    Optional<FieldOfStudy> field = fieldsOfStudyService.findById(idField);
 
-      Optional<FieldOfStudy> field = fieldsOfStudyService.findById(idField);
-      
-      if(field.isEmpty())
-          throw new FieldNotFoundException();
-      else{
-          FieldOfStudy fieldOfStudy = field.get();
-          fieldsOfStudyService.selectFieldOfStudy(authenticatedUser, fieldOfStudy);
-          return new ResponseEntity<>(new FieldOfStudyResponseDTO(fieldOfStudy), HttpStatus.OK);
-      }
+    if (field.isEmpty()) {
+      throw new FieldNotFoundException();
+    }
+
+    FieldOfStudy fieldOfStudy = field.get();
+    fieldsOfStudyService.selectFieldOfStudy(authenticatedUser, fieldOfStudy);
+    return new ResponseEntity<>(new FieldOfStudyResponseDTO(fieldOfStudy), HttpStatus.OK);
   }
   @GetMapping("/professors") 
   public ResponseEntity<List<ProfessorResponseDTO>> listProfessors(){

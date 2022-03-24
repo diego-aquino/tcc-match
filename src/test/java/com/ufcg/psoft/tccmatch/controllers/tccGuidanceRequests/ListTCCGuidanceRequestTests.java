@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests.CreateTCCGuidanceRequestRequestDTO;
+import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
@@ -47,12 +48,26 @@ public class ListTCCGuidanceRequestTests extends IntegrationTests {
       tccSubject.getId(),
       professor.getId()
     );
-    tccGuidanceRequestService.createTCCGuidanceRequest(createTCCGuidanceRequestRequestDTO, student);
+    TCCGuidanceRequest tccGuidanceRequest = tccGuidanceRequestService.createTCCGuidanceRequest(
+      createTCCGuidanceRequestRequestDTO,
+      student
+    );
 
     makeListTCCGuidanceRequestRequest(professorToken)
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$", is(any(List.class))))
-      .andExpect(jsonPath("$", hasSize(1)));
+      .andExpect(jsonPath("$", hasSize(1)))
+      .andExpect(jsonPath("$.[0].id", is(tccGuidanceRequest.getId().intValue())))
+      .andExpect(jsonPath("$.[0].status", is(tccGuidanceRequest.getStatus().toString())))
+      .andExpect(jsonPath("$.[0].message", is(tccGuidanceRequest.getMessage())))
+      .andExpect(
+        jsonPath("$.[0].createdBy", is(tccGuidanceRequest.getCreatedBy().getId().intValue()))
+      )
+      .andExpect(
+        jsonPath("$.[0].requestedTo", is(tccGuidanceRequest.getRequestedTo().getId().intValue()))
+      )
+      .andExpect(
+        jsonPath("$.[0].tccSubject", is(tccGuidanceRequest.getTccSubject().getId().intValue()))
+      );
   }
 
   @Test

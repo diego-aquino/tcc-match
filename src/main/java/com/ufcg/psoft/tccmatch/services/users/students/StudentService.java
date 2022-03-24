@@ -2,8 +2,8 @@ package com.ufcg.psoft.tccmatch.services.users.students;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateStudentDTO;
 import com.ufcg.psoft.tccmatch.dto.users.UpdateStudentDTO;
-import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.exceptions.users.StudentNotFoundException;
+import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
@@ -51,13 +51,8 @@ public class StudentService {
   }
 
   public Student updateStudent(Long studentId, UpdateStudentDTO updateStudentDTO) {
-    Optional<Student> optionalStudent = userRepository.findById(studentId);
+    Student student = findByIdOrThrow(studentId);
 
-    if (optionalStudent.isEmpty()) {
-      throw new StudentNotFoundException();
-    }
-
-    Student student = optionalStudent.get();
     userService.updateEmailIfProvided(updateStudentDTO.getEmail(), student);
     userService.updateNameIfProvided(updateStudentDTO.getName(), student);
     updateCompletionPeriodIfProvided(updateStudentDTO.getCompletionPeriod(), student);
@@ -77,15 +72,8 @@ public class StudentService {
   }
 
   public Student removeStudent(Long studentId) {
-    Optional<Student> optionalStudent = userRepository.findById(studentId);
-
-    if (optionalStudent.isEmpty()) {
-      throw new StudentNotFoundException();
-    }
-
-    Student student = optionalStudent.get();
+    Student student = findByIdOrThrow(studentId);
     userRepository.delete(student);
-
     return student;
   }
 
@@ -98,10 +86,12 @@ public class StudentService {
       authenticatedUser.getId().equals(studentId)
     );
   }
+
   public void selectFieldOfStudy(Student student, FieldOfStudy fieldOfStudy) {
     student.addField(fieldOfStudy);
     userRepository.save(student);
   }
+
   public Student findByIdOrThrow(Long id) {
     Optional<User> optionalStudent = userService.findUserById(id);
 
