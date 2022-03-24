@@ -120,7 +120,7 @@ class TCCGuidanceReportTest extends TCCGuidanceTests {
       authenticated(
         get(
           String.format(
-            "/api/tcc-guidances%s%s",
+            "/api/tcc-guidances/reports%s%s",
             queries.size() > 0 ? "?" : "",
             String.join("&", queries)
           )

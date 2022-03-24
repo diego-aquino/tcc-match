@@ -64,7 +64,7 @@ public class TCCGuidancesController {
         HttpStatus.OK);
   }
 
-  @GetMapping
+  @GetMapping("/reports")
   public ResponseEntity<List<TCCGuidanceReportDTO>> reportTCCGuidances(
     @RequestParam("period") Optional<String> period,
     @RequestParam("finished") Optional<Boolean> isFinished
