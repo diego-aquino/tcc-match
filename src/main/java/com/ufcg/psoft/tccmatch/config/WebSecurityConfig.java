@@ -43,6 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/tcc-subjects",
             "/api/tcc-guidance-requests",
             "/api/fields-of-study/professors",
+            "/api/tcc-guidances",
+            "/api/tcc-guidances/reports",
             "/api/tcc-guidance-problems")
         .authenticated()
         .antMatchers(
