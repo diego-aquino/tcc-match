@@ -1,6 +1,8 @@
 package com.ufcg.psoft.tccmatch.dto.users;
 
 import com.ufcg.psoft.tccmatch.models.users.Professor;
+
+import java.util.Arrays;
 import java.util.List;
 
 public class ProfessorResponseDTO {
@@ -37,5 +39,11 @@ public class ProfessorResponseDTO {
 
   public int getGuidanceQuota() {
     return guidanceQuota;
+  }
+  
+  public static List<ProfessorResponseDTO> listProfessors(List<Professor> tccGuidances) {
+    return Arrays.asList(
+      tccGuidances.stream().map(ProfessorResponseDTO::new).toArray(ProfessorResponseDTO[]::new)
+    );
   }
 }

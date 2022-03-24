@@ -28,4 +28,15 @@ public class FieldOfStudy {
         return name;
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(o.getClass()!= this.getClass()) return false;
+        FieldOfStudy field = (FieldOfStudy) o;
+        if(field.getName().equals(this.getName())) return true;
+        return false;
+    }
+    @Override
+    public int hashCode(){
+        return this.id.intValue();
+    }
 }

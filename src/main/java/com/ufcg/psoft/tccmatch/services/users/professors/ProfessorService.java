@@ -9,6 +9,8 @@ import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,5 +111,9 @@ public class ProfessorService {
       throw new ProfessorNotFoundException();
 
     return (Professor) optionalProfessor.get();
+  }
+
+  public List<Professor> findAllProfessors(){
+    return userRepository.findAllByType(User.Type.PROFESSOR);
   }
 }
