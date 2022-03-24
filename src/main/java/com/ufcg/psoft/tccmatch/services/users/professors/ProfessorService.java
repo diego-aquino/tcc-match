@@ -2,7 +2,6 @@ package com.ufcg.psoft.tccmatch.services.users.professors;
 
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.dto.users.UpdateProfessorDTO;
-import com.ufcg.psoft.tccmatch.exceptions.users.UserNotFoundException;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.exceptions.users.ProfessorNotFoundException;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
@@ -10,6 +9,8 @@ import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,5 +122,9 @@ public class ProfessorService {
     if (!professorWasFound) throw new ProfessorNotFoundException();
 
     return (Professor) optionalProfessor.get();
+  }
+
+  public List<Professor> findAllProfessors(){
+    return userRepository.findAllByType(User.Type.PROFESSOR);
   }
 }
