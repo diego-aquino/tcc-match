@@ -9,6 +9,7 @@ import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.tccGuidanceRequest.TCCGuidanceRequestService;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,7 @@ public class TCCGuidanceRequestsController {
       (Student) user
     );
 
-    return new ResponseEntity<TCCGuidanceRequestResponseDTO>(
+    return new ResponseEntity<>(
       new TCCGuidanceRequestResponseDTO(newTCCGuidanceRequest),
       HttpStatus.CREATED
     );
@@ -60,28 +61,31 @@ public class TCCGuidanceRequestsController {
 
     User user = authenticationService.getAuthenticatedUser();
 
-    TCCGuidanceRequest updatedTccGuidanceRequest = tccGuidanceRequestService.reviewTCCGuidanceRequest(
+    TCCGuidanceRequest updatedTCCGuidanceRequest = tccGuidanceRequestService.reviewTCCGuidanceRequest(
       tccGuidanceRequestId,
       reviewTccGuidanceRequestDTO,
       (Professor) user
     );
 
-    return new ResponseEntity<TCCGuidanceRequestResponseDTO>(
-      new TCCGuidanceRequestResponseDTO(updatedTccGuidanceRequest),
+    return new ResponseEntity<>(
+      new TCCGuidanceRequestResponseDTO(updatedTCCGuidanceRequest),
       HttpStatus.OK
     );
   }
 
   @GetMapping
-  public ResponseEntity<Set<TCCGuidanceRequest>> listTCCGuidanceRequests() {
+  public ResponseEntity<List<TCCGuidanceRequestResponseDTO>> listTCCGuidanceRequests() {
     authenticationService.ensureUserTypes(User.Type.PROFESSOR);
 
     User user = authenticationService.getAuthenticatedUser();
 
-    Set<TCCGuidanceRequest> TCCGuidanceRequests = tccGuidanceRequestService.listTCCGuidanceRequests(
+    Set<TCCGuidanceRequest> tccGuidanceRequests = tccGuidanceRequestService.listTCCGuidanceRequests(
       (Professor) user
     );
 
-    return new ResponseEntity<Set<TCCGuidanceRequest>>(TCCGuidanceRequests, HttpStatus.OK);
+    return new ResponseEntity<>(
+      TCCGuidanceRequestResponseDTO.fromTCCGuidanceRequests(tccGuidanceRequests),
+      HttpStatus.OK
+    );
   }
 }
