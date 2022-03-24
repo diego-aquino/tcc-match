@@ -1,5 +1,8 @@
 package com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.ufcg.psoft.tccmatch.dto.users.UserResponseDTO;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceProblem.TCCGuidanceProblem;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceProblem.TCCGuidanceProblem.Category;
@@ -38,5 +41,12 @@ public class TCCGuidanceProblemResponseDTO {
 
   public UserResponseDTO getCreatedBy() {
     return new UserResponseDTO(createdBy);
+  }
+
+  public static List<TCCGuidanceProblemResponseDTO> fromTCCGuidanceProblems(
+      List<TCCGuidanceProblem> tccGuidanceProblems) {
+    return Arrays.asList(
+        tccGuidanceProblems.stream().map(TCCGuidanceProblemResponseDTO::new)
+            .toArray(TCCGuidanceProblemResponseDTO[]::new));
   }
 }

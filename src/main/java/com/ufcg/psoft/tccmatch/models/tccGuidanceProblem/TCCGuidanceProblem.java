@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
 import com.ufcg.psoft.tccmatch.models.users.User;
@@ -23,7 +22,6 @@ public class TCCGuidanceProblem {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Transient
   private Category category;
 
   private String description;
