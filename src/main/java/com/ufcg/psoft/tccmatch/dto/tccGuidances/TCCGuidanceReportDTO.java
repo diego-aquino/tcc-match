@@ -45,7 +45,7 @@ public class TCCGuidanceReportDTO {
     return this.tccFieldOfStudy;
   }
 
-  public TCCSubjectResponseDTO getTccSubjectId() {
+  public TCCSubjectResponseDTO getTccSubject() {
     return tccSubject;
   }
 
