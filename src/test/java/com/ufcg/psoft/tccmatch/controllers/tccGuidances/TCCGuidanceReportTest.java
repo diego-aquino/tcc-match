@@ -89,7 +89,7 @@ class TCCGuidanceReportTest extends TCCGuidanceTests {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.[0].id", is(tccGuidances.get(0).getId().intValue())));
 
-      reportTCCGuidances(coordinatorToken, Optional.empty(), Optional.of(true))
+    reportTCCGuidances(coordinatorToken, Optional.empty(), Optional.of(true))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.[0].id", is(tccGuidances.get(1).getId().intValue())))
       .andExpect(jsonPath("$.[1].id", is(tccGuidances.get(2).getId().intValue())));
