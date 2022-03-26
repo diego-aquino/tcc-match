@@ -4,6 +4,7 @@ import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.models.users.User.Type;
 
 public class UserResponseDTO {
+
   private Long id;
   private Type type;
   private String email;

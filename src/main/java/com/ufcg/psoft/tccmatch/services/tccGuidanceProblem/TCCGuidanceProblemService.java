@@ -1,9 +1,5 @@
 package com.ufcg.psoft.tccmatch.services.tccGuidanceProblem;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem.CreateTCCGuidanceProblemDTO;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidances.TCCGuidanceNotFoundException;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceProblem.TCCGuidanceProblem;
@@ -12,12 +8,15 @@ import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.tccGuidanceProblem.TCCGuidanceProblemRepository;
 import com.ufcg.psoft.tccmatch.repositories.tccGuidances.TCCGuidanceRepository;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TCCGuidanceProblemService {
+
   @Autowired
   private TCCGuidanceProblemRepository tccGuidanceProblemRepository;
 
@@ -27,17 +26,25 @@ public class TCCGuidanceProblemService {
   @Autowired
   private TCCGuidanceProblemValidator tccGuidanceProblemValidator;
 
-  public TCCGuidanceProblem createTCCGuidanceProblem(CreateTCCGuidanceProblemDTO tccGuidanceProblemDTO,
-      User createdBy) {
-    Category category = tccGuidanceProblemValidator.validateCategory(tccGuidanceProblemDTO.getCategory());
-    Optional<TCCGuidance> optionalTCCGuidance = tccGuidanceRepository
-        .findById(tccGuidanceProblemDTO.getTccGuidanceId());
-    if (optionalTCCGuidance.isEmpty())
-      throw new TCCGuidanceNotFoundException();
+  public TCCGuidanceProblem createTCCGuidanceProblem(
+    CreateTCCGuidanceProblemDTO tccGuidanceProblemDTO,
+    User createdBy
+  ) {
+    Category category = tccGuidanceProblemValidator.validateCategory(
+      tccGuidanceProblemDTO.getCategory()
+    );
+    Optional<TCCGuidance> optionalTCCGuidance = tccGuidanceRepository.findById(
+      tccGuidanceProblemDTO.getTccGuidanceId()
+    );
+    if (optionalTCCGuidance.isEmpty()) throw new TCCGuidanceNotFoundException();
     TCCGuidance tccGuidance = optionalTCCGuidance.get();
 
-    TCCGuidanceProblem tccGuidanceProblem = new TCCGuidanceProblem(category,
-        tccGuidanceProblemDTO.getDescription(), createdBy, tccGuidance);
+    TCCGuidanceProblem tccGuidanceProblem = new TCCGuidanceProblem(
+      category,
+      tccGuidanceProblemDTO.getDescription(),
+      createdBy,
+      tccGuidance
+    );
     tccGuidanceProblemRepository.save(tccGuidanceProblem);
     return tccGuidanceProblem;
   }
@@ -46,7 +53,9 @@ public class TCCGuidanceProblemService {
     return tccGuidanceProblemRepository.findAll();
   }
 
-  public List<TCCGuidanceProblem> listAllTCCGuidanceProblemsOfStudents(List<TCCGuidanceProblem> tccGuidanceProblems) {
+  public List<TCCGuidanceProblem> listAllTCCGuidanceProblemsOfStudents(
+    List<TCCGuidanceProblem> tccGuidanceProblems
+  ) {
     List<TCCGuidanceProblem> studentTCCGuidanceProblems = new ArrayList<TCCGuidanceProblem>();
 
     for (TCCGuidanceProblem tccGuidanceProblem : tccGuidanceProblems) {
@@ -58,7 +67,9 @@ public class TCCGuidanceProblemService {
     return studentTCCGuidanceProblems;
   }
 
-  public List<TCCGuidanceProblem> listAllTCCGuidanceProblemsOfProfessors(List<TCCGuidanceProblem> tccGuidanceProblems) {
+  public List<TCCGuidanceProblem> listAllTCCGuidanceProblemsOfProfessors(
+    List<TCCGuidanceProblem> tccGuidanceProblems
+  ) {
     List<TCCGuidanceProblem> professorTCCGuidanceProblems = new ArrayList<TCCGuidanceProblem>();
 
     for (TCCGuidanceProblem tccGuidanceProblem : tccGuidanceProblems) {
@@ -69,5 +80,4 @@ public class TCCGuidanceProblemService {
 
     return professorTCCGuidanceProblems;
   }
-
 }

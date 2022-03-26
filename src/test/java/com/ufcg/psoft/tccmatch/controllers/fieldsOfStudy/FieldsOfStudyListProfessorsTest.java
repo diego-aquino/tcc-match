@@ -4,14 +4,6 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.HashSet;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.web.servlet.ResultActions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import com.ufcg.psoft.tccmatch.IntegrationTests;
 import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
@@ -19,14 +11,21 @@ import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.services.fieldsOfStudy.FieldsOfStudyService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
-
+import java.util.HashSet;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class FieldsOfStudyListProfessorsTest extends IntegrationTests{
-    
+public class FieldsOfStudyListProfessorsTest extends IntegrationTests {
+
   @Autowired
   private FieldsOfStudyService fieldsOfStudyService;
-  
+
   @Autowired
   private ProfessorService professorService;
 
@@ -51,16 +50,20 @@ public class FieldsOfStudyListProfessorsTest extends IntegrationTests{
     professor1 = createProfessorDTO(professorEmail1);
     professor2 = createProfessorDTO(professorEmail2);
     professor3 = createProfessorDTO(professorEmail3);
-  
+
     fieldsOfStudyService.selectFieldOfStudy(professor1, field1);
-    fieldsOfStudyService.selectFieldOfStudy(professorService.findByIdOrThrow(professor1.getId()), field2);
-      
+    fieldsOfStudyService.selectFieldOfStudy(
+      professorService.findByIdOrThrow(professor1.getId()),
+      field2
+    );
+
     fieldsOfStudyService.selectFieldOfStudy(professor2, field3);
     fieldsOfStudyService.selectFieldOfStudy(professor3, field3);
-  
+
     fieldsOfStudyService.selectFieldOfStudy(student, field3);
-    }
-  Professor createProfessorDTO(String professorEmail){
+  }
+
+  Professor createProfessorDTO(String professorEmail) {
     CreateProfessorDTO createProfessorDTO = new CreateProfessorDTO(
       professorEmail,
       "12345678",
@@ -69,27 +72,27 @@ public class FieldsOfStudyListProfessorsTest extends IntegrationTests{
     );
     return professorService.createProfessor(createProfessorDTO);
   }
+
   @Test
-  void validProfessorList() throws Exception{
+  void validProfessorList() throws Exception {
     ListFieldOfStudyRequest()
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(2)))
-        .andExpect(jsonPath("$.[0].id", is(professor2.getId().intValue())))
-        .andExpect(jsonPath("$.[1].id", is(professor3.getId().intValue())));
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$", hasSize(2)))
+      .andExpect(jsonPath("$.[0].id", is(professor2.getId().intValue())))
+      .andExpect(jsonPath("$.[1].id", is(professor3.getId().intValue())));
   }
+
   @Test
   void ZeroMatching() throws Exception {
     professorService.removeProfessor(professor3.getId());
     professorService.removeProfessor(professor2.getId());
-    ListFieldOfStudyRequest()
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(0)));
+    ListFieldOfStudyRequest().andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(0)));
   }
 
-  private ResultActions ListFieldOfStudyRequest() throws Exception{
+  private ResultActions ListFieldOfStudyRequest() throws Exception {
     return mvc.perform(
-      authenticated(get("/api/fields-of-study/professors"),studentToken)
-      .contentType(MediaType.APPLICATION_JSON)
-      );
+      authenticated(get("/api/fields-of-study/professors"), studentToken)
+        .contentType(MediaType.APPLICATION_JSON)
+    );
   }
 }

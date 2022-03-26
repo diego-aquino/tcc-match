@@ -1,7 +1,5 @@
 package com.ufcg.psoft.tccmatch.controllers.tccGuidanceProblem;
 
-import java.util.List;
-
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem.CreateTCCGuidanceProblemDTO;
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem.ListTCCGuidanceProblemResponseDTO;
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem.TCCGuidanceProblemResponseDTO;
@@ -9,7 +7,7 @@ import com.ufcg.psoft.tccmatch.models.tccGuidanceProblem.TCCGuidanceProblem;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.tccGuidanceProblem.TCCGuidanceProblemService;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +29,20 @@ public class TCCGuidanceProblemController {
 
   @PostMapping
   public ResponseEntity<TCCGuidanceProblemResponseDTO> createTCCGuidanceProblem(
-      @RequestBody CreateTCCGuidanceProblemDTO createTCCGuidanceProblemDTO) {
+    @RequestBody CreateTCCGuidanceProblemDTO createTCCGuidanceProblemDTO
+  ) {
     authenticationService.ensureUserTypes(User.Type.STUDENT, User.Type.PROFESSOR);
 
     User createdBy = authenticationService.getAuthenticatedUser();
 
-    TCCGuidanceProblem tccGuidanceProblem = tccGuidanceProblemService
-        .createTCCGuidanceProblem(createTCCGuidanceProblemDTO, createdBy);
-    return new ResponseEntity<>(new TCCGuidanceProblemResponseDTO(tccGuidanceProblem), HttpStatus.CREATED);
+    TCCGuidanceProblem tccGuidanceProblem = tccGuidanceProblemService.createTCCGuidanceProblem(
+      createTCCGuidanceProblemDTO,
+      createdBy
+    );
+    return new ResponseEntity<>(
+      new TCCGuidanceProblemResponseDTO(tccGuidanceProblem),
+      HttpStatus.CREATED
+    );
   }
 
   @GetMapping
@@ -46,15 +50,19 @@ public class TCCGuidanceProblemController {
     authenticationService.ensureUserTypes(User.Type.COORDINATOR);
 
     List<TCCGuidanceProblem> tccGuidanceProblems = tccGuidanceProblemService.listTCCGuidanceProblems();
-    List<TCCGuidanceProblemResponseDTO> tccGuidanceProblemsOfStudents = TCCGuidanceProblemResponseDTO
-        .fromTCCGuidanceProblems(tccGuidanceProblemService
-            .listAllTCCGuidanceProblemsOfStudents(tccGuidanceProblems));
-    List<TCCGuidanceProblemResponseDTO> tccGuidanceProblemsOfProfessors = TCCGuidanceProblemResponseDTO
-        .fromTCCGuidanceProblems(tccGuidanceProblemService
-            .listAllTCCGuidanceProblemsOfProfessors(tccGuidanceProblems));
+    List<TCCGuidanceProblemResponseDTO> tccGuidanceProblemsOfStudents = TCCGuidanceProblemResponseDTO.fromTCCGuidanceProblems(
+      tccGuidanceProblemService.listAllTCCGuidanceProblemsOfStudents(tccGuidanceProblems)
+    );
+    List<TCCGuidanceProblemResponseDTO> tccGuidanceProblemsOfProfessors = TCCGuidanceProblemResponseDTO.fromTCCGuidanceProblems(
+      tccGuidanceProblemService.listAllTCCGuidanceProblemsOfProfessors(tccGuidanceProblems)
+    );
 
     return new ResponseEntity<>(
-        new ListTCCGuidanceProblemResponseDTO(tccGuidanceProblemsOfStudents, tccGuidanceProblemsOfProfessors),
-        HttpStatus.OK);
+      new ListTCCGuidanceProblemResponseDTO(
+        tccGuidanceProblemsOfStudents,
+        tccGuidanceProblemsOfProfessors
+      ),
+      HttpStatus.OK
+    );
   }
 }

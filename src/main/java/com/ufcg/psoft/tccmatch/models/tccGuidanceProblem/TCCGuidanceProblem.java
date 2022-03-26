@@ -1,16 +1,16 @@
 package com.ufcg.psoft.tccmatch.models.tccGuidanceProblem;
 
+import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
+import com.ufcg.psoft.tccmatch.models.users.User;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
-import com.ufcg.psoft.tccmatch.models.users.User;
-
 @Entity
 public class TCCGuidanceProblem {
+
   public enum Category {
     UNAVAILABILITY,
     COMMUNICATION,
@@ -32,10 +32,14 @@ public class TCCGuidanceProblem {
   @ManyToOne
   private User createdBy;
 
-  public TCCGuidanceProblem() {
-  };
+  public TCCGuidanceProblem() {}
 
-  public TCCGuidanceProblem(Category category, String description, User createdBy, TCCGuidance tccGuidance) {
+  public TCCGuidanceProblem(
+    Category category,
+    String description,
+    User createdBy,
+    TCCGuidance tccGuidance
+  ) {
     this.category = category;
     this.description = description;
     this.createdBy = createdBy;

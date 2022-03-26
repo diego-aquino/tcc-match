@@ -9,10 +9,9 @@ import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
-
 
 @Service
 public class StudentService {
@@ -34,9 +33,11 @@ public class StudentService {
     String rawPassword = studentValidator.validatePassword((createStudentDTO.getPassword()));
     String name = studentValidator.validateName(createStudentDTO.getName());
     String registryNumber = studentValidator.validateRegistryNumber(
-        createStudentDTO.getRegistryNumber());
+      createStudentDTO.getRegistryNumber()
+    );
     String completionPeriod = studentValidator.validatePeriod(
-        createStudentDTO.getCompletionPeriod());
+      createStudentDTO.getCompletionPeriod()
+    );
 
     userService.ensureEmailIsNotInUse(email);
 
@@ -60,10 +61,10 @@ public class StudentService {
   }
 
   private void updateCompletionPeriodIfProvided(
-      Optional<String> optionalCompletionPeriod,
-      Student student) {
-    if (optionalCompletionPeriod.isEmpty())
-      return;
+    Optional<String> optionalCompletionPeriod,
+    Student student
+  ) {
+    if (optionalCompletionPeriod.isEmpty()) return;
 
     String newCompletionPeriod = studentValidator.validatePeriod(optionalCompletionPeriod.get());
     student.setCompletionPeriod(newCompletionPeriod);
@@ -76,13 +77,13 @@ public class StudentService {
   }
 
   public boolean hasPermissionToUpdateStudent(User authenticatedUser, Long studentId) {
-    if (authenticatedUser == null)
-      return false;
-    if (authenticatedUser.getType() == User.Type.COORDINATOR)
-      return true;
+    if (authenticatedUser == null) return false;
+    if (authenticatedUser.getType() == User.Type.COORDINATOR) return true;
 
-    return (authenticatedUser.getType() == User.Type.STUDENT &&
-        authenticatedUser.getId().equals(studentId));
+    return (
+      authenticatedUser.getType() == User.Type.STUDENT &&
+      authenticatedUser.getId().equals(studentId)
+    );
   }
 
   public void selectFieldOfStudy(Student student, FieldOfStudy fieldOfStudy) {
@@ -93,9 +94,9 @@ public class StudentService {
   public Student findByIdOrThrow(Long id) {
     Optional<User> optionalStudent = userService.findUserById(id);
 
-    boolean studentWasFound = optionalStudent.isPresent() && optionalStudent.get().getType() == User.Type.STUDENT;
-    if (!studentWasFound)
-      throw new StudentNotFoundException();
+    boolean studentWasFound =
+      optionalStudent.isPresent() && optionalStudent.get().getType() == User.Type.STUDENT;
+    if (!studentWasFound) throw new StudentNotFoundException();
 
     return (Student) optionalStudent.get();
   }

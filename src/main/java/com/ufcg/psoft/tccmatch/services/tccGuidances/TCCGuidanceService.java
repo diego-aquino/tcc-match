@@ -38,7 +38,8 @@ public class TCCGuidanceService {
     Student student = studentService.findByIdOrThrow(tccGuidanceDTO.getStudentId());
     Professor professor = professorService.findByIdOrThrow(tccGuidanceDTO.getProfessorId());
     TCCSubject tccSubject = tccSubjectService.findTCCSubjectByIdOrThrow(
-        tccGuidanceDTO.getTccSubjectId());
+      tccGuidanceDTO.getTccSubjectId()
+    );
     String period = validator.validatePeriod(tccGuidanceDTO.getPeriod());
 
     TCCGuidance tccGuidance = new TCCGuidance(student, professor, tccSubject, period);

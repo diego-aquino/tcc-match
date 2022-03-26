@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem.CreateTCCGuidanceProblemDTO;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceProblem.CategoryIsNotProvidedException;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidances.TCCGuidanceNotFoundException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -20,23 +19,25 @@ class TCCGuidanceProblemCreationTests extends TCCGuidanceProblemTests {
     student = createMockStudent();
     professor = createMockProfessor();
     tccSubject = createMockTCCSubject(student);
-    tccGuidance = createMockTCCGuidance(student.getId(), professor.getId(), tccSubject.getId(), period);
+    tccGuidance =
+      createMockTCCGuidance(student.getId(), professor.getId(), tccSubject.getId(), period);
     studentToken = loginWithMockStudent();
   }
 
   @Test
   void validTCCGuidanceProblemCreation() throws Exception {
     CreateTCCGuidanceProblemDTO createTCCGuidanceProblemDTO = new CreateTCCGuidanceProblemDTO(
-        category,
-        description,
-        tccGuidance.getId());
+      category,
+      description,
+      tccGuidance.getId()
+    );
 
     makeCreateTCCGuidanceProblemRequest(createTCCGuidanceProblemDTO, studentToken)
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id", is(any(Integer.class))))
-        .andExpect(jsonPath("$.category", is(createTCCGuidanceProblemDTO.getCategory())))
-        .andExpect(jsonPath("$.description", is(createTCCGuidanceProblemDTO.getDescription())))
-        .andExpect(jsonPath("$.tccGuidanceId", is(tccGuidance.getId().intValue())));
+      .andExpect(status().isCreated())
+      .andExpect(jsonPath("$.id", is(any(Integer.class))))
+      .andExpect(jsonPath("$.category", is(createTCCGuidanceProblemDTO.getCategory())))
+      .andExpect(jsonPath("$.description", is(createTCCGuidanceProblemDTO.getDescription())))
+      .andExpect(jsonPath("$.tccGuidanceId", is(tccGuidance.getId().intValue())));
   }
 
   @Test
@@ -44,13 +45,14 @@ class TCCGuidanceProblemCreationTests extends TCCGuidanceProblemTests {
     Long tccGuidanceIdNotFound = 1000L;
 
     CreateTCCGuidanceProblemDTO createTCCGuidanceProblemDTO = new CreateTCCGuidanceProblemDTO(
-        category,
-        description,
-        tccGuidanceIdNotFound);
+      category,
+      description,
+      tccGuidanceIdNotFound
+    );
 
     makeCreateTCCGuidanceProblemRequest(createTCCGuidanceProblemDTO, studentToken)
-        .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.message", is(TCCGuidanceNotFoundException.message())));
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.message", is(TCCGuidanceNotFoundException.message())));
   }
 
   @Test
@@ -58,21 +60,24 @@ class TCCGuidanceProblemCreationTests extends TCCGuidanceProblemTests {
     String categoryNotProvided = null;
 
     CreateTCCGuidanceProblemDTO createTCCGuidanceProblemDTO = new CreateTCCGuidanceProblemDTO(
-        categoryNotProvided,
-        description,
-        tccGuidance.getId());
+      categoryNotProvided,
+      description,
+      tccGuidance.getId()
+    );
 
     makeCreateTCCGuidanceProblemRequest(createTCCGuidanceProblemDTO, studentToken)
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.message", is(CategoryIsNotProvidedException.message())));
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.message", is(CategoryIsNotProvidedException.message())));
   }
 
   private ResultActions makeCreateTCCGuidanceProblemRequest(
-      CreateTCCGuidanceProblemDTO createTCCGuidanceProblemDTO,
-      String userToken) throws Exception {
+    CreateTCCGuidanceProblemDTO createTCCGuidanceProblemDTO,
+    String userToken
+  ) throws Exception {
     return mvc.perform(
-        authenticated(post("/api/tcc-guidance-problems"), userToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(toJSON(createTCCGuidanceProblemDTO)));
+      authenticated(post("/api/tcc-guidance-problems"), userToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(toJSON(createTCCGuidanceProblemDTO))
+    );
   }
 }

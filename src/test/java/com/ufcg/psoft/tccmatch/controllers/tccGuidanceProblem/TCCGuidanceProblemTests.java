@@ -5,12 +5,12 @@ import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
-
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 abstract class TCCGuidanceProblemTests extends IntegrationTests {
+
   protected Student student;
   protected Professor professor;
   protected TCCSubject tccSubject;

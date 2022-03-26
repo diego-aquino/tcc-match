@@ -29,8 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(AuthenticationManagerBuilder authenticationBuilder) throws Exception {
     authenticationBuilder
-        .userDetailsService(authenticationService)
-        .passwordEncoder(authenticationService.getPasswordEncoder());
+      .userDetailsService(authenticationService)
+      .passwordEncoder(authenticationService.getPasswordEncoder());
   }
 
   @Override
@@ -58,7 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/tcc-guidance-requests/review/*",
             "/api/tcc-guidances",
             "/api/tcc-guidances/finish/*",
-            "/api/tcc-guidance-problems")
+            "/api/tcc-guidance-problems",
+            "/api/tcc-subjects/show-interest/*")
         .authenticated()
         .antMatchers(HttpMethod.PATCH, "/api/users/students/*", "/api/users/professors/*")
         .authenticated()

@@ -2,7 +2,6 @@ package com.ufcg.psoft.tccmatch.models.users;
 
 import java.util.Collection;
 import java.util.Collections;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +34,7 @@ public abstract class User implements UserDetails {
   private String encodedPassword;
 
   private String name;
-  
+
   protected User() {}
 
   protected User(Type type) {

@@ -31,8 +31,7 @@ public class TCCGuidance {
 
   private boolean isFinished;
 
-  protected TCCGuidance() {
-  }
+  protected TCCGuidance() {}
 
   public TCCGuidance(Student student, Professor professor, TCCSubject tccSubject, String period) {
     this.student = student;

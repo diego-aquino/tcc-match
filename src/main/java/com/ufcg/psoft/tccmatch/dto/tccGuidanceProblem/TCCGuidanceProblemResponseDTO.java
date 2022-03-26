@@ -1,14 +1,14 @@
 package com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.ufcg.psoft.tccmatch.dto.users.UserResponseDTO;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceProblem.TCCGuidanceProblem;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceProblem.TCCGuidanceProblem.Category;
 import com.ufcg.psoft.tccmatch.models.users.User;
+import java.util.Arrays;
+import java.util.List;
 
 public class TCCGuidanceProblemResponseDTO {
+
   private Long id;
   private Category category;
   private String description;
@@ -44,9 +44,13 @@ public class TCCGuidanceProblemResponseDTO {
   }
 
   public static List<TCCGuidanceProblemResponseDTO> fromTCCGuidanceProblems(
-      List<TCCGuidanceProblem> tccGuidanceProblems) {
+    List<TCCGuidanceProblem> tccGuidanceProblems
+  ) {
     return Arrays.asList(
-        tccGuidanceProblems.stream().map(TCCGuidanceProblemResponseDTO::new)
-            .toArray(TCCGuidanceProblemResponseDTO[]::new));
+      tccGuidanceProblems
+        .stream()
+        .map(TCCGuidanceProblemResponseDTO::new)
+        .toArray(TCCGuidanceProblemResponseDTO[]::new)
+    );
   }
 }

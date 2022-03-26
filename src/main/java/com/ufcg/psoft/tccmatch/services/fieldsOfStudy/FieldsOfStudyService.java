@@ -7,16 +7,16 @@ import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.fieldsOfStudy.FieldsOfStudyRepository;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class FieldsOfStudyService {
+
   @Autowired
   private FieldsOfStudyRepository fieldsOfStudyRepository;
 
@@ -41,10 +41,13 @@ public class FieldsOfStudyService {
   }
 
   public void selectFieldOfStudy(User user, FieldOfStudy fieldOfStudy) {
-      if (user.getType() == User.Type.PROFESSOR)
-        professorService.selectFieldOfStudy((Professor) user, fieldOfStudy);
-      else if (user.getType() == User.Type.STUDENT)
-        studentService.selectFieldOfStudy((Student) user, fieldOfStudy);
+    if (user.getType() == User.Type.PROFESSOR) professorService.selectFieldOfStudy(
+      (Professor) user,
+      fieldOfStudy
+    ); else if (user.getType() == User.Type.STUDENT) studentService.selectFieldOfStudy(
+      (Student) user,
+      fieldOfStudy
+    );
   }
 
   public List<Professor> getProfessors(Student student) {
@@ -52,16 +55,16 @@ public class FieldsOfStudyService {
     List<Professor> comumProfessors = new ArrayList<Professor>();
     Set<FieldOfStudy> fields = student.getFields();
 
-    for (Professor prof : allProfessors){
+    for (Professor prof : allProfessors) {
       Set<FieldOfStudy> fieldProf = prof.getFields();
-      for (FieldOfStudy field : fields){
-        if (fieldProf.contains(field)){
+      for (FieldOfStudy field : fields) {
+        if (fieldProf.contains(field)) {
           comumProfessors.add(prof);
           break;
         }
       }
     }
-    
+
     return comumProfessors;
   }
 }

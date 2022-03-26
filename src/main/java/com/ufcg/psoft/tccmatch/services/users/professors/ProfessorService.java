@@ -9,7 +9,6 @@ import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -36,7 +35,8 @@ public class ProfessorService {
     String rawPassword = professorValidator.validatePassword((createProfessorDTO.getPassword()));
     String name = professorValidator.validateName(createProfessorDTO.getName());
     Set<String> laboratories = professorValidator.validateLaboratories(
-        createProfessorDTO.getLaboratories());
+      createProfessorDTO.getLaboratories()
+    );
 
     userService.ensureEmailIsNotInUse(email);
 
@@ -61,21 +61,22 @@ public class ProfessorService {
   }
 
   private void updateLaboratoriesIfProvided(
-      Optional<Set<String>> optionalLaboratories,
-      Professor professor) {
-    if (optionalLaboratories.isEmpty())
-      return;
+    Optional<Set<String>> optionalLaboratories,
+    Professor professor
+  ) {
+    if (optionalLaboratories.isEmpty()) return;
 
     Set<String> newLaboratories = professorValidator.validateLaboratories(
-        optionalLaboratories.get());
+      optionalLaboratories.get()
+    );
     professor.setLaboratories(newLaboratories);
   }
 
   private void updateGuidanceQuotaIfProvided(
-      Optional<Integer> optionalGuidanceQuota,
-      Professor professor) {
-    if (optionalGuidanceQuota.isEmpty())
-      return;
+    Optional<Integer> optionalGuidanceQuota,
+    Professor professor
+  ) {
+    if (optionalGuidanceQuota.isEmpty()) return;
 
     int newGuidanceQuota = professorValidator.validateGuidanceQuota(optionalGuidanceQuota.get());
     professor.setGuidanceQuota(newGuidanceQuota);
@@ -88,13 +89,13 @@ public class ProfessorService {
   }
 
   public boolean hasPermissionToUpdateProfessor(User authenticatedUser, Long professorId) {
-    if (authenticatedUser == null)
-      return false;
-    if (authenticatedUser.getType() == User.Type.COORDINATOR)
-      return true;
+    if (authenticatedUser == null) return false;
+    if (authenticatedUser.getType() == User.Type.COORDINATOR) return true;
 
-    return (authenticatedUser.getType() == User.Type.PROFESSOR &&
-        authenticatedUser.getId().equals(professorId));
+    return (
+      authenticatedUser.getType() == User.Type.PROFESSOR &&
+      authenticatedUser.getId().equals(professorId)
+    );
   }
 
   public void selectFieldOfStudy(Professor professor, FieldOfStudy fieldOfStudy) {
@@ -105,15 +106,14 @@ public class ProfessorService {
   public Professor findByIdOrThrow(Long id) {
     Optional<User> optionalProfessor = userService.findUserById(id);
 
-    boolean professorWasFound = optionalProfessor.isPresent()
-        && optionalProfessor.get().getType() == User.Type.PROFESSOR;
-    if (!professorWasFound)
-      throw new ProfessorNotFoundException();
+    boolean professorWasFound =
+      optionalProfessor.isPresent() && optionalProfessor.get().getType() == User.Type.PROFESSOR;
+    if (!professorWasFound) throw new ProfessorNotFoundException();
 
     return (Professor) optionalProfessor.get();
   }
 
-  public List<Professor> findAllProfessors(){
+  public List<Professor> findAllProfessors() {
     return userRepository.findAllByType(User.Type.PROFESSOR);
   }
 }

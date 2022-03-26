@@ -66,6 +66,8 @@ public class TCCGuidanceRequestService {
 
     tccGuidanceRequestRepository.save(tccGuidanceRequest);
 
+    //Send notification/email to professor about a new TCCGuidanceRequest being requested to them
+
     return tccGuidanceRequest;
   }
 
@@ -93,6 +95,8 @@ public class TCCGuidanceRequestService {
     );
 
     tccGuidanceRequestRepository.save(tccGuidanceRequest);
+
+    //if (reviewTccGuidanceRequestDTO.getIsApproved()): Send notification/email to coordinator about a new TCCGuidanceRequest being accepted
 
     return tccGuidanceRequest;
   }

@@ -1,6 +1,7 @@
 package com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem;
 
 public class CreateTCCGuidanceProblemDTO {
+
   private String category;
   private String description;
   private Long tccGuidanceId;
@@ -22,5 +23,4 @@ public class CreateTCCGuidanceProblemDTO {
   public Long getTccGuidanceId() {
     return tccGuidanceId;
   }
-
 }
