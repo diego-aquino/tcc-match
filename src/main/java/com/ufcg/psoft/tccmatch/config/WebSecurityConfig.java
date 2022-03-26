@@ -36,50 +36,49 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-      .authorizeRequests()
-      .antMatchers(
-        HttpMethod.GET,
-        "/api/notifications",
-        "/api/tcc-subjects",
-        "/api/tcc-guidance-requests",
-        "/api/fields-of-study/professors",
-        "/api/tcc-guidance-problems"
-      )
-      .authenticated()
-      .antMatchers(
-        HttpMethod.POST,
-        "/api/users/students",
-        "/api/users/professors",
-        "/api/fields-of-study",
-        "/api/fields-of-study/select/*",
-        "/api/tcc-subjects",
-        "/api/tcc-guidance-requests",
-        "/api/tcc-guidance-requests/review/*",
-        "/api/tcc-guidances",
-        "/api/tcc-guidances/finish/*",
-        "/api/tcc-guidance-problems",
-        "/api/tcc-subjects/show-interest/*"
-      )
-      .authenticated()
-      .antMatchers(HttpMethod.PATCH, "/api/users/students/*", "/api/users/professors/*")
-      .authenticated()
-      .antMatchers(HttpMethod.DELETE, "/api/users/students/*", "/api/users/professors/*")
-      .authenticated()
-      .anyRequest()
-      .permitAll()
-      .and()
-      .headers()
-      .frameOptions()
-      .disable()
-      .and()
-      .csrf()
-      .disable()
-      .sessionManagement()
-      .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-      .and()
-      .addFilterBefore(
-        new AuthenticationFilter(authenticationService),
-        UsernamePasswordAuthenticationFilter.class
-      );
+        .authorizeRequests()
+        .antMatchers(
+            HttpMethod.GET,
+            "/api/notifications",
+            "/api/tcc-subjects",
+            "/api/tcc-guidance-requests",
+            "/api/fields-of-study/professors",
+            "/api/tcc-guidances",
+            "/api/tcc-guidances/reports",
+            "/api/tcc-guidance-problems")
+        .authenticated()
+        .antMatchers(
+            HttpMethod.POST,
+            "/api/users/students",
+            "/api/users/professors",
+            "/api/fields-of-study",
+            "/api/fields-of-study/select/*",
+            "/api/tcc-subjects",
+            "/api/tcc-guidance-requests",
+            "/api/tcc-guidance-requests/review/*",
+            "/api/tcc-guidances",
+            "/api/tcc-guidances/finish/*",
+            "/api/tcc-guidance-problems",
+            "/api/tcc-subjects/show-interest/*")
+        .authenticated()
+        .antMatchers(HttpMethod.PATCH, "/api/users/students/*", "/api/users/professors/*")
+        .authenticated()
+        .antMatchers(HttpMethod.DELETE, "/api/users/students/*", "/api/users/professors/*")
+        .authenticated()
+        .anyRequest()
+        .permitAll()
+        .and()
+        .headers()
+        .frameOptions()
+        .disable()
+        .and()
+        .csrf()
+        .disable()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .addFilterBefore(
+            new AuthenticationFilter(authenticationService),
+            UsernamePasswordAuthenticationFilter.class);
   }
 }
