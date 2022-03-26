@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem.CreateTCCGuidanceProblemDTO;
-import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceProblem.CategoryIsNotProvidedException;
+import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceProblem.InvalidCategoryException;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidances.TCCGuidanceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,7 +67,7 @@ class TCCGuidanceProblemCreationTests extends TCCGuidanceProblemTests {
 
     makeCreateTCCGuidanceProblemRequest(createTCCGuidanceProblemDTO, studentToken)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is(CategoryIsNotProvidedException.message())));
+      .andExpect(jsonPath("$.message", is(InvalidCategoryException.message())));
   }
 
   private ResultActions makeCreateTCCGuidanceProblemRequest(
