@@ -19,10 +19,6 @@ public class TCCGuidanceRequestAcceptedNotification extends Notification {
     super(EVENT_TYPE);
   }
 
-  public TCCGuidanceRequestAcceptedNotification(User sentTo, Date createdAt) {
-    super(EVENT_TYPE, sentTo, createdAt);
-  }
-
   public TCCGuidanceRequestAcceptedNotification(
     User sentTo,
     TCCGuidanceRequest tccGuidanceRequest,

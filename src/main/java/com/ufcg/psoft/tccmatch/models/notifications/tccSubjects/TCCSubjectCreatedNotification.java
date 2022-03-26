@@ -19,10 +19,6 @@ public class TCCSubjectCreatedNotification extends Notification {
     super(EVENT_TYPE);
   }
 
-  public TCCSubjectCreatedNotification(User sentTo, Date createdAt) {
-    super(EVENT_TYPE, sentTo, createdAt);
-  }
-
   public TCCSubjectCreatedNotification(User sentTo, TCCSubject tccSubject, Date createdAt) {
     super(EVENT_TYPE, sentTo, createdAt);
     this.tccSubject = tccSubject;
