@@ -1,6 +1,7 @@
 package com.ufcg.psoft.tccmatch.controllers.tccGuidances;
 
 import com.ufcg.psoft.tccmatch.dto.tccGuidances.CreateTCCGuidanceDTO;
+import com.ufcg.psoft.tccmatch.dto.tccGuidances.TCCGuidanceReportDTO;
 import com.ufcg.psoft.tccmatch.dto.tccGuidances.TCCGuidanceResponseDTO;
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
 import com.ufcg.psoft.tccmatch.models.users.User;
@@ -62,4 +63,18 @@ public class TCCGuidancesController {
         TCCGuidanceResponseDTO.fromTCCGuidances(tccGuidances),
         HttpStatus.OK);
   }
+
+  @GetMapping("/reports")
+  public ResponseEntity<List<TCCGuidanceReportDTO>> reportTCCGuidances(
+    @RequestParam("period") Optional<String> period,
+    @RequestParam("finished") Optional<Boolean> isFinished
+  ){
+    authenticationService.ensureUserTypes(User.Type.COORDINATOR);
+    List<TCCGuidance> tccGuidances = tccGuidanceService.listTCCGuidances(period, isFinished);
+    return new ResponseEntity<>(
+      TCCGuidanceReportDTO.fromTCCGuidances(tccGuidances),
+      HttpStatus.OK
+    );
+  }
+
 }
