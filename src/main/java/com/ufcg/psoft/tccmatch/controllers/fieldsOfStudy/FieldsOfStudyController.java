@@ -57,11 +57,13 @@ public class FieldsOfStudyController {
   }
 
   @GetMapping("/professors")
-  public ResponseEntity<List<ProfessorResponseDTO>> listProfessors() {
+  public ResponseEntity<List<ProfessorResponseDTO>> listAvailableProfessorsWithCommonFields() {
     authenticationService.ensureUserTypes(User.Type.STUDENT);
-    Student authenticatedUser = (Student) authenticationService.getAuthenticatedUser();
+    Student student = (Student) authenticationService.getAuthenticatedUser();
 
-    List<Professor> listProfessors = fieldsOfStudyService.getProfessors(authenticatedUser);
+    List<Professor> listProfessors = fieldsOfStudyService.listAvailableProfessorsWithCommonFields(
+      student.getFields()
+    );
     return new ResponseEntity<>(ProfessorResponseDTO.listProfessors(listProfessors), HttpStatus.OK);
   }
 }

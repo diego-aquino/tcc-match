@@ -7,7 +7,7 @@ import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.fieldsOfStudy.FieldsOfStudyRepository;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -50,21 +50,17 @@ public class FieldsOfStudyService {
     );
   }
 
-  public List<Professor> getProfessors(Student student) {
+  public List<Professor> listAvailableProfessorsWithCommonFields(Set<FieldOfStudy> fieldsOfStudy) {
     List<Professor> allProfessors = professorService.findAllProfessors();
-    List<Professor> comumProfessors = new ArrayList<Professor>();
-    Set<FieldOfStudy> fields = student.getFields();
 
-    for (Professor prof : allProfessors) {
-      Set<FieldOfStudy> fieldProf = prof.getFields();
-      for (FieldOfStudy field : fields) {
-        if (fieldProf.contains(field)) {
-          comumProfessors.add(prof);
-          break;
-        }
-      }
-    }
+    Professor[] availableProfessorsWithCommonFields = allProfessors
+      .stream()
+      .filter(professor ->
+        professor.getGuidanceQuota() > 0 &&
+        professor.getFields().stream().anyMatch(fieldsOfStudy::contains)
+      )
+      .toArray(Professor[]::new);
 
-    return comumProfessors;
+    return Arrays.asList(availableProfessorsWithCommonFields);
   }
 }
