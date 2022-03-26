@@ -5,15 +5,11 @@ import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import java.util.Date;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 
 @Entity
-public class TCCGuidanceRequestCreatedNotification extends Notification {
+public class TCCGuidanceRequestCreatedNotification extends TCCGuidanceRequestNotification {
 
   private static final EventType EVENT_TYPE = Notification.EventType.TCC_GUIDANCE_REQUEST_CREATED;
-
-  @ManyToOne
-  private TCCGuidanceRequest tccGuidanceRequest;
 
   protected TCCGuidanceRequestCreatedNotification() {
     super(EVENT_TYPE);
@@ -24,7 +20,6 @@ public class TCCGuidanceRequestCreatedNotification extends Notification {
     TCCGuidanceRequest tccGuidanceRequest,
     Date createdAt
   ) {
-    super(EVENT_TYPE, sentTo, createdAt);
-    this.tccGuidanceRequest = tccGuidanceRequest;
+    super(EVENT_TYPE, sentTo, tccGuidanceRequest, createdAt);
   }
 }

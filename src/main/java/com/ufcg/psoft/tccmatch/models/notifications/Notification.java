@@ -1,5 +1,6 @@
 package com.ufcg.psoft.tccmatch.models.notifications;
 
+import com.ufcg.psoft.tccmatch.dto.notifications.NotificationResponseDTO;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import java.util.Date;
 import javax.persistence.Entity;
@@ -62,4 +63,6 @@ public abstract class Notification {
   public Date getCreatedAt() {
     return createdAt;
   }
+
+  public abstract NotificationResponseDTO toDTO();
 }
