@@ -81,6 +81,6 @@ public class TCCSubjectService {
     if (
       tccSubject.getCreatedBy().getType() != User.Type.STUDENT
     ) throw new InvalidTCCSubjectException();
-    // Notify Student on Professor showing interest in tccSubject
+    // No errors: Notify Student method hete
   }
 }

@@ -40,11 +40,14 @@ public class TCCSubjectController {
 
     TCCSubject newTCCSubject = tccSubjectService.createTCCSubject(tccSubjectDTO, user);
 
-    return new ResponseEntity<>(new TCCSubjectResponseDTO(newTCCSubject), HttpStatus.CREATED);
+    return new ResponseEntity<TCCSubjectResponseDTO>(
+      new TCCSubjectResponseDTO(newTCCSubject),
+      HttpStatus.CREATED
+    );
   }
 
   @PostMapping("/show-interest/{tccSubjectId}")
-  public ResponseEntity<String> createTCCSubject(@PathVariable long tccSubjectId) {
+  public ResponseEntity<String> showInterestTCCSubject(@PathVariable long tccSubjectId) {
     authenticationService.ensureUserTypes(User.Type.PROFESSOR);
 
     User user = authenticationService.getAuthenticatedUser();
