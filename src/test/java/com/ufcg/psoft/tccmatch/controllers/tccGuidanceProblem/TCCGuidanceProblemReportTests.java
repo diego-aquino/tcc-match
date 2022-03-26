@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem.CreateTCCGuidanceProblemDTO;
 import com.ufcg.psoft.tccmatch.models.tccGuidanceProblem.TCCGuidanceProblem;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.tccGuidanceProblem.TCCGuidanceProblemService;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,9 @@ import org.springframework.test.web.servlet.ResultActions;
 public class TCCGuidanceProblemReportTests extends TCCGuidanceProblemTests {
 
   @Autowired
+  private UserRepository<Professor> userRepository;
+
+  @Autowired
   private TCCGuidanceProblemService tccGuidanceProblemService;
 
   private List<TCCGuidanceProblem> tccGuidanceProblems;
@@ -27,7 +32,11 @@ public class TCCGuidanceProblemReportTests extends TCCGuidanceProblemTests {
   @BeforeEach
   void beforeEach() {
     student = createMockStudent();
+
     professor = createMockProfessor();
+    professor.setGuidanceQuota(1);
+    userRepository.save(professor);
+
     tccSubject = createMockTCCSubject(student);
     tccGuidance =
       createMockTCCGuidance(student.getId(), professor.getId(), tccSubject.getId(), period);
