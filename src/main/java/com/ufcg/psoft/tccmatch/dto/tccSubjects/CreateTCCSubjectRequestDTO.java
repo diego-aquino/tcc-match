@@ -1,6 +1,5 @@
 package com.ufcg.psoft.tccmatch.dto.tccSubjects;
 
-import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import java.util.Set;
 
 public class CreateTCCSubjectRequestDTO {
@@ -8,13 +7,13 @@ public class CreateTCCSubjectRequestDTO {
   private String title;
   private String description;
   private String status;
-  private Set<FieldOfStudy> fieldsOfStudy;
+  private Set<Long> fieldsOfStudy;
 
   public CreateTCCSubjectRequestDTO(
     String title,
     String description,
     String status,
-    Set<FieldOfStudy> fieldsOfStudy
+    Set<Long> fieldsOfStudy
   ) {
     this.title = title;
     this.description = description;
@@ -30,7 +29,7 @@ public class CreateTCCSubjectRequestDTO {
     return description;
   }
 
-  public Set<FieldOfStudy> getFieldsOfStudy() {
+  public Set<Long> getFieldsOfStudy() {
     return fieldsOfStudy;
   }
 

@@ -12,6 +12,7 @@ import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
+import com.ufcg.psoft.tccmatch.services.fieldsOfStudy.FieldsOfStudyService;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,9 @@ class TCCSubjectCreationTests extends IntegrationTests {
   @Autowired
   private TCCSubjectService tccSubjectService;
 
+  @Autowired
+  private FieldsOfStudyService fieldsOfStudyService;
+
   @Test
   void TCCSubjectCreationByStudent() throws Exception {
     Student student = createMockStudent();
@@ -37,7 +41,7 @@ class TCCSubjectCreationTests extends IntegrationTests {
       tccSubjectTitle,
       tccSubjectDescription,
       tccSubjectStatus,
-      tccSubjectFieldsOfStudy
+      fieldsOfStudyService.mapToIdSet(tccSubjectFieldsOfStudy)
     );
 
     makeCreateTCCSubjectRequest(createTCCSubjectRequestDTO, studentToken)
@@ -72,7 +76,7 @@ class TCCSubjectCreationTests extends IntegrationTests {
       tccSubjectTitle,
       tccSubjectDescription,
       tccSubjectStatus,
-      tccSubjectFieldsOfStudy
+      fieldsOfStudyService.mapToIdSet(tccSubjectFieldsOfStudy)
     );
 
     makeCreateTCCSubjectRequest(createTCCSubjectRequestDTO, professorToken)

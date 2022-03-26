@@ -35,15 +35,11 @@ public class TCCSubjectController {
     @RequestBody CreateTCCSubjectRequestDTO tccSubjectDTO
   ) {
     authenticationService.ensureUserTypes(User.Type.PROFESSOR, User.Type.STUDENT);
-
     User user = authenticationService.getAuthenticatedUser();
 
     TCCSubject newTCCSubject = tccSubjectService.createTCCSubject(tccSubjectDTO, user);
 
-    return new ResponseEntity<TCCSubjectResponseDTO>(
-      new TCCSubjectResponseDTO(newTCCSubject),
-      HttpStatus.CREATED
-    );
+    return new ResponseEntity<>(new TCCSubjectResponseDTO(newTCCSubject), HttpStatus.CREATED);
   }
 
   @PostMapping("/show-interest/{tccSubjectId}")
@@ -54,7 +50,7 @@ public class TCCSubjectController {
 
     tccSubjectService.showInterestTccSubject(tccSubjectId, (Professor) user);
 
-    return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @GetMapping
