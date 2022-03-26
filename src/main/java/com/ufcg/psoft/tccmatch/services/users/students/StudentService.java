@@ -9,7 +9,10 @@ import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -89,6 +92,21 @@ public class StudentService {
   public void selectFieldOfStudy(Student student, FieldOfStudy fieldOfStudy) {
     student.addField(fieldOfStudy);
     userRepository.save(student);
+  }
+
+  public List<Student> filterByFieldsOfStudy(Set<FieldOfStudy> fieldsOfStudy) {
+    List<Student> students = userRepository.findAllByType(User.Type.STUDENT);
+
+    List<Student> filteredStudents = new ArrayList<Student>();
+    for (Student student : students) {
+      for (FieldOfStudy fieldOfStudy : fieldsOfStudy) {
+        if (student.getFields().contains(fieldOfStudy)) {
+          filteredStudents.add(student);
+        }
+      }
+    }
+
+    return filteredStudents;
   }
 
   public Student findByIdOrThrow(Long id) {

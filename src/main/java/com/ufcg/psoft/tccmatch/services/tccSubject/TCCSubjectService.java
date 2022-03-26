@@ -7,6 +7,7 @@ import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.tccSubjects.TCCSubjectRepository;
+import com.ufcg.psoft.tccmatch.services.notifications.NotificationService;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,9 @@ public class TCCSubjectService {
 
   @Autowired
   TCCSubjectRepository tccSubjectRepository;
+
+  @Autowired
+  NotificationService notificationService;
 
   private static final Map<User.Type, User.Type> TCC_SUBJECT_SEARCH_BY_USER_TYPE;
 
@@ -54,6 +58,9 @@ public class TCCSubjectService {
     );
 
     tccSubjectRepository.save(tccSubject);
+    if (user.getType().equals(User.Type.PROFESSOR)) {
+      notificationService.handleTCCSubjectCreated(tccSubject);
+    }
 
     return tccSubject;
   }
@@ -81,6 +88,6 @@ public class TCCSubjectService {
     if (
       tccSubject.getCreatedBy().getType() != User.Type.STUDENT
     ) throw new InvalidTCCSubjectException();
-    // No errors: Notify Student method hete
+    notificationService.handleTCCSubjectInterested(tccSubject);
   }
 }

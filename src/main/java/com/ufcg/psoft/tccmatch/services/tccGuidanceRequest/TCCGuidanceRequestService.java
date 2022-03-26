@@ -12,6 +12,7 @@ import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.tccGuidanceRequests.TCCGuidanceRequestRepository;
+import com.ufcg.psoft.tccmatch.services.notifications.NotificationService;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import java.util.Optional;
@@ -30,6 +31,9 @@ public class TCCGuidanceRequestService {
 
   @Autowired
   ProfessorService professorService;
+
+  @Autowired
+  NotificationService notificationService;
 
   public Optional<TCCGuidanceRequest> findById(Long id) {
     return tccGuidanceRequestRepository.findById(id);
@@ -65,8 +69,7 @@ public class TCCGuidanceRequestService {
     }
 
     tccGuidanceRequestRepository.save(tccGuidanceRequest);
-
-    //Send notification/email to professor about a new TCCGuidanceRequest being requested to them
+    notificationService.handleTCCGuidanceRequestCreated(tccGuidanceRequest, creator);
 
     return tccGuidanceRequest;
   }
@@ -95,8 +98,9 @@ public class TCCGuidanceRequestService {
     );
 
     tccGuidanceRequestRepository.save(tccGuidanceRequest);
-
-    //if (reviewTccGuidanceRequestDTO.getIsApproved()): Send notification/email to coordinator about a new TCCGuidanceRequest being accepted
+    if (reviewTccGuidanceRequestDTO.getIsApproved()) {
+      notificationService.handleTCCGuidanceRequestAccepted(tccGuidanceRequest);
+    }
 
     return tccGuidanceRequest;
   }
