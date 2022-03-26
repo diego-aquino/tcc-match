@@ -12,6 +12,7 @@ import com.ufcg.psoft.tccmatch.services.Validator;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,18 @@ public class TCCGuidanceService {
       return tccGuidanceRepository.findAllByIsFinished(isFinished.get());
     }
     return tccGuidanceRepository.findAll();
+  }
+
+  public List<TCCGuidance> filterTCCGuidancesByProfessor(
+    List<TCCGuidance> tccGuidances,
+    Long professorId
+  ) {
+    return Arrays.asList(
+      tccGuidances
+        .stream()
+        .filter(tccGuidance -> tccGuidance.getProfessor().getId().equals(professorId))
+        .toArray(TCCGuidance[]::new)
+    );
   }
 
   public List<TCCGuidance> listAllTCCGuidances() {
