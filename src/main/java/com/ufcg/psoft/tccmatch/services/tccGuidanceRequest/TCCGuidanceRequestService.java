@@ -2,6 +2,7 @@ package com.ufcg.psoft.tccmatch.services.tccGuidanceRequest;
 
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests.CreateTCCGuidanceRequestRequestDTO;
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceRequests.ReviewTCCGuidanceRequestRequestDTO;
+import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceRequests.EmptyTCCGuidanceRequestReviewMessageException;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceRequests.TCCGuidanceRequestNotFound;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceRequests.TCCGuidanceRequestNotPending;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceRequests.TCCGuidanceRequestUnauthorizedProfessor;
@@ -83,14 +84,20 @@ public class TCCGuidanceRequestService {
     if (tccGuidanceRequestOp.isEmpty()) throw new TCCGuidanceRequestNotFound();
 
     TCCGuidanceRequest tccGuidanceRequest = tccGuidanceRequestOp.get();
-    if (
-      tccGuidanceRequest.getStatus() != TCCGuidanceRequest.Status.PENDING
-    ) throw new TCCGuidanceRequestNotPending();
-    if (
-      !tccGuidanceRequest.getRequestedTo().equals(professor)
-    ) throw new TCCGuidanceRequestUnauthorizedProfessor();
 
-    tccGuidanceRequest.setMessage(reviewTccGuidanceRequestDTO.getMessage());
+    if (tccGuidanceRequest.getStatus() != TCCGuidanceRequest.Status.PENDING) {
+      throw new TCCGuidanceRequestNotPending();
+    }
+    if (!tccGuidanceRequest.getRequestedTo().equals(professor)) {
+      throw new TCCGuidanceRequestUnauthorizedProfessor();
+    }
+
+    String reviewMessage = reviewTccGuidanceRequestDTO.getMessage();
+    if (reviewMessage == null || reviewMessage.isBlank()) {
+      throw new EmptyTCCGuidanceRequestReviewMessageException();
+    }
+
+    tccGuidanceRequest.setMessage(reviewMessage);
     tccGuidanceRequest.setStatus(
       reviewTccGuidanceRequestDTO.getIsApproved()
         ? TCCGuidanceRequest.Status.APPROVED
