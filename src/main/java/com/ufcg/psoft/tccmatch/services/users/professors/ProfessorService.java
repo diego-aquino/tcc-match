@@ -116,4 +116,10 @@ public class ProfessorService {
   public List<Professor> findAllProfessors() {
     return userRepository.findAllByType(User.Type.PROFESSOR);
   }
+
+  public void incrementGuidanceQuota(Professor professor, int increment) {
+    int newGuidanceQuota = Math.max(professor.getGuidanceQuota() + increment, 0);
+    professor.setGuidanceQuota(newGuidanceQuota);
+    userRepository.save(professor);
+  }
 }

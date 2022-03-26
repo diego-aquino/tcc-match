@@ -2,6 +2,7 @@ package com.ufcg.psoft.tccmatch.services.tccGuidances;
 
 import com.ufcg.psoft.tccmatch.dto.tccGuidances.CreateTCCGuidanceDTO;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidances.TCCGuidanceNotFoundException;
+import com.ufcg.psoft.tccmatch.exceptions.users.professors.ProfessorNotAvailableForTCCGuidancesException;
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
@@ -42,8 +43,15 @@ public class TCCGuidanceService {
     );
     String period = validator.validatePeriod(tccGuidanceDTO.getPeriod());
 
+    if (professor.getGuidanceQuota() == 0) {
+      throw new ProfessorNotAvailableForTCCGuidancesException();
+    }
+
     TCCGuidance tccGuidance = new TCCGuidance(student, professor, tccSubject, period);
     tccGuidanceRepository.save(tccGuidance);
+
+    professorService.incrementGuidanceQuota(professor, -1);
+
     return tccGuidance;
   }
 
@@ -57,6 +65,8 @@ public class TCCGuidanceService {
     TCCGuidance tccGuidance = optionalTCCGuidance.get();
     tccGuidance.markAsFinished();
     tccGuidanceRepository.save(tccGuidance);
+
+    professorService.incrementGuidanceQuota(tccGuidance.getProfessor(), 1);
 
     return tccGuidance;
   }
