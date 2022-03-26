@@ -8,7 +8,7 @@ import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
 import com.ufcg.psoft.tccmatch.models.users.User;
 import com.ufcg.psoft.tccmatch.repositories.tccGuidanceProblem.TCCGuidanceProblemRepository;
 import com.ufcg.psoft.tccmatch.repositories.tccGuidances.TCCGuidanceRepository;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,35 +49,25 @@ public class TCCGuidanceProblemService {
     return tccGuidanceProblem;
   }
 
-  public List<TCCGuidanceProblem> listTCCGuidanceProblems() {
-    return tccGuidanceProblemRepository.findAll();
+  public List<TCCGuidanceProblem> listByPeriod(Optional<String> period) {
+    if (period.isEmpty()) {
+      return tccGuidanceProblemRepository.findAll();
+    }
+    return tccGuidanceProblemRepository.findAllByTccGuidance_Period(period.get());
   }
 
-  public List<TCCGuidanceProblem> listAllTCCGuidanceProblemsOfStudents(
-    List<TCCGuidanceProblem> tccGuidanceProblems
+  public List<TCCGuidanceProblem> filterByCreatorType(
+    List<TCCGuidanceProblem> tccGuidanceProblems,
+    User.Type creatorType
   ) {
-    List<TCCGuidanceProblem> studentTCCGuidanceProblems = new ArrayList<TCCGuidanceProblem>();
+    List<TCCGuidanceProblem> filteredProblems = new LinkedList<>();
 
     for (TCCGuidanceProblem tccGuidanceProblem : tccGuidanceProblems) {
-      if (tccGuidanceProblem.getCreatedBy().getType() == User.Type.STUDENT) {
-        studentTCCGuidanceProblems.add(tccGuidanceProblem);
+      if (tccGuidanceProblem.getCreatedBy().getType() == creatorType) {
+        filteredProblems.add(tccGuidanceProblem);
       }
     }
 
-    return studentTCCGuidanceProblems;
-  }
-
-  public List<TCCGuidanceProblem> listAllTCCGuidanceProblemsOfProfessors(
-    List<TCCGuidanceProblem> tccGuidanceProblems
-  ) {
-    List<TCCGuidanceProblem> professorTCCGuidanceProblems = new ArrayList<TCCGuidanceProblem>();
-
-    for (TCCGuidanceProblem tccGuidanceProblem : tccGuidanceProblems) {
-      if (tccGuidanceProblem.getCreatedBy().getType() == User.Type.PROFESSOR) {
-        professorTCCGuidanceProblems.add(tccGuidanceProblem);
-      }
-    }
-
-    return professorTCCGuidanceProblems;
+    return filteredProblems;
   }
 }

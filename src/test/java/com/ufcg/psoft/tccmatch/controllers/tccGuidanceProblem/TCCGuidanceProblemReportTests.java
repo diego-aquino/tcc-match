@@ -17,7 +17,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class TCCGuidanceProblemListTests extends TCCGuidanceProblemTests {
+public class TCCGuidanceProblemReportTests extends TCCGuidanceProblemTests {
 
   @Autowired
   private TCCGuidanceProblemService tccGuidanceProblemService;
@@ -53,23 +53,17 @@ public class TCCGuidanceProblemListTests extends TCCGuidanceProblemTests {
 
   @Test
   void listTCCGuidanceProblemsGroupedByStudentsAndProfessors() throws Exception {
-    makeListTCCGuidanceProblemsRequest(coordinatorToken)
+    makeReportTCCGuidanceProblemsRequest(coordinatorToken)
       .andExpect(status().isOk())
       .andExpect(
-        jsonPath(
-          "$.studentsTccGuidanceProblems.[0].id",
-          is(tccGuidanceProblems.get(0).getId().intValue())
-        )
+        jsonPath("$.studentProblems.[0].id", is(tccGuidanceProblems.get(0).getId().intValue()))
       )
       .andExpect(
-        jsonPath(
-          "$.professorsTccGuidanceProblems.[0].id",
-          is(tccGuidanceProblems.get(1).getId().intValue())
-        )
+        jsonPath("$.professorProblems.[0].id", is(tccGuidanceProblems.get(1).getId().intValue()))
       );
   }
 
-  private ResultActions makeListTCCGuidanceProblemsRequest(String token) throws Exception {
-    return mvc.perform(authenticated(get("/api/tcc-guidance-problems"), token));
+  private ResultActions makeReportTCCGuidanceProblemsRequest(String token) throws Exception {
+    return mvc.perform(authenticated(get("/api/tcc-guidance-problems/reports"), token));
   }
 }
