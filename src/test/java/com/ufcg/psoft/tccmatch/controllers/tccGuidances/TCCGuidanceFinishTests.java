@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidances.TCCGuidanceNotFoundException;
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.tccGuidances.TCCGuidanceService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,9 @@ import org.springframework.test.web.servlet.ResultActions;
 class TCCGuidanceFinishTests extends TCCGuidanceTests {
 
   @Autowired
+  private UserRepository<Professor> userRepository;
+
+  @Autowired
   private TCCGuidanceService tccGuidanceService;
 
   private TCCGuidance tccGuidance;
@@ -24,7 +29,11 @@ class TCCGuidanceFinishTests extends TCCGuidanceTests {
   @BeforeEach
   void beforeEach() {
     student = createMockStudent();
+
     professor = createMockProfessor();
+    professor.setGuidanceQuota(1);
+    userRepository.save(professor);
+
     tccSubject = createMockTCCSubject(student);
     coordinatorToken = loginWithDefaultCoordinator();
 

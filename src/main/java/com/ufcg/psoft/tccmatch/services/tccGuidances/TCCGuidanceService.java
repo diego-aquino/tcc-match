@@ -2,6 +2,7 @@ package com.ufcg.psoft.tccmatch.services.tccGuidances;
 
 import com.ufcg.psoft.tccmatch.dto.tccGuidances.CreateTCCGuidanceDTO;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidances.TCCGuidanceNotFoundException;
+import com.ufcg.psoft.tccmatch.exceptions.users.professors.ProfessorNotAvailableForTCCGuidancesException;
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
@@ -11,6 +12,7 @@ import com.ufcg.psoft.tccmatch.services.Validator;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import com.ufcg.psoft.tccmatch.services.users.students.StudentService;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +44,15 @@ public class TCCGuidanceService {
     );
     String period = validator.validatePeriod(tccGuidanceDTO.getPeriod());
 
+    if (professor.getGuidanceQuota() == 0) {
+      throw new ProfessorNotAvailableForTCCGuidancesException();
+    }
+
     TCCGuidance tccGuidance = new TCCGuidance(student, professor, tccSubject, period);
     tccGuidanceRepository.save(tccGuidance);
+
+    professorService.incrementGuidanceQuota(professor, -1);
+
     return tccGuidance;
   }
 
@@ -57,6 +66,8 @@ public class TCCGuidanceService {
     TCCGuidance tccGuidance = optionalTCCGuidance.get();
     tccGuidance.markAsFinished();
     tccGuidanceRepository.save(tccGuidance);
+
+    professorService.incrementGuidanceQuota(tccGuidance.getProfessor(), 1);
 
     return tccGuidance;
   }
@@ -72,6 +83,18 @@ public class TCCGuidanceService {
       return tccGuidanceRepository.findAllByIsFinished(isFinished.get());
     }
     return tccGuidanceRepository.findAll();
+  }
+
+  public List<TCCGuidance> filterTCCGuidancesByProfessor(
+    List<TCCGuidance> tccGuidances,
+    Long professorId
+  ) {
+    return Arrays.asList(
+      tccGuidances
+        .stream()
+        .filter(tccGuidance -> tccGuidance.getProfessor().getId().equals(professorId))
+        .toArray(TCCGuidance[]::new)
+    );
   }
 
   public List<TCCGuidance> listAllTCCGuidances() {

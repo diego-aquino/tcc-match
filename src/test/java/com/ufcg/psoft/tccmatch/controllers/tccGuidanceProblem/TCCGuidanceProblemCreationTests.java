@@ -5,19 +5,29 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ufcg.psoft.tccmatch.dto.tccGuidanceProblem.CreateTCCGuidanceProblemDTO;
-import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceProblem.CategoryIsNotProvidedException;
+import com.ufcg.psoft.tccmatch.exceptions.tccGuidanceProblem.InvalidCategoryException;
 import com.ufcg.psoft.tccmatch.exceptions.tccGuidances.TCCGuidanceNotFoundException;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 class TCCGuidanceProblemCreationTests extends TCCGuidanceProblemTests {
 
+  @Autowired
+  private UserRepository<Professor> userRepository;
+
   @BeforeEach
   void beforeEach() {
     student = createMockStudent();
+
     professor = createMockProfessor();
+    professor.setGuidanceQuota(1);
+    userRepository.save(professor);
+
     tccSubject = createMockTCCSubject(student);
     tccGuidance =
       createMockTCCGuidance(student.getId(), professor.getId(), tccSubject.getId(), period);
@@ -37,7 +47,7 @@ class TCCGuidanceProblemCreationTests extends TCCGuidanceProblemTests {
       .andExpect(jsonPath("$.id", is(any(Integer.class))))
       .andExpect(jsonPath("$.category", is(createTCCGuidanceProblemDTO.getCategory())))
       .andExpect(jsonPath("$.description", is(createTCCGuidanceProblemDTO.getDescription())))
-      .andExpect(jsonPath("$.tccGuidanceId", is(tccGuidance.getId().intValue())));
+      .andExpect(jsonPath("$.tccGuidance.id", is(tccGuidance.getId().intValue())));
   }
 
   @Test
@@ -67,7 +77,7 @@ class TCCGuidanceProblemCreationTests extends TCCGuidanceProblemTests {
 
     makeCreateTCCGuidanceProblemRequest(createTCCGuidanceProblemDTO, studentToken)
       .andExpect(status().isBadRequest())
-      .andExpect(jsonPath("$.message", is(CategoryIsNotProvidedException.message())));
+      .andExpect(jsonPath("$.message", is(InvalidCategoryException.message())));
   }
 
   private ResultActions makeCreateTCCGuidanceProblemRequest(

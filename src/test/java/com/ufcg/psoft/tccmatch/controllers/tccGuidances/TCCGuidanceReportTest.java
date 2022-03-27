@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ufcg.psoft.tccmatch.dto.tccGuidances.CreateTCCGuidanceDTO;
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.tccGuidances.TCCGuidanceService;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -22,6 +24,9 @@ import org.springframework.test.web.servlet.ResultActions;
 class TCCGuidanceReportTest extends TCCGuidanceTests {
 
   @Autowired
+  private UserRepository<Professor> userRepository;
+
+  @Autowired
   private TCCGuidanceService tccGuidanceService;
 
   private List<TCCGuidance> tccGuidances;
@@ -30,7 +35,11 @@ class TCCGuidanceReportTest extends TCCGuidanceTests {
   @BeforeEach
   void beforeEach() {
     student = createMockStudent();
+
     professor = createMockProfessor();
+    professor.setGuidanceQuota(3);
+    userRepository.save(professor);
+
     tccSubject = createMockTCCSubject(student);
     coordinatorToken = loginWithDefaultCoordinator();
 
@@ -89,7 +98,7 @@ class TCCGuidanceReportTest extends TCCGuidanceTests {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.[0].id", is(tccGuidances.get(0).getId().intValue())));
 
-      reportTCCGuidances(coordinatorToken, Optional.empty(), Optional.of(true))
+    reportTCCGuidances(coordinatorToken, Optional.empty(), Optional.of(true))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.[0].id", is(tccGuidances.get(1).getId().intValue())))
       .andExpect(jsonPath("$.[1].id", is(tccGuidances.get(2).getId().intValue())));

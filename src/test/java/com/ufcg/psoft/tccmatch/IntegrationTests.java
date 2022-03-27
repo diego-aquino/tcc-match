@@ -14,6 +14,7 @@ import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.models.users.User;
+import com.ufcg.psoft.tccmatch.services.fieldsOfStudy.FieldsOfStudyService;
 import com.ufcg.psoft.tccmatch.services.sessions.AuthenticationService;
 import com.ufcg.psoft.tccmatch.services.tccGuidanceRequest.TCCGuidanceRequestService;
 import com.ufcg.psoft.tccmatch.services.tccGuidances.TCCGuidanceService;
@@ -78,6 +79,9 @@ public abstract class IntegrationTests {
   private TCCSubjectService tccSubjectService;
 
   @Autowired
+  private FieldsOfStudyService fieldsOfStudyService;
+
+  @Autowired
   private TCCGuidanceRequestService tccGuidanceRequestService;
 
   @Autowired
@@ -115,7 +119,7 @@ public abstract class IntegrationTests {
       tccSubjectTitle,
       tccSubjectDescription,
       tccSubjectStatus,
-      tccSubjectFieldsOfStudy
+      fieldsOfStudyService.mapToIdSet(tccSubjectFieldsOfStudy)
     );
     return tccSubjectService.createTCCSubject(createTCCSubjectRequestDTO, tccSubjectCreator);
   }

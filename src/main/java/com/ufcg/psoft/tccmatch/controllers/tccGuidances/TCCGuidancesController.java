@@ -53,7 +53,8 @@ public class TCCGuidancesController {
   @GetMapping
   public ResponseEntity<List<TCCGuidanceResponseDTO>> listTCCGuidances(
     @RequestParam("period") Optional<String> period,
-    @RequestParam("finished") Optional<Boolean> isFinished
+    @RequestParam("finished") Optional<Boolean> isFinished,
+    @RequestParam("professorId") Optional<Long> professorId
   ) {
     authenticationService.ensureUserTypes(
       User.Type.STUDENT,
@@ -63,8 +64,12 @@ public class TCCGuidancesController {
 
     List<TCCGuidance> tccGuidances = tccGuidanceService.listTCCGuidances(period, isFinished);
 
+    List<TCCGuidance> tccGuidancesToReturn = professorId.isPresent()
+      ? tccGuidanceService.filterTCCGuidancesByProfessor(tccGuidances, professorId.get())
+      : tccGuidances;
+
     return new ResponseEntity<>(
-      TCCGuidanceResponseDTO.fromTCCGuidances(tccGuidances),
+      TCCGuidanceResponseDTO.fromTCCGuidances(tccGuidancesToReturn),
       HttpStatus.OK
     );
   }
@@ -73,13 +78,9 @@ public class TCCGuidancesController {
   public ResponseEntity<List<TCCGuidanceReportDTO>> reportTCCGuidances(
     @RequestParam("period") Optional<String> period,
     @RequestParam("finished") Optional<Boolean> isFinished
-  ){
+  ) {
     authenticationService.ensureUserTypes(User.Type.COORDINATOR);
     List<TCCGuidance> tccGuidances = tccGuidanceService.listTCCGuidances(period, isFinished);
-    return new ResponseEntity<>(
-      TCCGuidanceReportDTO.fromTCCGuidances(tccGuidances),
-      HttpStatus.OK
-    );
+    return new ResponseEntity<>(TCCGuidanceReportDTO.fromTCCGuidances(tccGuidances), HttpStatus.OK);
   }
-
 }

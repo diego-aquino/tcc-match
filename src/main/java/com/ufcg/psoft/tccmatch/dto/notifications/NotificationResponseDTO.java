@@ -37,10 +37,7 @@ public class NotificationResponseDTO {
 
   public static List<NotificationResponseDTO> fromNotifications(List<Notification> notifications) {
     return Arrays.asList(
-      notifications
-        .stream()
-        .map(NotificationResponseDTO::new)
-        .toArray(NotificationResponseDTO[]::new)
+      notifications.stream().map(Notification::toDTO).toArray(NotificationResponseDTO[]::new)
     );
   }
 }

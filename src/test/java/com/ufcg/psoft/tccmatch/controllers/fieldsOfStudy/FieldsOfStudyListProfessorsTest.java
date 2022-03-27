@@ -9,6 +9,7 @@ import com.ufcg.psoft.tccmatch.dto.users.CreateProfessorDTO;
 import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
+import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.fieldsOfStudy.FieldsOfStudyService;
 import com.ufcg.psoft.tccmatch.services.users.professors.ProfessorService;
 import java.util.HashSet;
@@ -28,6 +29,9 @@ public class FieldsOfStudyListProfessorsTest extends IntegrationTests {
 
   @Autowired
   private ProfessorService professorService;
+
+  @Autowired
+  private UserRepository<Professor> userRepository;
 
   private Student student;
   private Professor professor1;
@@ -50,6 +54,9 @@ public class FieldsOfStudyListProfessorsTest extends IntegrationTests {
     professor1 = createProfessorDTO(professorEmail1);
     professor2 = createProfessorDTO(professorEmail2);
     professor3 = createProfessorDTO(professorEmail3);
+
+    professor3.setGuidanceQuota(1);
+    userRepository.save(professor3);
 
     fieldsOfStudyService.selectFieldOfStudy(professor1, field1);
     fieldsOfStudyService.selectFieldOfStudy(
@@ -77,9 +84,8 @@ public class FieldsOfStudyListProfessorsTest extends IntegrationTests {
   void validProfessorList() throws Exception {
     ListFieldOfStudyRequest()
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$", hasSize(2)))
-      .andExpect(jsonPath("$.[0].id", is(professor2.getId().intValue())))
-      .andExpect(jsonPath("$.[1].id", is(professor3.getId().intValue())));
+      .andExpect(jsonPath("$", hasSize(1)))
+      .andExpect(jsonPath("$.[0].id", is(professor3.getId().intValue())));
   }
 
   @Test

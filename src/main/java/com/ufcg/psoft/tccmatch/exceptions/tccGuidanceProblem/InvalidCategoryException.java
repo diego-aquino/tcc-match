@@ -2,13 +2,13 @@ package com.ufcg.psoft.tccmatch.exceptions.tccGuidanceProblem;
 
 import com.ufcg.psoft.tccmatch.exceptions.api.BadRequestApiException;
 
-public class CategoryIsNotProvidedException extends BadRequestApiException {
+public class InvalidCategoryException extends BadRequestApiException {
 
-  public CategoryIsNotProvidedException() {
+  public InvalidCategoryException() {
     super(message());
   }
 
   public static String message() {
-    return "Category is not provided.";
+    return "Category is invalid or was not provided.";
   }
 }

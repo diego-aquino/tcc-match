@@ -9,7 +9,11 @@ import com.ufcg.psoft.tccmatch.models.notifications.tccGuidanceRequests.TCCGuida
 import com.ufcg.psoft.tccmatch.models.notifications.tccGuidanceRequests.TCCGuidanceRequestCreatedNotification;
 import com.ufcg.psoft.tccmatch.models.notifications.tccSubjects.TCCSubjectCreatedNotification;
 import com.ufcg.psoft.tccmatch.models.notifications.tccSubjects.TCCSubjectInterestedNotification;
+import com.ufcg.psoft.tccmatch.models.tccGuidanceRequest.TCCGuidanceRequest;
+import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Coordinator;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.models.users.Student;
 import com.ufcg.psoft.tccmatch.repositories.notifications.NotificationRepository;
 import com.ufcg.psoft.tccmatch.services.users.UserService;
 import java.util.Date;
@@ -29,6 +33,9 @@ class NotificationListTests extends IntegrationTests {
   private Coordinator coordinator;
   private String coordinatorToken;
 
+  private Student student;
+  private Professor professor;
+
   @Autowired
   private UserService<Coordinator> userService;
 
@@ -47,6 +54,9 @@ class NotificationListTests extends IntegrationTests {
 
     coordinator = optionalCoordinator.get();
     coordinatorToken = loginWithDefaultCoordinator();
+
+    student = createMockStudent();
+    professor = createMockProfessor();
   }
 
   @Test
@@ -76,11 +86,18 @@ class NotificationListTests extends IntegrationTests {
   private List<Notification> createSampleNotifications() {
     List<Date> dates = List.of(new Date(10000), new Date(15000), new Date(7500), new Date(25000));
 
+    TCCSubject tccSubject = createMockTCCSubject(student);
+    TCCGuidanceRequest tccGuidanceRequest = createMockTCCGuidanceRequest(
+      tccSubject.getId(),
+      professor.getId(),
+      student
+    );
+
     List<Notification> notifications = List.of(
-      new TCCSubjectCreatedNotification(coordinator, dates.get(3)),
-      new TCCSubjectInterestedNotification(coordinator, dates.get(1)),
-      new TCCGuidanceRequestCreatedNotification(coordinator, dates.get(0)),
-      new TCCGuidanceRequestAcceptedNotification(coordinator, dates.get(2))
+      new TCCSubjectCreatedNotification(coordinator, tccSubject, dates.get(3)),
+      new TCCSubjectInterestedNotification(coordinator, tccSubject, dates.get(1)),
+      new TCCGuidanceRequestCreatedNotification(coordinator, tccGuidanceRequest, dates.get(0)),
+      new TCCGuidanceRequestAcceptedNotification(coordinator, tccGuidanceRequest, dates.get(2))
     );
     notificationRepository.saveAll(notifications);
 

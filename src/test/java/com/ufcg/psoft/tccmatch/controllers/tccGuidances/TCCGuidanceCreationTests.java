@@ -11,6 +11,8 @@ import com.ufcg.psoft.tccmatch.exceptions.users.ProfessorNotFoundException;
 import com.ufcg.psoft.tccmatch.exceptions.users.StudentNotFoundException;
 import com.ufcg.psoft.tccmatch.exceptions.users.students.InvalidPeriodException;
 import com.ufcg.psoft.tccmatch.models.tccGuidances.TCCGuidance;
+import com.ufcg.psoft.tccmatch.models.users.Professor;
+import com.ufcg.psoft.tccmatch.repositories.users.UserRepository;
 import com.ufcg.psoft.tccmatch.services.tccGuidances.TCCGuidanceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,12 +23,19 @@ import org.springframework.test.web.servlet.ResultActions;
 class TCCGuidanceCreationTests extends TCCGuidanceTests {
 
   @Autowired
+  private UserRepository<Professor> userRepository;
+
+  @Autowired
   private TCCGuidanceService tccGuidanceService;
 
   @BeforeEach
   void beforeEach() {
     student = createMockStudent();
+
     professor = createMockProfessor();
+    professor.setGuidanceQuota(1);
+    userRepository.save(professor);
+
     tccSubject = createMockTCCSubject(student);
     coordinatorToken = loginWithDefaultCoordinator();
   }

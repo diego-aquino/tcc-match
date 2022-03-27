@@ -10,6 +10,7 @@ import com.ufcg.psoft.tccmatch.models.fieldsOfStudy.FieldOfStudy;
 import com.ufcg.psoft.tccmatch.models.tccSubject.TCCSubject;
 import com.ufcg.psoft.tccmatch.models.users.Professor;
 import com.ufcg.psoft.tccmatch.models.users.Student;
+import com.ufcg.psoft.tccmatch.services.fieldsOfStudy.FieldsOfStudyService;
 import com.ufcg.psoft.tccmatch.services.tccSubject.TCCSubjectService;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +38,9 @@ class ListTCCSubjectTests extends IntegrationTests {
   @Autowired
   private TCCSubjectService tccSubjectService;
 
+  @Autowired
+  private FieldsOfStudyService fieldsOfStudyService;
+
   private List<TCCSubject> tccSubjects;
 
   @BeforeEach
@@ -51,7 +55,7 @@ class ListTCCSubjectTests extends IntegrationTests {
             tccSubjectTitle,
             tccSubjectDescription,
             tccSubjectStatus,
-            tccSubjectFieldsOfStudy
+            fieldsOfStudyService.mapToIdSet(tccSubjectFieldsOfStudy)
           ),
           professor
         ),
@@ -60,7 +64,7 @@ class ListTCCSubjectTests extends IntegrationTests {
             tccSubjectTitle + " 2",
             tccSubjectDescription + " 2",
             tccSubjectStatus + " 2",
-            tccSubjectFieldsOfStudy
+            fieldsOfStudyService.mapToIdSet(tccSubjectFieldsOfStudy)
           ),
           professor
         ),
@@ -69,7 +73,7 @@ class ListTCCSubjectTests extends IntegrationTests {
             tccSubjectTitle + " 3",
             tccSubjectDescription + " 3",
             tccSubjectStatus + " 3",
-            tccSubjectFieldsOfStudy
+            fieldsOfStudyService.mapToIdSet(tccSubjectFieldsOfStudy)
           ),
           professor
         ),
@@ -78,7 +82,7 @@ class ListTCCSubjectTests extends IntegrationTests {
             tccSubjectTitle + " 4",
             tccSubjectDescription + " 4",
             tccSubjectStatus + " 4",
-            tccSubjectFieldsOfStudy
+            fieldsOfStudyService.mapToIdSet(tccSubjectFieldsOfStudy)
           ),
           student
         ),
@@ -87,7 +91,7 @@ class ListTCCSubjectTests extends IntegrationTests {
             tccSubjectTitle + " 5",
             tccSubjectDescription + " 5",
             tccSubjectStatus + " 5",
-            tccSubjectFieldsOfStudy
+            fieldsOfStudyService.mapToIdSet(tccSubjectFieldsOfStudy)
           ),
           student
         )

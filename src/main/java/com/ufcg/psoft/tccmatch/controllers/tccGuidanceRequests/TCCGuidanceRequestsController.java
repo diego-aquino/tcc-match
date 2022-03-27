@@ -39,11 +39,11 @@ public class TCCGuidanceRequestsController {
   ) {
     authenticationService.ensureUserTypes(User.Type.STUDENT);
 
-    User user = authenticationService.getAuthenticatedUser();
+    User student = authenticationService.getAuthenticatedUser();
 
     TCCGuidanceRequest newTCCGuidanceRequest = tccGuidanceRequestService.createTCCGuidanceRequest(
       createTccGuidanceRequestDTO,
-      (Student) user
+      (Student) student
     );
 
     return new ResponseEntity<>(
